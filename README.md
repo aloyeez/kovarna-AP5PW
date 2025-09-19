@@ -234,7 +234,7 @@ Remember to update the TypeScript interfaces and parsing logic accordingly.
 
 ## Customization
 
-### Logo and Branding
+### Logo and Brandinga
 - **Logo**: Replace `
 =======
 # kovarna-AP5PW
