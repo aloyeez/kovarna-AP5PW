@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Hospůdka U Kovárny – Web App
 
 Modern restaurant website built with React, TypeScript, and Vite, featuring dynamic menu management through Google Sheets integration.
@@ -235,3 +236,6 @@ Remember to update the TypeScript interfaces and parsing logic accordingly.
 
 ### Logo and Branding
 - **Logo**: Replace `
+=======
+# kovarna-AP5PW
+>>>>>>> cfa450e4b8a1a4da658f4c100719278dba8eec09
