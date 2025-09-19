@@ -1,0 +1,693 @@
+@import "tailwindcss";
+
+/* Custom styles can go here */
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  min-height: calc(100vh - 120px);
+  padding: 2rem;
+  background: #f8f9fa;
+}
+
+/* Page containers */
+.about-page,
+.menu-page,
+.contact-page,
+.reservations-page,
+.home-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Page titles */
+.about-title,
+.menu-title,
+.contact-title,
+.reservations-title {
+  text-align: center;
+  color: #1a1a1a;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* About page specific styling */
+.about-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.about-content {
+  line-height: 1.8;
+}
+
+.about-text h2 {
+  color: #48301cff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #48301cff;
+  padding-bottom: 1rem;
+}
+
+.about-text p {
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  text-align: justify;
+  text-indent: 2rem;
+  line-height: 1.8;
+}
+
+.about-signature {
+  text-align: center !important;
+  text-indent: 0 !important;
+  font-style: italic;
+  font-size: 1.2rem;
+  color: #f4d03f;
+  font-weight: 600;
+  margin: 2rem 0;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  border-left: 4px solid #f4d03f;
+}
+
+.about-highlight {
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+  border: 2px solid #f4d03f;
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(244, 208, 63, 0.2);
+}
+
+.about-highlight h3 {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.about-highlight p {
+  color: #555;
+  font-size: 1.1rem;
+  margin: 0 0 1.5rem 0;
+  text-align: center;
+  text-indent: 0;
+}
+
+.menu-link-btn {
+  background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
+  color: #1a1a1a;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(244, 208, 63, 0.3);
+}
+
+.menu-link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 208, 63, 0.4);
+  background: linear-gradient(135deg, #f39c12 0%, #f4d03f 100%);
+}
+
+.menu-link-btn:active {
+  transform: translateY(0);
+}
+
+/* Home page specific */
+.home-page {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.home-page h1 {
+  font-size: 3rem;
+  color: #1a1a1a;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.home-page p {
+  font-size: 1.2rem;
+  color: #666;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Contact page specific styling */
+.contact-container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.contact-info h2 {
+  color: #48301cff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 3px solid #48301cff;
+  padding-bottom: 1rem;
+}
+
+.contact-details {
+  display: grid;
+  gap: 2rem;
+}
+
+.contact-item h3 {
+  color: #48301cff;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contact-item p {
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.contact-item strong {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.map-note, .phone-note {
+  color: #666;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.opening-hours {
+  display: grid;
+  gap: 1rem;
+}
+
+.day-group h4 {
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.day-group p {
+  color: #555;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Social media section styling */
+.social-media-section h3 {
+  color: #f4d03f;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.social-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.social-link.facebook {
+  background: linear-gradient(135deg, #1877f2 0%, #0d6efd 100%);
+}
+
+
+
+.social-link.tripadvisor {
+  background: linear-gradient(135deg, #00af87 0%, #00a878 100%);
+}
+
+.social-icon {
+  font-size: 1.5rem;
+}
+
+.social-text {
+  font-weight: 600;
+}
+
+.facebook-plugin {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.facebook-plugin h4 {
+  color: #f4d03f;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.facebook-plugin iframe {
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Map section styling */
+.map-section {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.map-section h3 {
+  color: #48301cff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.map-container {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.map-placeholder {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 3rem 2rem;
+  min-height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-info {
+  text-align: center;
+  max-width: 500px;
+}
+
+.map-info h4 {
+  color: #1a1a1a;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.map-info p {
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  line-height: 1.6;
+}
+
+.map-note {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid #f4d03f;
+}
+
+.map-note p {
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.map-link-btn {
+  display: inline-block;
+  background: linear-gradient(135deg, #f4d03f 0%, #f39c12 100%);
+  color: #1a1a1a;
+  text-decoration: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(244, 208, 63, 0.3);
+}
+
+.map-link-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(244, 208, 63, 0.4);
+  background: linear-gradient(135deg, #f39c12 0%, #f4d03f 100%);
+}
+
+/* Responsive design for about page */
+@media (max-width: 768px) {
+  .about-text h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .about-text p {
+    font-size: 1rem;
+    text-indent: 1rem;
+    margin-bottom: 1.2rem;
+  }
+  
+  .about-highlight {
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .about-highlight h3 {
+    font-size: 1.3rem;
+  }
+  
+  .about-signature {
+    font-size: 1.1rem;
+    padding: 0.8rem;
+  }
+}
+
+/* Responsive design for contact page */
+@media (max-width: 768px) {
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .contact-info h2 {
+    font-size: 1.6rem;
+  }
+  
+  .contact-item h3 {
+    font-size: 1.2rem;
+  }
+  
+  .social-media-section h3 {
+    font-size: 1.3rem;
+  }
+  
+  .social-links {
+    gap: 0.8rem;
+  }
+  
+  .social-link {
+    padding: 0.8rem 1.2rem;
+    font-size: 1rem;
+  }
+  
+  .facebook-plugin iframe {
+    width: 100% !important;
+    max-width: 340px;
+  }
+  
+  .map-section h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Menu page specific styling */
+.menu-container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.menu-content {
+  background: linear-gradient(135deg, #fbeee1 100%, #fbeee1 100%);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e8e4d8;
+}
+
+.menu-day {
+  margin-bottom: 2rem;
+}
+
+.day-title {
+  color: #48301cff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-bottom: 2px solid #291b10ff;
+  padding-bottom: 0.5rem;
+}
+
+.no-menu-message {
+  color: #666;
+  font-style: italic;
+  font-size: 1.1rem;
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px dashed #ddd;
+}
+
+.menu-special-offer {
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+  border: 2px solid #644931ff;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin: 1rem 0 1.5rem 0;
+  text-align: center;
+  box-shadow: 0 2px 10px rgba(244, 208, 63, 0.2);
+}
+
+.menu-special-offer p {
+  color: #1a1a1a;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.menu-separator {
+  height: 2px;
+  background: repeating-linear-gradient(
+    to right,
+    transparent,
+    transparent 4px,
+    #644931ff 4px,
+    #644931ff 8px
+  );
+  margin: 2rem 0;
+}
+
+.menu-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  color: #644931ff;
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid #644931ff;
+  padding-bottom: 0.5rem;
+}
+
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  gap: 1rem;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.item-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.item-number {
+  color: #644931ff;
+  font-weight: bold;
+  font-size: 1rem;
+  min-width: 2rem;
+}
+
+.item-name {
+  color: #333;
+  font-size: 1rem;
+  line-height: 1.5;
+  flex: 1;
+}
+
+.allergens {
+  color: #666;
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: #f8f9fa;
+  padding: 0.2rem 0.5rem;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+  white-space: nowrap;
+}
+
+.item-price {
+  color: #1a1a1a;
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: right;
+  min-width: 80px;
+}
+
+.menu-note {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #fff8e1 0%, #fff3e0 100%);
+  border-radius: 8px;
+  border-left: 4px solid #644931ff;
+  text-align: center;
+}
+
+.menu-note p {
+  color: #666;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.menu-note strong {
+  color: #1a1a1a;
+}
+
+.menu-update {
+  color: #666;
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 2rem 0 1.5rem 0;
+  padding: 0.5rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+/* Responsive design for menu page */
+@media (max-width: 768px) {
+  .menu-content {
+    padding: 1.5rem;
+  }
+  
+  .day-title {
+    font-size: 1.5rem;
+  }
+  
+  .section-title {
+    font-size: 1.2rem;
+  }
+  
+  .menu-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .item-info {
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  
+  .item-price {
+    text-align: left;
+    min-width: auto;
+  }
+  
+  .allergens {
+    align-self: flex-start;
+  }
+}
+
+/* Loading, Error, and No-Data states for DailyMenu */
+.loading-message,
+.error-message,
+.no-data-message {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+}
+
+.loading-message p {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.error-message p {
+  font-size: 1.1rem;
+  color: #d32f2f;
+  margin: 0;
+}
+
+.no-data-message p {
+  font-size: 1.1rem;
+  color: #666;
+  margin: 0;
+}
