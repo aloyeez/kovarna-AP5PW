@@ -1,13 +1,16 @@
 import './Footer.css'
+import { useLanguage } from '../contexts/LanguageContext'
 
 function Footer() {
+  const { t } = useLanguage()
+  
   return (
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-content">
           <div className="footer-section">
-            <h3>Hospůdka U Kovárny</h3>
-            <p>Tradiční česká kuchyně v historické atmosféře</p>
+            <h3>{t('footer.title')}</h3>
+            <p>{t('footer.subtitle')}</p>
             {/* <div className="social-links">
               <a href="#" aria-label="Facebook">📘</a>
               <a href="#" aria-label="Instagram">📷</a>
@@ -16,35 +19,35 @@ function Footer() {
           </div>
           
           <div className="footer-section">
-            <h4>Kontakt</h4>
-            <p>📍 Lešetín I 610, 760 01 Zlín</p>
-            <p>📞 +420 775 954 945</p>
-            <p>✉️ hospudka@ukovarny.cz</p>
+            <h4>{t('footer.contact')}</h4>
+            <p>{t('footer.address')}</p>
+            <p>{t('footer.phone')}</p>
+            <p>{t('footer.email')}</p>
           </div>
           
           <div className="footer-section">
-            <h4>Otevírací doba</h4>
-            <p>Po-Čt: 11:00 - 14:00 | 17:00 - 22:00</p>
-            <p>Pá: 11:00 - 14:00 | 17:00 - 23:00</p>
-            <p>So: 18:00 - 23:00</p>
-            <p>Ne: 18:00 - 22:00</p>
+            <h4>{t('footer.openingHours')}</h4>
+            <p>{t('footer.mondayThursday')}</p>
+            <p>{t('footer.friday')}</p>
+            <p>{t('footer.saturday')}</p>
+            <p>{t('footer.sunday')}</p>
           </div>
           
           <div className="footer-section">
-            <h4>Rychlé odkazy</h4>
+            <h4>{t('footer.quickLinks')}</h4>
             <ul>
-              <li><a href="/menu">Jídelní lístek</a></li>
-              <li><a href="/about">O nás</a></li>
-              <li><a href="/contact">Kontakt</a></li>
+              <li><a href="/menu">{t('footer.menu')}</a></li>
+              <li><a href="/about">{t('footer.about')}</a></li>
+              <li><a href="/contact">{t('footer.contactLink')}</a></li>
             </ul>
           </div>
         </div>
         
         <div className="footer-bottom">
-          <p>&copy; 2025 Hospůdka U Kovárny. Všechna práva vyhrazena.</p>
+          <p>{t('footer.copyright')}</p>
           <div className="footer-links">
-            <a href="#">Ochrana osobních údajů</a>
-            <a href="#">Podmínky použití</a>
+            <a href="#">{t('footer.privacy')}</a>
+            <a href="#">{t('footer.terms')}</a>
           </div>
         </div>
       </div>

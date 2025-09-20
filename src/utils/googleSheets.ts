@@ -1,7 +1,7 @@
 // Google Sheets utility for fetching menu data
 // This approach uses the public URL method (no API keys needed)
 
-export interface MenuItem {
+export interface DailyMenuItem {
   Date: string;
   Day: string;
   Type: string;
@@ -10,7 +10,7 @@ export interface MenuItem {
   Allergens: string;
 }
 
-export interface OrganizedDayData {
+export interface OrganizedDailyMenuData {
   date: string;
   day: string;
   soups: Array<{
@@ -30,16 +30,49 @@ export interface OrganizedDayData {
   info: string | null;
 }
 
-export const fetchDailyMenuFromSheet = async (sheetUrl: string): Promise<MenuItem[] | null> => {
-  try {
-    // Extract the sheet ID from the URL
-    const sheetId = extractSheetId(sheetUrl);
-    if (!sheetId) {
-      throw new Error('Invalid Google Sheets URL');
-    }
+// New interface for regular menu items
+export interface RegularMenuItem {
+  Category: string;
+  Name: string;
+  Price: string;
+  Description?: string;
+}
 
-    // Construct the CSV export URL
-    const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0`;
+export interface OrganizedRegularMenuData {
+  categories: Record<string, Array<{
+    name: string;
+    price: string;
+    description?: string;
+  }>>;
+}
+
+// New interface for drinks items
+export interface DrinksItem {
+  Category: string;
+  Name: string;
+  Price: string;
+  Description?: string;
+}
+
+export interface OrganizedDrinksData {
+  categories: Record<string, Array<{
+    name: string;
+    price: string;
+    description?: string;
+  }>>;
+}
+
+export const fetchDailyMenuFromSheet = async (
+  fileId: string, 
+  language: 'cz' | 'en' = 'cz',
+  sheetConfig: { sheets: { cz: { dailyMenu: number }, en: { dailyMenu: number } } }
+): Promise<DailyMenuItem[] | null> => {
+  try {
+    // Get the appropriate gid based on language
+    const gid = sheetConfig.sheets[language].dailyMenu;
+    
+    // Construct the CSV export URL with specific gid
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=csv&gid=${gid}`;
     
     // Fetch the CSV data
     const response = await fetch(csvUrl);
@@ -48,30 +81,78 @@ export const fetchDailyMenuFromSheet = async (sheetUrl: string): Promise<MenuIte
     }
     
     const csvText = await response.text();
-    return parseCSVToMenuData(csvText);
+    return parseDailyMenu(csvText);
   } catch (error) {
-    console.error('Error fetching menu data:', error);
+    console.error('Error fetching daily menu data:', error);
     return null;
   }
 };
 
-// Extract sheet ID from Google Sheets URL
-const extractSheetId = (url: string): string | null => {
-  const match = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
-  return match ? match[1] : null;
+// New function for fetching regular menu data
+export const fetchRegularMenuFromSheet = async (
+  fileId: string, 
+  language: 'cz' | 'en' = 'cz',
+  sheetConfig: { sheets: { cz: { regularMenu: number }, en: { regularMenu: number } } }
+): Promise<RegularMenuItem[] | null> => {
+  try {
+    // Get the appropriate gid based on language
+    const gid = sheetConfig.sheets[language].regularMenu;
+    
+    // Construct the CSV export URL with specific gid
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=csv&gid=${gid}`;
+    
+    // Fetch the CSV data
+    const response = await fetch(csvUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch regular menu data from Google Sheets');
+    }
+    
+    const csvText = await response.text();
+    return parseRegularMenuCSV(csvText);
+  } catch (error) {
+    console.error('Error fetching regular menu data:', error);
+    return null;
+  }
 };
 
-// Parse CSV data to structured menu data with proper comma handling
-const parseCSVToMenuData = (csvText: string): MenuItem[] => {
+// New function for fetching drinks data
+export const fetchDrinksFromSheet = async (
+  fileId: string, 
+  language: 'cz' | 'en' = 'cz',
+  sheetConfig: { sheets: { cz: { drinks: number }, en: { drinks: number } } }
+): Promise<DrinksItem[] | null> => {
+  try {
+    // Get the appropriate gid based on language
+    const gid = sheetConfig.sheets[language].drinks;
+    
+    // Construct the CSV export URL with specific gid
+    const csvUrl = `https://docs.google.com/spreadsheets/d/${fileId}/export?format=csv&gid=${gid}`;
+    
+    // Fetch the CSV data
+    const response = await fetch(csvUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch drinks data from Google Sheets');
+    }
+    
+    const csvText = await response.text();
+    return parseDrinksCSV(csvText);
+  } catch (error) {
+    console.error('Error fetching drinks data:', error);
+    return null;
+  }
+};
+
+// Parse CSV data to structured daily menu data with proper comma handling
+const parseDailyMenu = (csvText: string): DailyMenuItem[] => {
   const lines = csvText.split('\n');
   const headers = parseCSVLine(lines[0]);
   
-  const menuData: MenuItem[] = [];
+  const menuData: DailyMenuItem[] = [];
   
   for (let i = 1; i < lines.length; i++) {
     if (lines[i].trim()) {
       const values = parseCSVLine(lines[i]);
-      const row: Partial<MenuItem> = {};
+      const row: Partial<DailyMenuItem> = {};
       
       headers.forEach((header, index) => {
         if (header === 'Date') row.Date = values[index] || '';
@@ -83,7 +164,63 @@ const parseCSVToMenuData = (csvText: string): MenuItem[] => {
       });
       
       if (row.Date && row.Day && row.Type && row.Name) {
-        menuData.push(row as MenuItem);
+        menuData.push(row as DailyMenuItem);
+      }
+    }
+  }
+  
+  return menuData;
+};
+
+// Parse regular menu CSV data
+const parseRegularMenuCSV = (csvText: string): RegularMenuItem[] => {
+  const lines = csvText.split('\n');
+  const headers = parseCSVLine(lines[0]);
+  
+  const menuData: RegularMenuItem[] = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].trim()) {
+      const values = parseCSVLine(lines[i]);
+      const row: Partial<RegularMenuItem> = {};
+      
+      headers.forEach((header, index) => {
+        if (header === 'Category') row.Category = values[index] || '';
+        if (header === 'Name') row.Name = values[index] || '';
+        if (header === 'Price') row.Price = values[index] || '';
+        if (header === 'Description') row.Description = values[index] || '';
+      });
+      
+      if (row.Category && row.Name) {
+        menuData.push(row as RegularMenuItem);
+      }
+    }
+  }
+  
+  return menuData;
+};
+
+// Parse drinks CSV data
+const parseDrinksCSV = (csvText: string): DrinksItem[] => {
+  const lines = csvText.split('\n');
+  const headers = parseCSVLine(lines[0]);
+  
+  const menuData: DrinksItem[] = [];
+  
+  for (let i = 1; i < lines.length; i++) {
+    if (lines[i].trim()) {
+      const values = parseCSVLine(lines[i]);
+      const row: Partial<DrinksItem> = {};
+      
+      headers.forEach((header, index) => {
+        if (header === 'Category') row.Category = values[index] || '';
+        if (header === 'Name') row.Name = values[index] || '';
+        if (header === 'Price') row.Price = values[index] || '';
+        if (header === 'Description') row.Description = values[index] || '';
+      });
+      
+      if (row.Category && row.Name) {
+        menuData.push(row as DrinksItem);
       }
     }
   }
@@ -129,9 +266,9 @@ const parseCSVLine = (line: string): string[] => {
   return result;
 };
 
-// Helper function to organize menu data by day
-export const organizeMenuDataByDay = (menuData: MenuItem[]): Record<string, OrganizedDayData> => {
-  const organizedData: Record<string, OrganizedDayData> = {};
+// Helper function to organize daily menu data by day
+export const organizeDailyMenuData = (menuData: DailyMenuItem[]): Record<string, OrganizedDailyMenuData> => {
+  const organizedData: Record<string, OrganizedDailyMenuData> = {};
   
   menuData.forEach(row => {
     const date = row.Date;
@@ -180,6 +317,52 @@ export const organizeMenuDataByDay = (menuData: MenuItem[]): Record<string, Orga
   Object.values(organizedData).forEach(dayData => {
     dayData.mainDishes.forEach((dish, index) => {
       dish.number = (index + 1).toString();
+    });
+  });
+  
+  return organizedData;
+};
+
+// Helper function to organize regular menu data by category
+export const organizeRegularMenuData = (menuData: RegularMenuItem[]): OrganizedRegularMenuData => {
+  const organizedData: OrganizedRegularMenuData = {
+    categories: {}
+  };
+  
+  menuData.forEach(row => {
+    const category = row.Category;
+    
+    if (!organizedData.categories[category]) {
+      organizedData.categories[category] = [];
+    }
+    
+    organizedData.categories[category].push({
+      name: row.Name,
+      price: row.Price,
+      description: row.Description
+    });
+  });
+  
+  return organizedData;
+};
+
+// Helper function to organize drinks data by category
+export const organizeDrinksData = (menuData: DrinksItem[]): OrganizedDrinksData => {
+  const organizedData: OrganizedDrinksData = {
+    categories: {}
+  };
+  
+  menuData.forEach(row => {
+    const category = row.Category;
+    
+    if (!organizedData.categories[category]) {
+      organizedData.categories[category] = [];
+    }
+    
+    organizedData.categories[category].push({
+      name: row.Name,
+      price: row.Price,
+      description: row.Description
     });
   });
   
