@@ -18,6 +18,7 @@ function Navbar() {
           <button type="button" onClick={() => navigate('/regularmenu')} aria-label="RegularMenu">Jídelní lístek</button>
           <button type="button" onClick={() => navigate('/about')} aria-label="About">O nás</button>
           <button type="button" onClick={() => navigate('/contact')} aria-label="Contact">Kontakt</button>
+          <button type="button" onClick={() => navigate('/reservation')} aria-label="Reservation">Rezervace</button>
         </div>
       </div>
     </nav>

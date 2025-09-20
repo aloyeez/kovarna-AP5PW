@@ -6,6 +6,7 @@ import DailyMenu from './pages/DailyMenu'
 import RegularMenu from './pages/RegularMenu'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
+import Reservation from './components/Reservation';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/dailymenu" element={<DailyMenu />} />
             <Route path="/regularmenu" element={<RegularMenu />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/reservation" element={<Reservation />} />
           </Routes>
         </main>
         <Footer />

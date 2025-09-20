@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About",
+    "contact": "Contact"
+  },
+  "home": {
+    "title": "Welcome to Hospůdka U Kovárny",
+    "subtitle": "A place where honest Czech cuisine meets family comfort and friendly atmosphere. Come taste our specialties and enjoy a well-chilled beer",
+    "beerTitle": "We serve beer with character",
+    "beerDescription": "At our place, you'll find honestly cared-for beer, always properly chilled and poured with love. Taste Czech classics and original specialties from smaller breweries.",
+    "foodTitle": "Honest Czech cuisine",
+    "foodDescription": "We have focused even more on our menu with traditional Czech dishes and modern food preparation trends, guaranteeing the freshness of all ingredients used.",
+    "awardTitle": "Awards we're proud of",
+    "awardDescription": "The prestigious Hvězda sládků award is a huge commitment and confirmation for us that we pour beer with the greatest care and love for the craft.",
+    "showMenu": "View our menu"
+  },
+  "menu": {
+    "daily": "Daily Menu",
+    "regular": "Regular Menu",
+    "drinks": "Drinks",
+    "loading": "Loading all menus...",
+    "error": "Error loading menu data. Please try again later."
+  },
+  "dailyMenu": {
+    "title": "DAILY MENU",
+    "soups": "Soups",
+    "mainDishes": "Main Dishes",
+    "allergens": "Allergens",
+    "note": "Daily menu may vary. For current offers, please contact staff."
+  },
+  "regularMenu": {
+    "title": "REGULAR MENU",
+    "note": "Restaurant offers may vary. For current daily offers, visit the \"Daily Menu\" section."
+  },
+  "drinks": {
+    "title": "DRINKS",
+    "note": "Drink offers may vary. For current daily offers, visit the \"Daily Menu\" section."
+  },
+  "about": {
+    "title": "ABOUT US",
+    "subtitle": "Hospůdka U Kovárny Zlín",
+    "description": "Welcome to our traditional Czech pub, where history meets modern gastronomy.",
+    "signature": "Hospůdka U Kovárny Team",
+    "mainTitle": "Something about our Pub…",
+    "history": "Hospůdka U Kovárny was founded as a family business in 1993, and the name was suggested by local residents and neighbors who still remembered when there was a blacksmith shop opposite our pub, which was set up by blacksmith František Bartík along with an apartment from a former barn. This blacksmith shop was still in operation after World War II.",
+    "capacity": "In our restaurant, which we try to run in a family spirit, there are about 60 seats, and in the summer months, two summer gardens with an additional 50 seats are prepared for our guests.",
+    "events": "It will be our honor and pleasure to offer you the organization of events for larger groups, such as weddings, corporate parties, anniversary celebrations, graduations, etc. - don't hesitate and write to us for more non-binding information.",
+    "smoking": "Since we became a voluntarily non-smoking restaurant on May 1, 2008, we have focused even more on our menu with traditional Czech dishes and modern food preparation trends, guaranteeing the freshness of all ingredients used. Lunch menu offers are also a matter of course.",
+    "beer": "Furthermore, we would like to offer you excellent beer from Černá Hora brewery and also Plzeňský Prazdroj, which you can have poured at our place in one go, so-called \"na hladinku\". This is a little-known style, especially in Moravia, but it is the best and most gentle way of pouring beer. The result is beer at an ideal temperature of 7°C with beautiful foam similar to milk.",
+    "welcome": "We will be happy to welcome you to our Pub and will try to ensure that you leave satisfied.",
+    "visit": "We look forward to your visit.",
+    "dailyMenuTitle": "🍽️ Daily Menu",
+    "dailyMenuDesc": "Every day we prepare fresh lunch menu with traditional Czech dishes.",
+    "showMenu": "Show daily menu →"
+  },
+  "contact": {
+    "title": "CONTACT",
+    "address": "Address",
+    "phone": "Phone",
+    "email": "Email",
+    "openingHours": "Opening Hours",
+    "socialMedia": "Social Media",
+    "map": "Map",
+    "mainTitle": "Pub \"U KOVÁRNY\"",
+    "addressTitle": "📍 Address",
+    "addressText": "Lešetín I / 610<br />760 01 ZLÍN",
+    "mapNote": "(see map below the form)",
+    "phoneTitle": "📞 Phone",
+    "mobileReservation": "Mobile - reservations:",
+    "phoneNote": "(during opening hours)",
+    "mobileManager": "Mobile - manager:",
+    "emailTitle": "✉️ Email",
+    "openingHoursTitle": "🕒 Opening Hours",
+    "mondayThursday": "Mon-Thu: 11:00 - 14:00 | 17:00 - 22:00",
+    "friday": "Fri: 11:00 - 14:00 | 17:00 - 23:00",
+    "saturday": "Sat: 18:00 - 23:00",
+    "sunday": "Sun: 18:00 - 22:00",
+    "facebookTitle": "📘 Our Facebook",
+    "mapSectionTitle": "📍 Where to find us"
+  },
+  "common": {
+    "noData": "No data available.",
+    "loading": "Loading...",
+    "error": "Error loading data. Please try again later.",
+    "scrollToTop": "Scroll to top"
+  },
+  "footer": {
+    "title": "Hospůdka U Kovárny",
+    "subtitle": "Traditional Czech cuisine in a historic atmosphere",
+    "contact": "Contact",
+    "address": "📍 Lešetín I 610, 760 01 Zlín",
+    "phone": "📞 +420 775 954 945",
+    "email": "✉️ hospudka@ukovarny.cz",
+    "openingHours": "Opening Hours",
+    "mondayThursday": "Mon-Thu: 11:00 - 14:00 | 17:00 - 22:00",
+    "friday": "Fri: 11:00 - 14:00 | 17:00 - 23:00",
+    "saturday": "Sat: 18:00 - 23:00",
+    "sunday": "Sun: 18:00 - 22:00",
+    "quickLinks": "Quick Links",
+    "menu": "Menu",
+    "about": "About",
+    "contactLink": "Contact",
+    "copyright": "© 2025 Hospůdka U Kovárny. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  }
+}

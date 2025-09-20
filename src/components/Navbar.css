@@ -55,8 +55,8 @@
 
 .navbar button {
   background: transparent;
-  border: 2px solid #e6d29c;
-  color: #e6d29c;
+  border: 2px solid #f4d03f;
+  color: #f4d03f;
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
@@ -65,14 +65,14 @@
   transition: all 0.3s ease;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  box-shadow: 0 0 8px rgba(244, 208, 63, 0.3);
+  box-shadow: 0 0 8px rgba(244, 208, 63, 0.8);
 }
 
 .navbar button:hover {
-  background: #e6d29c;
+  background: #f4d03f;
   color: #1a1a1a;
   transform: translateY(-2px);
-  box-shadow: 0 0 15px rgba(189, 170, 121, 0.5), 0 4px 12px rgba(189, 170, 121, 0.4);
+  box-shadow: 0 0 15px rgba(244, 208, 63, 1), 0 4px 12px rgba(244, 208, 63, 0.8);
 }
 
 .navbar button:active {
@@ -193,4 +193,3 @@
     height: 60px;
   }
 }
-

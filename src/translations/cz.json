@@ -1,0 +1,109 @@
+{
+  "nav": {
+    "home": "Domov",
+    "menu": "Menu",
+    "about": "O nás",
+    "contact": "Kontakt"
+  },
+  "home": {
+    "title": "Vítejte v Hospůdce U Kovárny",
+    "subtitle": "Místo, kde se potkává poctivá česká kuchyně, rodinná pohoda a přátelská atmosféra. Přijďte ochutnat naše speciality a dejte si dobře vychlazené pivo",
+    "beerTitle": "Točíme pivo, které má říz",
+    "beerDescription": "U nás najdete poctivě ošetřené pivo, vždy správně vychlazené a natočené s láskou. Ochutnejte českou klasiku i originální speciály z menších pivovarů.",
+    "foodTitle": "Poctivá česká kuchyně",
+    "foodDescription": "Ještě více jsme se zaměřili na náš jídelní lístek s tradičními českými pokrmy i moderními trendy úpravy jídel se zárukou čerstvosti všech používaných surovin.",
+    "awardTitle": "Ocenění, na které jsme hrdí",
+    "awardDescription": "Prestižní ocenění Hvězda sládků je pro nás obrovským závazkem a potvrzením, že čepujeme pivo s tou největší péčí a láskou k řemeslu.",
+    "showMenu": "Podívejte se na menu"
+  },
+  "menu": {
+    "daily": "Denní Menu",
+    "regular": "Stálý Jídelní Lístek",
+    "drinks": "Nápoje",
+    "loading": "Načítání všech menu...",
+    "error": "Chyba při načítání menu. Zkuste to prosím později."
+  },
+  "dailyMenu": {
+    "title": "DENNÍ MENU",
+    "soups": "Polévky",
+    "mainDishes": "Hlavní jídla",
+    "allergens": "Alergeny",
+    "note": "Denní menu se může lišit. Pro aktuální nabídku kontaktujte personál."
+  },
+  "regularMenu": {
+    "title": "STÁLÝ JÍDELNÍ LÍSTEK",
+    "note": "Nabídka v restauraci se může lišit. Pro aktuální denní nabídku navštivte sekci \"Denní menu\"."
+  },
+  "drinks": {
+    "title": "NÁPOJE",
+    "note": "Nabídka nápojů se může lišit. Pro aktuální denní nabídku navštivte sekci \"Denní menu\"."
+  },
+  "about": {
+    "title": "O NÁS",
+    "subtitle": "Hospůdka U Kovárny Zlín",
+    "description": "Vítejte v naší tradiční české hospůdce, kde se setkává historie s moderním pojetím gastronomie.",
+    "signature": "Tým Hospůdky U Kovárny",
+    "mainTitle": "Něco o naší Hospůdce…",
+    "history": "Hospůdka U Kovárny byla založena jako rodinná firma v roce 1993 a název vznikl na popud místních starousedlíků a sousedů, kteří si ještě pamatovali, kdy naproti naší hospůdky stála kovárna, kterou si zřídil i s bytem z bývalé stodoly kovář František Bartík. V této kovárně se pracovalo ještě po 2.světové válce.",
+    "capacity": "V naší restauraci, kterou se snažíme vést v rodinném duchu, se nachází asi 60 míst a v letních měsících jsou zde pro naše hosty připraveny ještě dvě letní zahrádky s dalšími 50 místy.",
+    "events": "Bude nám ctí i potěšením nabídnout vám rovněž uspořádání akcí pro větší společnost, např. svatby, firemní večírky, oslavy jubileí, promoce apod. - neváhejte a napište si pro bližší nezávazné informace.",
+    "smoking": "Jelikož jsme se od 1.5.2008 stali dobrovolně nekuřáckou restaurací, ještě více jsme se zaměřili na náš jídelní lístek s tradičními českými pokrmy i moderními trendy úpravy jídel se zárukou čerstvosti všech používaných surovin. Samozřejmostí jsou i nabídky poledního menu.",
+    "beer": "Dále bychom vám chtěli nabídnout skvělé pivo z pivovaru Černá Hora a také Plzeňský Prazdroj, který si u nás můžete nechat načepovat na jeden zátah tzv. „na hladinku\". Jde o málo rozšířený styl, zejména na Moravě, ale přitom je to nejlepší a nejšetrnější způsob čepování piva. Výsledkem je pivo o ideální teplotě 7°C a s krásnou pěnou podobnou mléku.",
+    "welcome": "Rádi Vás uvítáme v naší Hospůdce a budeme se snažit, abyste od nás odcházeli spokojeni.",
+    "visit": "Těšíme se na Vaší návštěvu.",
+    "dailyMenuTitle": "🍽️ Denní menu",
+    "dailyMenuDesc": "Každý den připravujeme čerstvé polední menu s tradičními českými pokrmy.",
+    "showMenu": "Zobrazit denní menu →"
+  },
+  "contact": {
+    "title": "KONTAKT",
+    "address": "Adresa",
+    "phone": "Telefon",
+    "email": "Email",
+    "openingHours": "Otevírací doba",
+    "socialMedia": "Sociální sítě",
+    "map": "Mapa",
+    "mainTitle": "Hospůdka \"U KOVÁRNY\"",
+    "addressTitle": "📍 Adresa",
+    "addressText": "Lešetín I / 610<br />760 01 ZLÍN",
+    "mapNote": "(viz mapa pod formulářem)",
+    "phoneTitle": "📞 Telefon",
+    "mobileReservation": "Mobil - rezervace:",
+    "phoneNote": "(v otevírací době)",
+    "mobileManager": "Mobil - vedoucí:",
+    "emailTitle": "✉️ Email",
+    "openingHoursTitle": "🕒 Otevírací doba",
+    "mondayThursday": "Po-Čt: 11:00 - 14:00 | 17:00 - 22:00",
+    "friday": "Pá: 11:00 - 14:00 | 17:00 - 23:00",
+    "saturday": "So: 18:00 - 23:00",
+    "sunday": "Ne: 18:00 - 22:00",
+    "facebookTitle": "📘 Náš Facebook",
+    "mapSectionTitle": "📍 Kde nás najdete"
+  },
+  "common": {
+    "noData": "Žádná data nejsou k dispozici.",
+    "loading": "Načítání...",
+    "error": "Chyba při načítání dat. Zkuste to prosím později.",
+    "scrollToTop": "Scroll na vrch"
+  },
+  "footer": {
+    "title": "Hospůdka U Kovárny",
+    "subtitle": "Tradiční česká kuchyně v historické atmosféře",
+    "contact": "Kontakt",
+    "address": "📍 Lešetín I 610, 760 01 Zlín",
+    "phone": "📞 +420 775 954 945",
+    "email": "✉️ hospudka@ukovarny.cz",
+    "openingHours": "Otevírací doba",
+    "mondayThursday": "Po-Čt: 11:00 - 14:00 | 17:00 - 22:00",
+    "friday": "Pá: 11:00 - 14:00 | 17:00 - 23:00",
+    "saturday": "So: 18:00 - 23:00",
+    "sunday": "Ne: 18:00 - 22:00",
+    "quickLinks": "Rychlé odkazy",
+    "menu": "Jídelní lístek",
+    "about": "O nás",
+    "contactLink": "Kontakt",
+    "copyright": "© 2025 Hospůdka U Kovárny. Všechna práva vyhrazena.",
+    "privacy": "Ochrana osobních údajů",
+    "terms": "Podmínky použití"
+  }
+}
