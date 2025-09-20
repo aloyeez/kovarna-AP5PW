@@ -25,8 +25,7 @@ function Footer() {
           <div className="footer-section">
             <h4>Otevírací doba</h4>
             <p>Po-Čt: 11:00 - 14:00 | 17:00 - 22:00</p>
-            <p>Pá: 11:00 - 14:00 | 17:00 - 23:00</p>
-            <p>So: 18:00 - 23:00</p>
+            <p>Pá-So: 11:00 - 14:00 | 17:00 - 22:00</p>
             <p>Ne: 18:00 - 22:00</p>
           </div>
           
