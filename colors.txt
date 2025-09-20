@@ -1,7 +1,0 @@
-#644931ff - text for light bg
-#e6d29c - text for dark bg
-#7a583b - text for light bg
-#48301cff - text for light bg
-#f3d3a7ff light bg
-
-#fbeee1 bg menu
