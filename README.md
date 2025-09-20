@@ -1,20 +1,42 @@
-## Hospůdka U Kovárny – Web App
+## Hospůdka U Kovárny – Full Stack Restaurant Application
 
-Modern restaurant website built with React, TypeScript, and Vite, featuring dynamic menu management through Google Sheets integration.
+Modern restaurant reservation system with React frontend and Spring MVC backend. Features dynamic menu management through Google Sheets integration, user authentication, and comprehensive reservation management.
 
-### Tech stack
-- **Frontend**: React + TypeScript
-- **Build tool**: Vite
-- **Package manager**: pnpm
+### Tech Stack
+
+#### Frontend
+- **Framework**: React 19 + TypeScript
+- **Build Tool**: Vite
+- **Package Manager**: pnpm
 - **Styling**: Tailwind CSS v4 + Custom CSS
 - **Routing**: React Router DOM
+- **State Management**: React Context API
+- **HTTP Client**: Axios (planned)
 - **Dynamic Content**: Google Sheets integration (no API keys required)
 
+#### Backend
+- **Framework**: Spring Boot 3.x + Spring MVC
+- **Language**: Java 17+
+- **Build Tool**: Maven
+- **Database**: PostgreSQL/MySQL (JPA/Hibernate)
+- **Authentication**: JWT + Spring Security
+- **Architecture**: Multi-layered (Presentation, Application, Infrastructure, Domain)
+- **API**: RESTful Web Services
+
 ## Prerequisites
+
+### Frontend
 - **Node.js**: 18.0+ (LTS recommended)
 - **pnpm**: 9+
 
-### Install pnpm
+### Backend
+- **Java**: 17+ (JDK)
+- **Maven**: 3.8+
+- **Database**: PostgreSQL 13+ or MySQL 8.0+
+
+### Install Prerequisites
+
+#### Install pnpm
 ```bash
 # Recommended (Node 16.13+):
 corepack enable
@@ -24,49 +46,131 @@ corepack prepare pnpm@latest --activate
 npm i -g pnpm
 ```
 
-## Quick start
+#### Install Java (if not already installed)
 ```bash
-# 1) Install dependencies
-pnpm install
+# Ubuntu/Debian
+sudo apt update
+sudo apt install openjdk-17-jdk
 
-# 2) Start the dev server (http://localhost:5173 by default)
-pnpm dev
+# macOS (using Homebrew)
+brew install openjdk@17
+
+# Windows (using Chocolatey)
+choco install openjdk17
 ```
 
-### Common scripts
+## Quick Start
+
+### 1. Backend Setup
+```bash
+# Navigate to backend directory
+cd backend_kovarna
+
+# Compile and run Spring Boot application
+./mvnw spring-boot:run
+
+# Backend will start on http://localhost:8080
+```
+
+### 2. Frontend Setup
+```bash
+# Navigate to frontend directory
+cd frontend_kovarna
+
+# Install dependencies
+pnpm install
+
+# Start the dev server
+pnpm dev
+
+# Frontend will start on http://localhost:5173
+```
+
+### Common Scripts
+
+#### Frontend (`frontend_kovarna/`)
 - **dev**: start Vite dev server → `pnpm dev`
-- **build**: type-check and build for production into `dist/` → `pnpm build`
+- **build**: type-check and build for production → `pnpm build`
 - **preview**: preview the production build locally → `pnpm preview`
 - **lint**: run ESLint → `pnpm lint`
 
-## Project structure
+#### Backend (`backend_kovarna/`)
+- **run**: start Spring Boot application → `./mvnw spring-boot:run`
+- **compile**: compile Java sources → `./mvnw compile`
+- **test**: run unit tests → `./mvnw test`
+- **package**: create JAR file → `./mvnw package`
+
+## Project Structure
 ```
-.
-├─ public/                 # Static assets served as-is
-│  └─ index.html          # Main HTML file with Facebook SDK
-├─ src/
-│  ├─ assets/              # App assets (images, etc.)
-│  │  └─ logo.png          # Navbar logo (transparent PNG/SVG recommended)
-│  ├─ components/
-│  │  ├─ Navbar.tsx        # Top navigation bar with routing
-│  │  ├─ Navbar.css        # Navbar styling (dark theme, golden accents)
-│  │  ├─ Footer.tsx        # Website footer component
-│  │  └─ Footer.css        # Footer styling
-│  ├─ pages/
-│  │  ├─ Home.tsx          # Homepage component
-│  │  ├─ About.tsx         # About page with restaurant information
-│  │  ├─ DailyMenu.tsx     # Daily menu (fetches from Google Sheets)
-│  │  ├─ RegularMenu.tsx   # Permanent menu items
-│  │  └─ Contact.tsx       # Contact page with map and Facebook integration
-│  ├─ utils/
-│  │  └─ googleSheets.ts   # Google Sheets integration utilities
-│  ├─ config/
-│  │  └─ sheets.ts         # Configuration for Google Sheets URLs
-│  ├─ App.tsx              # App root component with routing
-│  ├─ main.tsx             # Vite entry point
-│  └─ index.css            # Global styles and Tailwind CSS
-├─ vite.config.ts          # Vite configuration with path aliases
-└─ tsconfig.json           # TypeScript configuration
+kovarna-AP5PW/
+├─ frontend_kovarna/       # React Frontend Application
+│  ├─ public/              # Static assets served as-is
+│  │  └─ index.html        # Main HTML file with Facebook SDK
+│  ├─ src/
+│  │  ├─ assets/           # App assets (images, etc.)
+│  │  │  └─ logo.png       # Navbar logo
+│  │  ├─ components/       # Reusable UI components
+│  │  │  ├─ Navbar.tsx     # Navigation bar with auth buttons
+│  │  │  ├─ Footer.tsx     # Website footer
+│  │  │  └─ *.css          # Component styles
+│  │  ├─ pages/            # Page components
+│  │  │  ├─ Home.tsx       # Homepage
+│  │  │  ├─ About.tsx      # About page
+│  │  │  ├─ DailyMenu.tsx  # Daily menu (Google Sheets)
+│  │  │  ├─ RegularMenu.tsx# Permanent menu
+│  │  │  ├─ Contact.tsx    # Contact page
+│  │  │  ├─ Login.tsx      # User login (planned)
+│  │  │  └─ Register.tsx   # User registration (planned)
+│  │  ├─ contexts/         # React Context providers
+│  │  │  ├─ LanguageContext.tsx # i18n support
+│  │  │  └─ AuthContext.tsx     # Auth state (planned)
+│  │  ├─ services/         # API communication (planned)
+│  │  │  ├─ api.ts         # Base API config
+│  │  │  ├─ authService.ts # Authentication API
+│  │  │  └─ reservationService.ts # Reservation API
+│  │  ├─ utils/
+│  │  │  └─ googleSheets.ts# Google Sheets integration
+│  │  ├─ config/
+│  │  │  └─ sheets.ts      # Google Sheets URLs
+│  │  ├─ translations/     # i18n translation files
+│  │  │  ├─ en.json        # English translations
+│  │  │  └─ cz.json        # Czech translations
+│  │  ├─ App.tsx           # Root component with routing
+│  │  ├─ main.tsx          # Vite entry point
+│  │  └─ index.css         # Global styles and Tailwind CSS
+│  ├─ package.json         # Frontend dependencies
+│  ├─ vite.config.ts       # Vite configuration
+│  └─ tsconfig.json        # TypeScript configuration
+│
+├─ backend_kovarna/        # Spring Boot Backend Application
+│  ├─ src/
+│  │  ├─ main/
+│  │  │  ├─ java/com/kovarna/
+│  │  │  │  ├─ presentation/      # Controllers (Presentation Layer)
+│  │  │  │  │  ├─ controllers/    # REST Controllers
+│  │  │  │  │  └─ dto/            # Data Transfer Objects
+│  │  │  │  ├─ application/       # Services (Application Layer)
+│  │  │  │  │  ├─ services/       # Business logic services
+│  │  │  │  │  └─ validators/     # Custom validation attributes
+│  │  │  │  ├─ infrastructure/    # Data Access (Infrastructure Layer)
+│  │  │  │  │  ├─ repositories/   # JPA Repositories
+│  │  │  │  │  └─ config/         # Database configuration
+│  │  │  │  ├─ domain/            # Entities (Domain Layer)
+│  │  │  │  │  ├─ entities/       # JPA Entities
+│  │  │  │  │  └─ enums/          # Domain enums
+│  │  │  │  └─ security/          # Spring Security configuration
+│  │  │  │     ├─ jwt/            # JWT token handling
+│  │  │  │     └─ config/         # Security configuration
+│  │  │  └─ resources/
+│  │  │     ├─ application.properties # Spring Boot configuration
+│  │  │     └─ db/migration/      # Database migrations
+│  │  └─ test/                    # Unit and integration tests
+│  ├─ pom.xml              # Maven dependencies
+│  ├─ mvnw                 # Maven wrapper (Unix)
+│  └─ mvnw.cmd             # Maven wrapper (Windows)
+│
+├─ README.md               # Project documentation
+└─ .gitignore             # Git ignore rules
 ```
 
 ## Features
@@ -77,16 +181,231 @@ pnpm dev
 - **Real-time Updates**: Menu changes appear instantly on the website
 - **No API Keys Required**: Uses public CSV export from Google Sheets
 
+### 🔐 User Authentication & Authorization
+- **Multi-role System**: Admin, Manager, Customer roles
+- **JWT Authentication**: Secure token-based authentication
+- **Protected Routes**: Role-based access control
+- **User Registration**: Self-service user registration
+
+### 📅 Reservation Management
+- **Customer Reservations**: Users can create, view, and cancel their reservations
+- **Table Management**: Admin/Manager can manage restaurant tables
+- **Service Management**: Configurable restaurant services
+- **Admin Dashboard**: Complete CRUD operations for all entities
+- **Manager Interface**: Limited admin access for customer-facing operations
+
 ### 🎨 Modern Design
 - **Responsive Layout**: Works on all devices (mobile, tablet, desktop)
 - **Dark Theme**: Professional restaurant aesthetic
 - **Golden Accents**: Elegant color scheme
 - **Smooth Animations**: Enhanced user experience
+- **Multilingual Support**: Czech and English translations
 
 ### 📱 Social Integration
 - **Facebook Page Plugin**: Embedded Facebook timeline
 - **Google Maps**: Interactive location map
 - **Contact Information**: Complete restaurant details
+
+### 🏗️ Architecture & Development
+- **Multi-layered Architecture**: Clean separation of concerns
+- **RESTful API**: Standard REST endpoints for frontend-backend communication
+- **Code-First Database**: JPA/Hibernate with automatic migrations
+- **Custom Validation**: Server-side validation with custom attributes
+- **Unit Testing**: Comprehensive test coverage (planned)
+- **Logging**: Application logging for monitoring and debugging (planned)
+
+## API Documentation
+
+### Base URL
+```
+http://localhost:8080/api
+```
+
+### Authentication Endpoints
+
+#### POST `/auth/register`
+Register a new user
+```json
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "email": "john.doe@example.com",
+  "password": "securePassword123",
+  "phoneNumber": "+420123456789",
+  "role": "CUSTOMER"
+}
+```
+
+#### POST `/auth/login`
+Login with existing credentials
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "securePassword123"
+}
+```
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "id": 1,
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "role": "CUSTOMER"
+  }
+}
+```
+
+### Reservation Endpoints
+
+#### GET `/reservations` (Customer)
+Get user's own reservations
+**Headers:** `Authorization: Bearer {token}`
+
+#### POST `/reservations` (Customer)
+Create a new reservation
+```json
+{
+  "tableId": 1,
+  "dateTime": "2025-09-25T19:00:00",
+  "numberOfGuests": 4,
+  "notes": "Birthday celebration",
+  "services": [1, 2]
+}
+```
+
+#### PUT `/reservations/{id}` (Customer)
+Update existing reservation (own reservations only)
+
+#### DELETE `/reservations/{id}` (Customer)
+Cancel reservation (own reservations only)
+
+### Admin/Manager Endpoints
+
+#### GET `/admin/reservations` (Admin, Manager)
+Get all reservations with filtering
+**Query Parameters:**
+- `date`: Filter by date (YYYY-MM-DD)
+- `status`: Filter by status (PENDING, CONFIRMED, CANCELLED)
+- `tableId`: Filter by table
+
+#### GET `/admin/tables` (Admin, Manager)
+Get all restaurant tables
+
+#### POST `/admin/tables` (Admin, Manager)
+Create new table
+```json
+{
+  "number": "T1",
+  "capacity": 4,
+  "location": "Main dining area",
+  "isActive": true
+}
+```
+
+#### GET `/admin/services` (Admin, Manager)
+Get all available services
+
+#### POST `/admin/services` (Admin, Manager)
+Create new service
+```json
+{
+  "name": "Wine tasting",
+  "description": "Premium wine selection",
+  "duration": 120,
+  "price": 50.00
+}
+```
+
+#### GET `/admin/users` (Admin only)
+Get all users with role management
+
+### Entity Models
+
+#### User
+```typescript
+interface User {
+  id: number
+  firstName: string
+  lastName: string
+  email: string
+  phoneNumber?: string
+  role: 'ADMIN' | 'MANAGER' | 'CUSTOMER'
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+```
+
+#### Reservation
+```typescript
+interface Reservation {
+  id: number
+  userId: number
+  tableId: number
+  dateTime: string
+  numberOfGuests: number
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
+  notes?: string
+  services: Service[]
+  createdAt: string
+  updatedAt: string
+}
+```
+
+#### Table
+```typescript
+interface Table {
+  id: number
+  number: string
+  capacity: number
+  location: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+```
+
+#### Service
+```typescript
+interface Service {
+  id: number
+  name: string
+  description: string
+  duration: number // minutes
+  price: number
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+```
+
+### Error Responses
+```json
+{
+  "error": "VALIDATION_ERROR",
+  "message": "Invalid input data",
+  "details": [
+    {
+      "field": "email",
+      "message": "Email is required"
+    }
+  ],
+  "timestamp": "2025-09-20T10:30:00Z"
+}
+```
+
+### Status Codes
+- `200`: Success
+- `201`: Created
+- `400`: Bad Request (validation errors)
+- `401`: Unauthorized (invalid/missing token)
+- `403`: Forbidden (insufficient permissions)
+- `404`: Not Found
+- `409`: Conflict (duplicate data)
+- `500`: Internal Server Error
 
 ## Google Sheets Integration
 
