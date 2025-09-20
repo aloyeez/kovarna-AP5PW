@@ -26,18 +26,11 @@ function Footer() {
           </div>
           
           <div className="footer-section">
-<<<<<<< HEAD
-            <h4>Otevírací doba</h4>
-            <p>Po-Čt: 11:00 - 14:00 | 17:00 - 22:00</p>
-            <p>Pá-So: 11:00 - 14:00 | 17:00 - 22:00</p>
-            <p>Ne: 18:00 - 22:00</p>
-=======
             <h4>{t('footer.openingHours')}</h4>
             <p>{t('footer.mondayThursday')}</p>
             <p>{t('footer.friday')}</p>
             <p>{t('footer.saturday')}</p>
             <p>{t('footer.sunday')}</p>
->>>>>>> d1b75d4bf1256bb975826898643705f674851323
           </div>
           
           <div className="footer-section">
