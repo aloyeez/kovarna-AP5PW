@@ -1,7 +1,7 @@
 .navbar {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  padding: 0.75rem 2rem;
+  padding: 0.5rem 2rem;
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: flex-start;
   gap: 2rem;
-  min-height: 100px;
+  min-height: 60px;
 }
 
 .navbar-buttons {
@@ -38,16 +38,16 @@
 }
 
 .navbar-logo img {
-  height: 110px;
+  height: 75px;
   width: auto;
-  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) brightness(0) saturate(100%) invert(89%) sepia(28%) saturate(456%) hue-rotate(359deg) brightness(103%) contrast(98%); 
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3)) brightness(0) saturate(100%) invert(89%) sepia(28%) saturate(456%) hue-rotate(359deg) brightness(103%) contrast(98%);
 }
 
 .navbar button {
   background: transparent;
   border: 2px solid #e6d29c;
   color: #e6d29c;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1.5rem;
   border-radius: 8px;
   font-weight: 600;
   font-size: 0.9rem;
@@ -258,7 +258,7 @@
   }
 
   .navbar-logo img {
-    height: 80px;
+    height: 55px;
   }
 }
 
@@ -290,7 +290,7 @@
   }
 
   .navbar-logo img {
-    height: 60px;
+    height: 40px;
   }
 
   .hamburger-menu {
