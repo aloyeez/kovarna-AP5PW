@@ -124,7 +124,7 @@
   }
   
   .footer-container {
-    padding: 0 0.5rem;
+    padding: 0 1.5rem;
     max-width: 100%;
     box-sizing: border-box;
   }
@@ -149,7 +149,7 @@
 
 @media (max-width: 480px) {
   .footer-container {
-    padding: 0 0.25rem;
+    padding: 0 1rem;
   }
   
   .footer-section h3 {
