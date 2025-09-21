@@ -68,6 +68,18 @@
   color: #e6d29c;
 }
 
+.address-link {
+  color: #cccccc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.address-link:hover {
+  color: #e6d29c;
+  text-decoration: underline;
+}
+
 .social-links {
   display: flex;
   gap: 1rem;

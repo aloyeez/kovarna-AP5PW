@@ -20,7 +20,17 @@ function Footer() {
           
           <div className="footer-section">
             <h4>{t('footer.contact')}</h4>
-            <p>{t('footer.address')}</p>
+            <p>
+              <a
+                href="https://maps.app.goo.gl/pZzrYt8NTUSZ92Dr7"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="address-link"
+                aria-label="View location on Google Maps"
+              >
+                {t('footer.address')}
+              </a>
+            </p>
             <p>{t('footer.phone')}</p>
             <p>{t('footer.email')}</p>
           </div>
