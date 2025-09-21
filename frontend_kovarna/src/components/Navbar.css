@@ -70,33 +70,38 @@
   transform: translateY(0);
 }
 
+/* Mobile controls container */
+.mobile-controls {
+  display: none;
+  align-items: center;
+  margin-left: auto;
+}
+
 /* Hamburger menu styles */
 .hamburger-menu {
-  display: none;
   background: transparent;
   border: none;
   cursor: pointer;
   padding: 0;
-  margin-left: auto;
   z-index: 1001;
-  color: #f4d03f;
+  color: #e6d29c;
   font-size: 2rem;
   font-weight: bold;
   line-height: 1;
   transition: all 0.3s ease;
-  text-shadow: 0 0 8px rgba(244, 208, 63, 0.8);
+  text-shadow: 0 0 8px rgba(230, 210, 156, 0.8);
 }
 
 .hamburger-menu:hover {
-  color: #f39c12;
-  text-shadow: 0 0 12px rgba(244, 208, 63, 1);
+  color: #e6d29c;
+  text-shadow: 0 0 15px rgba(230, 210, 156, 1);
   transform: scale(1.1);
 }
 
 /* Active state when menu is open */
 .hamburger-menu[aria-expanded="true"] {
-  color: #f39c12;
-  text-shadow: 0 0 12px rgba(244, 208, 63, 1);
+  color: #e6d29c;
+  text-shadow: 0 0 20px rgba(230, 210, 156, 1);
   transform: scale(1.1);
 }
 
@@ -152,9 +157,11 @@
 }
 
 .mobile-language-switcher {
-  margin-top: 1rem;
   display: flex;
   justify-content: center;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(230, 210, 156, 0.3);
 }
 
 /* Desktop only class */
@@ -216,7 +223,7 @@
   .navbar {
     padding: 0.75rem 1rem;
   }
-  
+
   .navbar-inner {
     flex-direction: row;
     justify-content: space-between;
@@ -226,27 +233,30 @@
     padding: 0.5rem 0;
     position: relative;
   }
-  
+
   .navbar-logo {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
-  
+
   .navbar-buttons {
     margin-right: 0 !important;
   }
-  
-  /* Show hamburger menu on mobile */
-  .hamburger-menu {
+
+  /* Show mobile controls on mobile */
+  .mobile-controls {
     display: flex;
+  }
+
+  .hamburger-menu {
     font-size: 1.15rem !important;
   }
-  
+
   /* Hide desktop navigation on mobile */
   .desktop-only {
     display: none;
   }
-  
+
   .navbar-logo img {
     height: 80px;
   }
@@ -258,39 +268,44 @@
   .navbar {
     padding: 0.5rem 0.75rem;
   }
-  
+
   .navbar-inner {
     gap: 1rem;
     padding: 0.25rem 0;
     max-width: 100%;
   }
-  
+
   .navbar-logo {
     margin-left: 0 !important;
     margin-right: 0 !important;
   }
-  
+
   .navbar-buttons {
     margin-right: 0 !important;
   }
-  
+
+  /* Ensure mobile controls display properly on small screens */
+  .mobile-controls {
+    display: flex;
+  }
+
   .navbar-logo img {
     height: 60px;
   }
-  
+
   .hamburger-menu {
     font-size: 1.75rem;
   }
-  
+
   .mobile-menu-overlay {
     min-width: 220px;
     right: 0.5rem;
   }
-  
+
   .mobile-menu-content {
     padding: 1.25rem;
   }
-  
+
   .mobile-menu-items button {
     padding: 0.875rem 1.25rem;
     font-size: 0.9rem;

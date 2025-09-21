@@ -39,16 +39,18 @@ function Navbar() {
           <img src={logo} alt="Hospůdka U Kovárny logo" />
         </Link>
 
-        {/* Hamburger menu button for mobile */}
-        <button 
-          ref={hamburgerRef}
-          className="hamburger-menu"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle mobile menu"
-          aria-expanded={isMobileMenuOpen}
-        >
-          ≡
-        </button>
+        {/* Mobile controls - hamburger menu */}
+        <div className="mobile-controls">
+          <button
+            ref={hamburgerRef}
+            className="hamburger-menu"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle mobile menu"
+            aria-expanded={isMobileMenuOpen}
+          >
+            ≡
+          </button>
+        </div>
 
         {/* Desktop navigation */}
         <div className="navbar-buttons desktop-only">

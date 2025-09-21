@@ -1,170 +1,86 @@
 .language-switcher {
-  position: relative;
   display: inline-block;
 }
 
-.language-button {
+.language-toggle {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  color: #666;
-  border: none;
+  background: transparent;
+  border: 2px solid #e6d29c;
+  color: #e6d29c;
+  padding: 0.75rem 1.5rem;
   border-radius: 8px;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
+  cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 8px rgba(230, 210, 156, 0.3);
+  font-family: 'Noto Color Emoji', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.language-button:hover {
-  background: rgba(230, 210, 156, 0.1);
+.language-toggle:hover {
+  background: #e6d29c;
+  color: #1a1a1a;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0 15px rgba(189, 170, 121, 0.5), 0 4px 12px rgba(189, 170, 121, 0.4);
 }
 
-.language-button:active {
+.language-toggle:active {
   transform: translateY(0);
 }
 
-.flag-icon {
-  display: inline-block;
-  border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-  margin-right: 8px;
-}
-
-.language-flag {
-  display: flex;
-  align-items: center;
-}
-
-.language-code {
-  font-weight: bold;
-  letter-spacing: 0.5px;
-}
-
-.dropdown-arrow {
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-}
-
-.dropdown-arrow.open {
-  transform: rotate(180deg);
-}
-
-.language-dropdown {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  margin-top: 0.75rem;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  backdrop-filter: blur(15px);
-  border-radius: 12px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15), 0 4px 16px rgba(230, 210, 156, 0.1);
-  border: 2px solid #e6d29c;
-  overflow: hidden;
-  z-index: 1000;
-  min-width: 200px;
-  max-width: calc(100vw - 1rem);
-  animation: slideDown 0.3s ease;
-  padding: 0.5rem 0;
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
 .language-option {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
-  padding: 1rem 1.5rem;
-  border: none;
-  background: none;
-  cursor: pointer;
   transition: all 0.3s ease;
-  text-align: left;
-  font-size: 0.95rem;
-  color: #e6d29c;
-  border-bottom: 1px solid rgba(230, 210, 156, 0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.language-option:last-child {
-  border-bottom: none;
-}
-
-.language-option:hover {
-  background: linear-gradient(135deg, rgba(230, 210, 156, 0.15) 0%, rgba(230, 210, 156, 0.05) 100%);
-  transform: translateX(5px);
-  color: #ffffff;
+  font-weight: 600;
 }
 
 .language-option.active {
-  background: linear-gradient(135deg, rgba(230, 210, 156, 0.25) 0%, rgba(230, 210, 156, 0.15) 100%);
-  color: #ffffff;
-  font-weight: 600;
-  border-left: 4px solid #e6d29c;
-  margin-left: 0;
-  padding-left: calc(1.5rem - 4px);
+  color: inherit;
+  text-shadow: 0 0 8px rgba(230, 210, 156, 0.8);
 }
 
-.language-option .language-name {
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.language-option.inactive {
+  opacity: 0.6;
 }
 
-/* Responsive adjustments */
+.language-toggle:hover .language-option.active {
+  color: inherit;
+  text-shadow: 0 0 8px rgba(26, 26, 26, 0.8);
+}
+
+.language-toggle:hover .language-option.inactive {
+  opacity: 0.8;
+  color: inherit;
+}
+
+.language-separator {
+  margin: 0 0.5rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+/* Mobile responsive adjustments */
 @media (max-width: 768px) {
-  .language-button {
-    padding: 0.4rem 0.8rem;
+  .language-toggle {
+    padding: 0.5rem 1rem;
     font-size: 0.8rem;
   }
-  
-  .language-dropdown {
-    min-width: 120px;
-    max-width: calc(100vw - 1rem);
-    right: 0.5rem;
-  }
-  
-  .language-option {
-    padding: 0.625rem 1.25rem;
-    font-size: 0.8rem;
+
+  .language-separator {
+    margin: 0 0.3rem;
   }
 }
 
 @media (max-width: 480px) {
-  .language-button {
-    padding: 0.3rem 0.6rem;
+  .language-toggle {
+    padding: 0.4rem 0.8rem;
     font-size: 0.75rem;
+    letter-spacing: 0.3px;
   }
-  
-  .language-dropdown {
-    min-width: 100px;
-    max-width: calc(100vw - 1rem);
-    right: 0.25rem;
-  }
-  
-  .language-flag {
-    font-size: 1rem;
-  }
-  
-  .language-code {
-    display: none; /* Hide language code on very small screens */
+
+  .language-separator {
+    margin: 0 0.25rem;
   }
 }
