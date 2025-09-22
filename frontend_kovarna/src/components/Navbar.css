@@ -22,7 +22,6 @@
   align-items: center;
   gap: 1.5rem;
   margin-left: auto;
-  margin-right: -12rem;
 }
 
 .navbar-logo {
@@ -30,7 +29,6 @@
   align-items: center;
   transition: transform 0.3s ease;
   margin-right: auto;
-  margin-left: -12rem;
 }
 
 .navbar-logo:hover {
@@ -171,51 +169,27 @@
 
 /* Responsive design using standard breakpoints */
 
-/* XXL (≥ 1400px) - Large monitors */
+/* Large screens (≥ 1400px) - Add extended margins only for very large screens */
 @media (min-width: 1400px) {
-  .navbar-logo {
-    margin-left: -12rem;
-  }
-  
-  .navbar-buttons {
-    margin-right: -12rem;
+  .navbar-inner {
+    max-width: 1400px;
+    padding: 0 4rem;
   }
 }
 
-/* Extra large (1200px – 1399px) - Desktop */
-@media (max-width: 1399px) and (min-width: 1200px) {
-  .navbar-logo {
-    margin-left: -8rem;
-  }
-  
-  .navbar-buttons {
-    margin-right: -8rem;
+/* Medium to large screens (992px – 1399px) - Standard desktop */
+@media (min-width: 992px) and (max-width: 1399px) {
+  .navbar-inner {
+    max-width: 1200px;
+    padding: 0 2rem;
   }
 }
 
-/* Large (992px – 1199px) - Notebook, smaller desktop */
-@media (max-width: 1199px) and (min-width: 992px) {
-  .navbar-logo {
-    margin-left: 0rem;
-  }
-  
-  .navbar-buttons {
-    margin-right: 0rem;
-  }
-}
-
-/* Medium (768px – 991px) - Tablet landscape */
-@media (max-width: 991px) and (min-width: 768px) {
-  .navbar-logo {
-    margin-left: 0;
-  }
-  
-  .navbar-buttons {
-    margin-right: 0;
-  }
-  
+/* Tablet and small desktop (768px – 991px) */
+@media (max-width: 991px) {
   .navbar-inner {
     justify-content: space-between;
+    padding: 0 1rem;
   }
 }
 

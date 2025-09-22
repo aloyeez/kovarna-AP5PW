@@ -67,7 +67,7 @@
     "addressTitle": "📍 Adresa",
     "addressText": "Lešetín I / 610<br />760 01 ZLÍN",
     "mapNote": "(viz mapa pod formulářem)",
-    "phoneTitle": "📞 Telefon",
+    "phoneTitle": "📧 Kontakt",
     "mobileReservation": "Mobil - rezervace:",
     "phoneNote": "(v otevírací době)",
     "mobileManager": "Mobil - vedoucí:",
@@ -78,7 +78,12 @@
     "saturday": "So: 18:00 - 23:00",
     "sunday": "Ne: 18:00 - 22:00",
     "facebookTitle": "📘 Náš Facebook",
-    "mapSectionTitle": "📍 Kde nás najdete"
+    "mapSectionTitle": "📍 Kde nás najdete",
+    "featuresTitle": "🏠 Vybavení restaurace",
+    "dailyMenu": "Denní obědové menu",
+    "outdoorSeating": "Venkovní posezení",
+    "cardsAccepted": "Platba kartou",
+    "petFriendly": "Vítáme mazlíčky"
   },
   "common": {
     "noData": "Žádná data nejsou k dispozici.",
