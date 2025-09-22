@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Database Configuration ###
+# Exclude any files with actual database credentials
+application-local.properties
+application-prod.properties

@@ -34,6 +34,70 @@ Modern restaurant reservation system with React frontend and Spring MVC backend.
 - **Maven**: 3.8+
 - **Database**: PostgreSQL 13+ or MySQL 8.0+
 
+## Database Setup
+
+### PostgreSQL Installation and Configuration
+
+1. **Install PostgreSQL on Ubuntu/Debian:**
+   ```bash
+   sudo apt update
+   sudo apt install postgresql postgresql-contrib -y
+   sudo systemctl start postgresql
+   sudo systemctl enable postgresql
+   ```
+
+2. **Create Database and User:**
+   ```bash
+   # Connect to PostgreSQL as postgres user
+   sudo -u postgres psql
+
+   # Create database and user
+   CREATE DATABASE kovarna_db;
+   CREATE USER kovarna_user WITH PASSWORD 'your_secure_password';
+   GRANT ALL PRIVILEGES ON DATABASE kovarna_db TO kovarna_user;
+   \q
+   ```
+
+3. **Set Environment Variable:**
+   ```bash
+   # Set the database password as environment variable
+   export DB_PASSWORD=your_secure_password
+
+   # Add to ~/.bashrc for persistence
+   echo 'export DB_PASSWORD=your_secure_password' >> ~/.bashrc
+   source ~/.bashrc
+   ```
+
+4. **Configure Remote Access (Optional):**
+   If you need to connect from a different server:
+   ```bash
+   # Edit postgresql.conf
+   sudo nano /etc/postgresql/16/main/postgresql.conf
+   # Change: listen_addresses = 'localhost' to listen_addresses = '*'
+
+   # Edit pg_hba.conf
+   sudo nano /etc/postgresql/16/main/pg_hba.conf
+   # Add line: host kovarna_db kovarna_user 0.0.0.0/0 md5
+
+   # Restart PostgreSQL
+   sudo systemctl restart postgresql
+   ```
+
+### Database Configuration Files
+
+The project uses environment variables for secure database configuration:
+
+- **`application.properties`**: Contains database configuration with environment variable placeholders
+- **`application.properties.example`**: Template file showing required configuration structure
+- **Environment Variable Required**: `DB_PASSWORD` must be set before running the application
+
+### Security Notes
+
+- Database passwords are never stored in the repository
+- Use the `DB_PASSWORD` environment variable for the database password
+- The `application.properties.example` file shows the required configuration structure
+- For production, consider using additional environment variables for database URL and username
+
 ### Install Prerequisites
 
 #### Install pnpm
