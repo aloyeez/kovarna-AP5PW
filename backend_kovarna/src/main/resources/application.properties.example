@@ -1,0 +1,13 @@
+spring.application.name=backend_kovarna
+
+# Database Configuration
+# Copy this file to application.properties and set the DB_PASSWORD environment variable
+spring.datasource.url=jdbc:postgresql://localhost:5432/kovarna_db
+spring.datasource.username=kovarna_user
+spring.datasource.password=${DB_PASSWORD}
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA/Hibernate Configuration
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
