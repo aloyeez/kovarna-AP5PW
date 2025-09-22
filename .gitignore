@@ -50,8 +50,7 @@ build/
 
 ### Database Configuration ###
 # Exclude any files with actual database credentials
-application-local.properties
-application-prod.properties
+application.properties
 
 # Editor directories and files
 .DS_Store
