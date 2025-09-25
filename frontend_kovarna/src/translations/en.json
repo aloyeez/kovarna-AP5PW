@@ -6,7 +6,8 @@
     "about": "About",
     "contact": "Contact",
     "login": "Login",
-    "signup": "Sign Up"
+    "signup": "Sign Up",
+    "signIn": "Sign In"
   },
   "home": {
     "title": "Welcome to Hospůdka U Kovárny",
@@ -142,6 +143,15 @@
       "reservations": "My Reservations",
       "settings": "Account Settings",
       "logout": "Logout"
+    },
+    "dropdown": {
+      "title": "Welcome Back!",
+      "subtitle": "Sign in to your account",
+      "rememberMe": "Remember me",
+      "forgotPassword": "Forgot password?",
+      "or": "or",
+      "newCustomer": "New to Hospůdka U Kovárny?",
+      "createAccount": "Create Account"
     }
   },
   "reservations": {

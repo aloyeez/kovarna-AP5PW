@@ -6,7 +6,8 @@
     "about": "O nás",
     "contact": "Kontakt",
     "login": "Přihlásit",
-    "signup": "Registrace"
+    "signup": "Registrace",
+    "signIn": "Přihlásit se"
   },
   "home": {
     "title": "Vítejte v Hospůdce U Kovárny",
@@ -142,6 +143,15 @@
       "reservations": "Moje rezervace",
       "settings": "Nastavení účtu",
       "logout": "Odhlásit"
+    },
+    "dropdown": {
+      "title": "Vítejte zpět!",
+      "subtitle": "Přihlaste se ke svému účtu",
+      "rememberMe": "Zapamatovat si mě",
+      "forgotPassword": "Zapomněli jste heslo?",
+      "or": "nebo",
+      "newCustomer": "Nový host Hospůdky U Kovárny?",
+      "createAccount": "Vytvořit účet"
     }
   },
   "reservations": {

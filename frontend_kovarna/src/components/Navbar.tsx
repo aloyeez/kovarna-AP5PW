@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import logo from '@/assets/logo.png'
 import LanguageSwitcher from './LanguageSwitcher'
 import UserDropdown from './UserDropdown'
+import AuthDropdown from './AuthDropdown'
 import { useLanguage } from '../contexts/LanguageContext'
 import { useAuth } from '../contexts/AuthContext'
 import './Navbar.css'
@@ -56,47 +57,45 @@ function Navbar() {
         </div>
 
         {/* Desktop navigation */}
-        <div className="navbar-buttons desktop-only">
-          <button type="button" onClick={() => navigate('/')} aria-label="Home">
-            {t('nav.home')}
-          </button>
-          <button type="button" onClick={() => navigate('/menu')} aria-label="Menu">
-            {t('nav.menu')}
-          </button>
-          <button type="button" onClick={() => navigate('/reservations')} aria-label="Reservations">
-            {t('nav.reservations')}
-          </button>
-          <button type="button" onClick={() => navigate('/about')} aria-label="About">
-            {t('nav.about')}
-          </button>
-          <button type="button" onClick={() => navigate('/contact')} aria-label="Contact">
-            {t('nav.contact')}
-          </button>
-          <LanguageSwitcher />
+        <div className="navbar-content desktop-only">
+          {/* Main navigation section */}
+          <div className="navbar-nav">
+            <button type="button" onClick={() => navigate('/')} aria-label="Home">
+              {t('nav.home')}
+            </button>
+            <button type="button" onClick={() => navigate('/menu')} aria-label="Menu">
+              {t('nav.menu')}
+            </button>
+            <button
+              type="button"
+              className="reservations-button"
+              onClick={() => navigate('/reservations')}
+              aria-label="Reservations"
+            >
+              {t('nav.reservations')}
+            </button>
+            <button type="button" onClick={() => navigate('/about')} aria-label="About">
+              {t('nav.about')}
+            </button>
+            <button type="button" onClick={() => navigate('/contact')} aria-label="Contact">
+              {t('nav.contact')}
+            </button>
+          </div>
 
-          {/* Authentication section */}
-          {isAuthenticated ? (
-            <UserDropdown />
-          ) : (
-            <div className="auth-buttons">
-              <button
-                type="button"
-                className="auth-button login-button"
-                onClick={() => navigate('/login')}
-                aria-label="Login"
-              >
-                {t('nav.login')}
-              </button>
-              <button
-                type="button"
-                className="auth-button signup-button"
-                onClick={() => navigate('/signup')}
-                aria-label="Sign Up"
-              >
-                {t('nav.signup')}
-              </button>
+          {/* Actions section */}
+          <div className="navbar-actions">
+            <div className="language-section">
+              <LanguageSwitcher />
             </div>
-          )}
+
+            <div className="auth-section">
+              {isAuthenticated ? (
+                <UserDropdown />
+              ) : (
+                <AuthDropdown />
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Mobile navigation overlay */}
@@ -125,19 +124,29 @@ function Navbar() {
                   <div className="mobile-auth-buttons">
                     <button
                       type="button"
-                      className="auth-button login-button"
+                      className="nav-button mobile-signin-button"
                       onClick={() => { navigate('/login'); setIsMobileMenuOpen(false); }}
-                      aria-label="Login"
+                      aria-label="Sign In"
                     >
-                      {t('nav.login')}
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <path
+                          d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+                      </svg>
+                      {t('nav.signIn')}
                     </button>
                     <button
                       type="button"
-                      className="auth-button signup-button"
+                      className="nav-button mobile-signup-button"
                       onClick={() => { navigate('/signup'); setIsMobileMenuOpen(false); }}
-                      aria-label="Sign Up"
+                      aria-label="Create Account"
                     >
-                      {t('nav.signup')}
+                      {t('auth.dropdown.createAccount')}
                     </button>
                   </div>
                 )}
