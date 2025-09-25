@@ -56,7 +56,7 @@ function Login() {
           )}
 
           <div className="form-group">
-            <label htmlFor="username">{t('auth.login.username')}</label>
+            <label htmlFor="username">Email</label>
             <input
               type="text"
               id="username"

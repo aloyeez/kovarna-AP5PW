@@ -80,10 +80,6 @@ function AuthDropdown() {
     navigate('/signup', { state: { from: location } })
   }
 
-  const handleForgotPasswordClick = () => {
-    setIsOpen(false)
-    navigate('/forgot-password')
-  }
 
   return (
     <div className="auth-dropdown-container">
@@ -128,7 +124,7 @@ function AuthDropdown() {
                 name="username"
                 value={formData.username}
                 onChange={handleChange}
-                placeholder={t('auth.login.username')}
+                placeholder="Email"
                 required
                 disabled={isLoading}
                 autoComplete="username"
@@ -160,15 +156,6 @@ function AuthDropdown() {
                 />
                 <span>{t('auth.dropdown.rememberMe')}</span>
               </label>
-
-              <button
-                type="button"
-                className="forgot-link"
-                onClick={handleForgotPasswordClick}
-                disabled={isLoading}
-              >
-                {t('auth.dropdown.forgotPassword')}
-              </button>
             </div>
 
             <button
@@ -180,9 +167,7 @@ function AuthDropdown() {
             </button>
           </form>
 
-          <div className="auth-dropdown-divider">
-            <span>{t('auth.dropdown.or')}</span>
-          </div>
+          <div className="auth-dropdown-divider"></div>
 
           <div className="auth-dropdown-signup">
             <p>{t('auth.dropdown.newCustomer')}</p>

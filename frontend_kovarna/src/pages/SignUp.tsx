@@ -9,9 +9,7 @@ function SignUp() {
     username: '',
     email: '',
     password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: ''
+    confirmPassword: ''
   })
   const [errors, setErrors] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -68,9 +66,7 @@ function SignUp() {
       await register({
         username: formData.username,
         email: formData.email,
-        password: formData.password,
-        firstName: formData.firstName || undefined,
-        lastName: formData.lastName || undefined
+        password: formData.password
       })
       navigate(from, { replace: true })
     } catch (err: any) {
@@ -96,33 +92,6 @@ function SignUp() {
             </div>
           )}
 
-          <div className="form-row">
-            <div className="form-group">
-              <label htmlFor="firstName">{t('auth.signup.firstName')}</label>
-              <input
-                type="text"
-                id="firstName"
-                name="firstName"
-                value={formData.firstName}
-                onChange={handleChange}
-                disabled={isLoading}
-                autoComplete="given-name"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="lastName">{t('auth.signup.lastName')}</label>
-              <input
-                type="text"
-                id="lastName"
-                name="lastName"
-                value={formData.lastName}
-                onChange={handleChange}
-                disabled={isLoading}
-                autoComplete="family-name"
-              />
-            </div>
-          </div>
 
           <div className="form-group">
             <label htmlFor="username">{t('auth.signup.username')} *</label>
