@@ -3,12 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
   padding: 0;
 }
 
 .signup-card {
-  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
   border-radius: 16px;
   padding: 3rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
