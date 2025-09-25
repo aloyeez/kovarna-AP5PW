@@ -159,8 +159,8 @@
   left: 0;
   right: 0;
   background: #1a1a1a;
-  border: 2px solid #e6d29c;
-  border-top: none;
+  border-top: 2px solid #e6d29c;
+  border-bottom: 2px solid #e6d29c;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
   z-index: 1000;
   animation: slideDown 0.3s ease;
@@ -289,12 +289,8 @@
 
 /* Switch to mobile layout */
 @media (max-width: 991px) {
-  .navbar {
-    background: #1a1a1a !important;
-  }
-
   .mobile-menu-overlay {
-    background: #1a1a1a !important;
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%) !important;
   }
 
   .desktop-only {
