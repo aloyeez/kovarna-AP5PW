@@ -158,7 +158,7 @@
   top: 100%;
   left: 0;
   right: 0;
-  background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+  background: #1a1a1a;
   border: 2px solid #e6d29c;
   border-top: none;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
@@ -198,6 +198,16 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  background: transparent;
+  border: 1px solid #e6d29c;
+  color: #e6d29c;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-items button:hover {
+  background: rgba(230, 210, 156, 0.1);
+  transform: translateY(-1px);
+  box-shadow: 0 0 15px rgba(230, 210, 156, 0.4);
 }
 
 .mobile-auth-buttons {
@@ -279,6 +289,14 @@
 
 /* Switch to mobile layout */
 @media (max-width: 991px) {
+  .navbar {
+    background: #1a1a1a !important;
+  }
+
+  .mobile-menu-overlay {
+    background: #1a1a1a !important;
+  }
+
   .desktop-only {
     display: none;
   }
