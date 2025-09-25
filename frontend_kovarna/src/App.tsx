@@ -56,16 +56,8 @@ function AppContent() {
             <Contact />
           </main>
         } />
-        <Route path="/login" element={
-          <main className="main-content">
-            <Login />
-          </main>
-        } />
-        <Route path="/signup" element={
-          <main className="main-content">
-            <SignUp />
-          </main>
-        } />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/reservations" element={
           <ProtectedRoute>
             <main className="main-content">
