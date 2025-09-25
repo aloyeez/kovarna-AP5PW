@@ -84,16 +84,16 @@ function Navbar() {
 
           {/* Actions section */}
           <div className="navbar-actions">
-            <div className="language-section">
-              <LanguageSwitcher />
-            </div>
-
             <div className="auth-section">
               {isAuthenticated ? (
                 <UserDropdown />
               ) : (
                 <AuthDropdown />
               )}
+            </div>
+
+            <div className="language-section">
+              <LanguageSwitcher />
             </div>
           </div>
         </div>
