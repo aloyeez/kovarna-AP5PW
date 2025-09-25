@@ -7,7 +7,8 @@ import './Login.css'
 function Login() {
   const [formData, setFormData] = useState({
     username: '',
-    password: ''
+    password: '',
+    rememberMe: false
   })
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -20,9 +21,10 @@ function Login() {
   const from = location.state?.from?.pathname || '/'
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: type === 'checkbox' ? checked : value
     }))
   }
 
@@ -81,6 +83,19 @@ function Login() {
               disabled={isLoading}
               autoComplete="current-password"
             />
+          </div>
+
+          <div className="form-options">
+            <label className="remember-me">
+              <input
+                type="checkbox"
+                name="rememberMe"
+                checked={formData.rememberMe}
+                onChange={handleChange}
+                disabled={isLoading}
+              />
+              <span>Remember me</span>
+            </label>
           </div>
 
           <button
