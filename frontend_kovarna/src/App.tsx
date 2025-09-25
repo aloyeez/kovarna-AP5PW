@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
+import ProtectedRoute from './components/ProtectedRoute'
 import About from './pages/About'
 import Menu from './pages/Menu'
 import DailyMenu from './pages/DailyMenu'
@@ -9,8 +10,12 @@ import RegularMenu from './pages/RegularMenu'
 import Drinks from './pages/Drinks'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
+import Login from './pages/Login'
+import SignUp from './pages/SignUp'
+import Reservations from './pages/Reservations'
 import { useScrollToTop } from './hooks/useScrollToTop'
 import { LanguageProvider } from './contexts/LanguageContext'
+import { AuthProvider } from './contexts/AuthContext'
 
 function AppContent() {
   // This hook will scroll to top on every route change
@@ -51,6 +56,23 @@ function AppContent() {
             <Contact />
           </main>
         } />
+        <Route path="/login" element={
+          <main className="main-content">
+            <Login />
+          </main>
+        } />
+        <Route path="/signup" element={
+          <main className="main-content">
+            <SignUp />
+          </main>
+        } />
+        <Route path="/reservations" element={
+          <ProtectedRoute>
+            <main className="main-content">
+              <Reservations />
+            </main>
+          </ProtectedRoute>
+        } />
       </Routes>
       <Footer />
       <ScrollToTopButton />
@@ -61,9 +83,11 @@ function AppContent() {
 function App() {
   return (
     <LanguageProvider>
-      <Router>
-        <AppContent />
-      </Router>
+      <AuthProvider>
+        <Router>
+          <AppContent />
+        </Router>
+      </AuthProvider>
     </LanguageProvider>
   )
 }

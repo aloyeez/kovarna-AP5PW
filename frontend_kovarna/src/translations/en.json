@@ -2,8 +2,11 @@
   "nav": {
     "home": "Home",
     "menu": "Menu",
+    "reservations": "Reservations",
     "about": "About",
-    "contact": "Contact"
+    "contact": "Contact",
+    "login": "Login",
+    "signup": "Sign Up"
   },
   "home": {
     "title": "Welcome to Hospůdka U Kovárny",
@@ -110,5 +113,57 @@
     "copyright": "© 2025 Hospůdka U Kovárny. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use"
+  },
+  "auth": {
+    "login": {
+      "title": "Login to Your Account",
+      "username": "Username",
+      "password": "Password",
+      "loginButton": "Login",
+      "noAccount": "Don't have an account?",
+      "signUpLink": "Sign up here",
+      "error": "Invalid username or password"
+    },
+    "signup": {
+      "title": "Create Your Account",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "signupButton": "Sign Up",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Login here",
+      "error": "Registration failed. Please try again."
+    },
+    "userDropdown": {
+      "profile": "My Profile",
+      "reservations": "My Reservations",
+      "settings": "Account Settings",
+      "logout": "Logout"
+    }
+  },
+  "reservations": {
+    "title": "Make a Reservation",
+    "loginRequired": "Please log in to make a reservation",
+    "date": "Date",
+    "time": "Time",
+    "guests": "Number of Guests",
+    "specialRequests": "Special Requests",
+    "name": "Name",
+    "phone": "Phone Number",
+    "email": "Email",
+    "submitButton": "Reserve Table",
+    "success": "Reservation successfully created!",
+    "error": "Failed to create reservation. Please try again.",
+    "myReservations": {
+      "title": "My Reservations",
+      "noReservations": "You have no reservations yet.",
+      "upcoming": "Upcoming Reservations",
+      "past": "Past Reservations",
+      "cancel": "Cancel",
+      "modify": "Modify"
+    }
   }
 }
