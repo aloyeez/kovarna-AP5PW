@@ -1,9 +1,13 @@
 {
   "nav": {
-    "home": "Domov",
+    "home": "Domů",
     "menu": "Menu",
+    "reservations": "Rezervace",
     "about": "O nás",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "login": "Přihlásit",
+    "signup": "Registrace",
+    "signIn": "Přihlásit se"
   },
   "home": {
     "title": "Vítejte v Hospůdce U Kovárny",
@@ -110,5 +114,66 @@
     "copyright": "© 2025 Hospůdka U Kovárny. Všechna práva vyhrazena.",
     "privacy": "Ochrana osobních údajů",
     "terms": "Podmínky použití"
+  },
+  "auth": {
+    "login": {
+      "title": "Přihlásit se k účtu",
+      "username": "Uživatelské jméno",
+      "password": "Heslo",
+      "loginButton": "Přihlásit",
+      "noAccount": "Nemáte účet?",
+      "signUpLink": "Zaregistrujte se zde",
+      "error": "Neplatné uživatelské jméno nebo heslo"
+    },
+    "signup": {
+      "title": "Vytvořit nový účet",
+      "username": "Uživatelské jméno",
+      "email": "E-mail",
+      "password": "Heslo",
+      "confirmPassword": "Potvrdit heslo",
+      "firstName": "Křestní jméno",
+      "lastName": "Příjmení",
+      "signupButton": "Registrovat",
+      "hasAccount": "Už máte účet?",
+      "loginLink": "Přihlaste se zde",
+      "error": "Registrace se nezdařila. Zkuste to prosím znovu."
+    },
+    "userDropdown": {
+      "profile": "Můj profil",
+      "reservations": "Moje rezervace",
+      "settings": "Nastavení účtu",
+      "logout": "Odhlásit"
+    },
+    "dropdown": {
+      "title": "Vítejte zpět!",
+      "subtitle": "Přihlaste se ke svému účtu",
+      "rememberMe": "Zapamatovat si mě",
+      "forgotPassword": "Zapomněli jste heslo?",
+      "or": "nebo",
+      "newCustomer": "Nový host Hospůdky U Kovárny?",
+      "createAccount": "Vytvořit účet"
+    }
+  },
+  "reservations": {
+    "title": "Rezervace stolu",
+    "loginRequired": "Pro vytvoření rezervace se prosím přihlaste",
+    "date": "Datum",
+    "time": "Čas",
+    "guests": "Počet hostů",
+    "specialRequests": "Speciální požadavky",
+    "name": "Jméno",
+    "phone": "Telefon",
+    "email": "E-mail",
+    "submitButton": "Rezervovat stůl",
+    "success": "Rezervace byla úspěšně vytvořena!",
+    "error": "Nepodařilo se vytvořit rezervaci. Zkuste to prosím znovu.",
+    "myReservations": {
+      "title": "Moje rezervace",
+      "noReservations": "Zatím nemáte žádné rezervace.",
+      "upcoming": "Nadcházející rezervace",
+      "past": "Minulé rezervace",
+      "cancel": "Zrušit",
+      "modify": "Upravit"
+    }
   }
 }
