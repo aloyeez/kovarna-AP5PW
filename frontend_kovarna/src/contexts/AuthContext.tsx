@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { authService } from '../services/authService'
 
 interface User {
   id: string
@@ -14,7 +15,7 @@ interface AuthContextType {
   isLoading: boolean
   login: (username: string, password: string) => Promise<void>
   register: (userData: RegisterData) => Promise<void>
-  logout: () => void
+  logout: () => Promise<void>
   isAuthenticated: boolean
 }
 
@@ -56,20 +57,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const login = async (username: string, password: string): Promise<void> => {
     try {
-      const response = await fetch('http://markoshub.com:6913/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Login failed')
-      }
-
-      const data = await response.json()
+      const data = await authService.login({ username, password })
       const { token: authToken, user: userData } = data
 
       setToken(authToken)
@@ -86,27 +74,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const register = async (userData: RegisterData): Promise<void> => {
     try {
-      const response = await fetch('http://markoshub.com:6913/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      })
+      const registeredUser = await authService.register(userData)
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Registration failed')
-      }
-
-      const data = await response.json()
-      const { token: authToken, user: registeredUser } = data
-
-      setToken(authToken)
+      // Note: Current backend doesn't return token on registration
+      // You'll need to login after registration or modify backend
       setUser(registeredUser)
 
-      // Save to localStorage
-      localStorage.setItem('auth_token', authToken)
+      // For now, user needs to login after registration
+      // since backend doesn't return token on registration
       localStorage.setItem('auth_user', JSON.stringify(registeredUser))
     } catch (error) {
       console.error('Registration error:', error)
@@ -114,11 +89,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  const logout = (): void => {
+  const logout = async (): Promise<void> => {
+    await authService.logout()
     setUser(null)
     setToken(null)
-    localStorage.removeItem('auth_token')
-    localStorage.removeItem('auth_user')
   }
 
   const value: AuthContextType = {

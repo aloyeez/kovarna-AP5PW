@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
@@ -7,9 +7,9 @@ import './Login.css'
 function Login() {
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
-    rememberMe: false
+    password: ''
   })
+  const [successMessage, setSuccessMessage] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -20,11 +20,25 @@ function Login() {
 
   const from = location.state?.from?.pathname || '/'
 
+  // Check for success message from registration
+  useEffect(() => {
+    if (location.state?.successMessage) {
+      setSuccessMessage(location.state.successMessage)
+      // Pre-fill username if provided from registration
+      if (location.state.username) {
+        setFormData(prev => ({
+          ...prev,
+          username: location.state.username
+        }))
+      }
+    }
+  }, [location.state])
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }))
   }
 
@@ -51,6 +65,12 @@ function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+          {successMessage && (
+            <div className="success-message" style={{ color: 'green', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '0.375rem' }}>
+              {successMessage}
+            </div>
+          )}
+
           {error && (
             <div className="error-message">
               {error}
@@ -85,18 +105,6 @@ function Login() {
             />
           </div>
 
-          <div className="form-options">
-            <label className="remember-me">
-              <input
-                type="checkbox"
-                name="rememberMe"
-                checked={formData.rememberMe}
-                onChange={handleChange}
-                disabled={isLoading}
-              />
-              <span>Remember me</span>
-            </label>
-          </div>
 
           <button
             type="submit"
