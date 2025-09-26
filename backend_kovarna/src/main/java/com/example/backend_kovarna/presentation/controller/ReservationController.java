@@ -23,6 +23,7 @@ public class ReservationController {
 
     private final ReservationService reservationService;
     private final ReservationSlotService slotService;
+
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(
             @AuthenticationPrincipal User user,
