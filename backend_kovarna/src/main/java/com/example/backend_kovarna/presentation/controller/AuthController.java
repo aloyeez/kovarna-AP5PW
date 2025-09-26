@@ -7,6 +7,8 @@ import com.example.backend_kovarna.domain.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,5 +21,13 @@ public class AuthController {
     public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRegistrationDto dto) {
         User user = authService.registerUser(dto);
         return ResponseEntity.ok(new UserResponseDto(user));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<String> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(401).body("Unauthorized");
+        }
+        return ResponseEntity.ok("Current user: " + userDetails.getUsername());
     }
 }
