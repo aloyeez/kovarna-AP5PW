@@ -8,8 +8,7 @@ function AuthDropdown() {
   const [isOpen, setIsOpen] = useState(false)
   const [formData, setFormData] = useState({
     username: '',
-    password: '',
-    rememberMe: false
+    password: ''
   })
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -44,10 +43,10 @@ function AuthDropdown() {
   }, [isOpen])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value
+      [name]: value
     }))
   }
 
@@ -59,7 +58,7 @@ function AuthDropdown() {
     try {
       await login(formData.username, formData.password)
       setIsOpen(false)
-      setFormData({ username: '', password: '', rememberMe: false })
+      setFormData({ username: '', password: '' })
 
       // Redirect to reservations if they were trying to access it
       const from = location.pathname
@@ -145,18 +144,6 @@ function AuthDropdown() {
               />
             </div>
 
-            <div className="form-options">
-              <label className="remember-me">
-                <input
-                  type="checkbox"
-                  name="rememberMe"
-                  checked={formData.rememberMe}
-                  onChange={handleChange}
-                  disabled={isLoading}
-                />
-                <span>{t('auth.dropdown.rememberMe')}</span>
-              </label>
-            </div>
 
             <button
               type="submit"
