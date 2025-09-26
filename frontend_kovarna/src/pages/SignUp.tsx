@@ -63,18 +63,25 @@ function SignUp() {
     setIsLoading(true)
 
     try {
-      await register({
+      const autoLoginSuccessful = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password
       })
-      navigate('/login', {
-        replace: true,
-        state: {
-          successMessage: `Registration successful! Please log in with your credentials.`,
-          username: formData.username
-        }
-      })
+
+      if (autoLoginSuccessful) {
+        // Auto-login successful, redirect to home
+        navigate(from, { replace: true })
+      } else {
+        // Need to login manually, redirect to login with success message
+        navigate('/login', {
+          replace: true,
+          state: {
+            successMessage: `Registration successful! Please log in with your credentials.`,
+            username: formData.username
+          }
+        })
+      }
     } catch (err: any) {
       setErrors([err.message || t('auth.signup.error')])
     } finally {

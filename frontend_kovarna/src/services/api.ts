@@ -31,6 +31,14 @@ api.interceptors.response.use(
       localStorage.removeItem('auth_user');
       window.location.href = '/login';
     }
+
+    // Provide better error messages
+    const errorMessage = error.response?.data?.message ||
+                        error.response?.data?.error ||
+                        error.message ||
+                        'An unexpected error occurred';
+
+    error.message = errorMessage;
     return Promise.reject(error);
   }
 );

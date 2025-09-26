@@ -12,7 +12,7 @@ export interface RegisterRequest {
 }
 
 export interface UserResponse {
-  id: string;
+  id: number;
   username: string;
   email: string;
   firstName?: string;
@@ -30,8 +30,8 @@ export const authService = {
     return response.data;
   },
 
-  async register(data: RegisterRequest): Promise<UserResponse> {
-    const response = await api.post<UserResponse>('/api/auth/register', data);
+  async register(data: RegisterRequest): Promise<AuthResponse | UserResponse> {
+    const response = await api.post<AuthResponse | UserResponse>('/api/auth/register', data);
     return response.data;
   },
 

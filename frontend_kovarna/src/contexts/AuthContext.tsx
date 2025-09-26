@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, type ReactNode }
 import { authService } from '../services/authService'
 
 interface User {
-  id: string
+  id: number
   username: string
   email: string
   firstName?: string
@@ -14,7 +14,7 @@ interface AuthContextType {
   token: string | null
   isLoading: boolean
   login: (username: string, password: string) => Promise<void>
-  register: (userData: RegisterData) => Promise<void>
+  register: (userData: RegisterData) => Promise<boolean>
   logout: () => Promise<void>
   isAuthenticated: boolean
 }
@@ -72,17 +72,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  const register = async (userData: RegisterData): Promise<void> => {
+  const register = async (userData: RegisterData): Promise<boolean> => {
     try {
-      const registeredUser = await authService.register(userData)
+      const response = await authService.register(userData)
 
-      // Note: Current backend doesn't return token on registration
-      // You'll need to login after registration or modify backend
-      setUser(registeredUser)
-
-      // For now, user needs to login after registration
-      // since backend doesn't return token on registration
-      localStorage.setItem('auth_user', JSON.stringify(registeredUser))
+      // Check if response includes token (auto-login after registration)
+      if ('token' in response) {
+        // Full auth response with token
+        const { token: authToken, user: userData } = response
+        setToken(authToken)
+        setUser(userData)
+        localStorage.setItem('auth_token', authToken)
+        localStorage.setItem('auth_user', JSON.stringify(userData))
+        return true // Auto-login successful
+      } else {
+        // User-only response (need to login separately)
+        setUser(response)
+        localStorage.setItem('auth_user', JSON.stringify(response))
+        return false // Need to login manually
+      }
     } catch (error) {
       console.error('Registration error:', error)
       throw error
