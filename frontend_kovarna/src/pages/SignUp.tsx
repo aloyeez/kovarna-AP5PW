@@ -68,7 +68,13 @@ function SignUp() {
         email: formData.email,
         password: formData.password
       })
-      navigate(from, { replace: true })
+      navigate('/login', {
+        replace: true,
+        state: {
+          successMessage: `Registration successful! Please log in with your credentials.`,
+          username: formData.username
+        }
+      })
     } catch (err: any) {
       setErrors([err.message || t('auth.signup.error')])
     } finally {

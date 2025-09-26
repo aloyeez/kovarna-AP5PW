@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
@@ -9,6 +9,7 @@ function Login() {
     username: '',
     password: ''
   })
+  const [successMessage, setSuccessMessage] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -18,6 +19,20 @@ function Login() {
   const location = useLocation()
 
   const from = location.state?.from?.pathname || '/'
+
+  // Check for success message from registration
+  useEffect(() => {
+    if (location.state?.successMessage) {
+      setSuccessMessage(location.state.successMessage)
+      // Pre-fill username if provided from registration
+      if (location.state.username) {
+        setFormData(prev => ({
+          ...prev,
+          username: location.state.username
+        }))
+      }
+    }
+  }, [location.state])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -50,6 +65,12 @@ function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
+          {successMessage && (
+            <div className="success-message" style={{ color: 'green', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '0.375rem' }}>
+              {successMessage}
+            </div>
+          )}
+
           {error && (
             <div className="error-message">
               {error}

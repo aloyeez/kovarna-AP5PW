@@ -1,25 +1,43 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { reservationService, type ReservationSlot } from '../services/reservationService';
+import { useAuth } from '../contexts/AuthContext';
 import './Reservations.css'
 export default function ReservationPage() {
   const [step, setStep] = useState<"date" | "form">("date");
   const [selectedDate, setSelectedDate] = useState("");
-  const [selectedTime, setSelectedTime] = useState("");
+  const [selectedSlot, setSelectedSlot] = useState<ReservationSlot | null>(null);
+  const [availableSlots, setAvailableSlots] = useState<ReservationSlot[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
+
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
+    name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "",
+    email: user?.email || "",
     phone: "",
     guests: 1,
   });
 
-  const availableSlots = [
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-  ];
+  // Fetch available slots when date changes
+  useEffect(() => {
+    if (selectedDate) {
+      fetchAvailableSlots();
+    }
+  }, [selectedDate]);
+
+  const fetchAvailableSlots = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const slots = await reservationService.getAvailableSlots(selectedDate);
+      setAvailableSlots(slots.filter(slot => slot.isAvailable));
+    } catch (err) {
+      setError('Failed to fetch available time slots');
+      console.error('Error fetching slots:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -27,14 +45,37 @@ export default function ReservationPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Reservation submitted", {
-      ...formData,
-      selectedDate,
-      selectedTime,
-    });
-    alert("Reservation submitted! We'll confirm by email.");
+    if (!selectedSlot) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      await reservationService.createReservation({
+        slotId: selectedSlot.id,
+        customerName: formData.name,
+        customerEmail: formData.email,
+        customerPhone: formData.phone,
+        numberOfGuests: formData.guests,
+      });
+      alert("Reservation submitted successfully! We'll confirm by email.");
+      // Reset form
+      setStep("date");
+      setSelectedDate("");
+      setSelectedSlot(null);
+      setFormData({
+        name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "",
+        email: user?.email || "",
+        phone: "",
+        guests: 1,
+      });
+    } catch (err) {
+      setError('Failed to submit reservation');
+      console.error('Error submitting reservation:', err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -63,27 +104,39 @@ export default function ReservationPage() {
                 <label>
                   Vyberte čas
                 </label>
-                <div className="time-slot-grid">
-                  {availableSlots.map((slot) => (
-                    <button
-                      key={slot}
-                      type="button"
-                      className={`time-slot-btn ${
-                        selectedTime === slot ? "selected" : ""
-                      }`}
-                      onClick={() => setSelectedTime(slot)}
-                    >
-                      {slot}
-                    </button>
-                  ))}
-                </div>
+                {loading ? (
+                  <div>Loading available slots...</div>
+                ) : error ? (
+                  <div style={{ color: 'red' }}>{error}</div>
+                ) : availableSlots.length === 0 ? (
+                  <div>No available slots for this date</div>
+                ) : (
+                  <div className="time-slot-grid">
+                    {availableSlots.map((slot) => (
+                      <button
+                        key={slot.id}
+                        type="button"
+                        className={`time-slot-btn ${
+                          selectedSlot?.id === slot.id ? "selected" : ""
+                        }`}
+                        onClick={() => setSelectedSlot(slot)}
+                      >
+                        {new Date(slot.startTime).toLocaleTimeString('cs-CZ', {
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        })}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
-            {selectedDate && selectedTime && (
+            {selectedDate && selectedSlot && (
               <button
                 className="primary"
                 onClick={() => setStep("form")}
+                disabled={loading}
               >
                 Pokračovat
               </button>
@@ -151,8 +204,9 @@ export default function ReservationPage() {
                 ))}
               </select>
             </div>
-            <button type="submit">
-              Potvrdit rezervaci
+            {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+            <button type="submit" disabled={loading}>
+              {loading ? 'Processing...' : 'Potvrdit rezervaci'}
             </button>
           </form>
         )}
