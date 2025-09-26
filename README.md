@@ -11,7 +11,7 @@ Modern restaurant reservation system with React frontend and Spring MVC backend.
 - **Styling**: Tailwind CSS v4 + Custom CSS
 - **Routing**: React Router DOM
 - **State Management**: React Context API
-- **HTTP Client**: Axios (planned)
+- **HTTP Client**: Axios
 - **Dynamic Content**: Google Sheets integration (no API keys required)
 
 #### Backend
@@ -141,6 +141,9 @@ cd backend_kovarna
 # Navigate to frontend directory
 cd frontend_kovarna
 
+# Copy environment configuration
+cp .env.example .env
+
 # Install dependencies
 pnpm install
 
@@ -183,13 +186,14 @@ kovarna-AP5PW/
 │  │  │  ├─ DailyMenu.tsx  # Daily menu (Google Sheets)
 │  │  │  ├─ RegularMenu.tsx# Permanent menu
 │  │  │  ├─ Contact.tsx    # Contact page
-│  │  │  ├─ Login.tsx      # User login (planned)
-│  │  │  └─ Register.tsx   # User registration (planned)
+│  │  │  ├─ Login.tsx      # User login with success messages
+│  │  │  ├─ SignUp.tsx     # User registration
+│  │  │  └─ Reservations.tsx # Reservation management
 │  │  ├─ contexts/         # React Context providers
 │  │  │  ├─ LanguageContext.tsx # i18n support
-│  │  │  └─ AuthContext.tsx     # Auth state (planned)
-│  │  ├─ services/         # API communication (planned)
-│  │  │  ├─ api.ts         # Base API config
+│  │  │  └─ AuthContext.tsx     # Auth state management
+│  │  ├─ services/         # API communication
+│  │  │  ├─ api.ts         # Base API config with axios
 │  │  │  ├─ authService.ts # Authentication API
 │  │  │  └─ reservationService.ts # Reservation API
 │  │  ├─ utils/
@@ -203,8 +207,11 @@ kovarna-AP5PW/
 │  │  ├─ main.tsx          # Vite entry point
 │  │  └─ index.css         # Global styles and Tailwind CSS
 │  ├─ package.json         # Frontend dependencies
-│  ├─ vite.config.ts       # Vite configuration
-│  └─ tsconfig.json        # TypeScript configuration
+│  ├─ vite.config.ts       # Vite configuration with proxy
+│  ├─ tsconfig.json        # TypeScript configuration
+│  ├─ .env                 # Environment variables (local)
+│  ├─ .env.example         # Environment variables template
+│  └─ .gitignore           # Git ignore rules
 │
 ├─ backend_kovarna/        # Spring Boot Backend Application
 │  ├─ src/
@@ -236,6 +243,25 @@ kovarna-AP5PW/
 ├─ README.md               # Project documentation
 └─ .gitignore             # Git ignore rules
 ```
+
+## Environment Configuration
+
+### Frontend
+
+The frontend uses environment variables for API configuration:
+
+1. **Create `.env` file from template:**
+   ```bash
+   cd frontend_kovarna
+   cp .env.example .env
+   ```
+
+2. **Environment variables:**
+   - `VITE_API_URL`: Backend API URL (default: `http://localhost:8080`)
+
+### Development Setup
+
+The frontend uses Vite's proxy configuration to bypass CORS issues during development. All requests to `/api` are automatically proxied to the backend server specified in `vite.config.ts`.
 
 ## Features
 
@@ -291,19 +317,7 @@ http://localhost:8080/api
 Register a new user
 ```json
 {
-  "firstName": "John",
-  "lastName": "Doe",
-  "email": "john.doe@example.com",
-  "password": "securePassword123",
-  "phoneNumber": "+420123456789",
-  "role": "CUSTOMER"
-}
-```
-
-#### POST `/auth/login`
-Login with existing credentials
-```json
-{
+  "username": "johndoe",
   "email": "john.doe@example.com",
   "password": "securePassword123"
 }
@@ -311,15 +325,27 @@ Login with existing credentials
 **Response:**
 ```json
 {
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "user": {
-    "id": 1,
-    "firstName": "John",
-    "lastName": "Doe",
-    "email": "john.doe@example.com",
-    "role": "CUSTOMER"
-  }
+  "id": 1,
+  "username": "johndoe",
+  "email": "john.doe@example.com"
 }
+```
+
+#### POST `/auth/login` (To be implemented)
+Login with existing credentials - currently uses HTTP Basic Auth
+```json
+{
+  "username": "johndoe",
+  "password": "securePassword123"
+}
+```
+
+#### GET `/auth/me`
+Get current authenticated user info
+**Headers:** `Authorization: Basic {credentials}`
+**Response:**
+```json
+"Current user: johndoe"
 ```
 
 ### Reservation Endpoints
