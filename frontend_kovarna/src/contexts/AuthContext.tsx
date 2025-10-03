@@ -46,11 +46,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         const parsedUser = JSON.parse(savedUser)
         setToken(savedToken)
         setUser(parsedUser)
+        console.log('✅ User is logged in:', parsedUser.username)
       } catch (error) {
         console.error('Failed to parse saved user data:', error)
         localStorage.removeItem('auth_token')
         localStorage.removeItem('auth_user')
+        console.log('❌ User is NOT logged in (invalid saved data)')
       }
+    } else {
+      console.log('❌ User is NOT logged in (no saved session)')
     }
     setIsLoading(false)
   }, [])
@@ -58,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = async (username: string, password: string): Promise<void> => {
     try {
       const data = await authService.login({ username, password })
+      console.log('🔍 Backend response:', data)
       const { token: authToken, user: userData } = data
 
       setToken(authToken)
@@ -66,6 +71,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       // Save to localStorage
       localStorage.setItem('auth_token', authToken)
       localStorage.setItem('auth_user', JSON.stringify(userData))
+
+      console.log('✅ Login successful! User:', userData.username)
     } catch (error) {
       console.error('Login error:', error)
       throw error
@@ -98,9 +105,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const logout = async (): Promise<void> => {
+    console.log('🚪 Logging out user')
     await authService.logout()
     setUser(null)
     setToken(null)
+    console.log('❌ User is NOT logged in (logged out)')
   }
 
   const value: AuthContextType = {

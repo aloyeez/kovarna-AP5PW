@@ -4,6 +4,7 @@ import com.example.backend_kovarna.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,16 +25,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/reservations/slots").permitAll()
                         .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/api/auth/login") 
-                        .successHandler((req, res, auth) -> res.setStatus(200))
-                        .failureHandler((req, res, ex) -> res.sendError(401, "Invalid credentials"))
-                        .permitAll()
-                )
-                .logout(logout -> logout.permitAll());
-//                .httpBasic(Customizer.withDefaults());
+                );
         return http.build();
     }
 

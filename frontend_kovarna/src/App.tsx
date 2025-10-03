@@ -59,9 +59,11 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/reservations" element={
-          <main className="main-content">
-            <Reservations />
-          </main>
+          <ProtectedRoute>
+            <main className="main-content">
+              <Reservations />
+            </main>
+          </ProtectedRoute>
         } />
       </Routes>
       <Footer />
