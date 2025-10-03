@@ -1,6 +1,8 @@
 package com.example.backend_kovarna.presentation.controller;
 
 import com.example.backend_kovarna.application.service.AuthService;
+import com.example.backend_kovarna.domain.dto.AuthResponseDto;
+import com.example.backend_kovarna.domain.dto.LoginRequestDto;
 import com.example.backend_kovarna.domain.dto.UserRegistrationDto;
 import com.example.backend_kovarna.domain.dto.UserResponseDto;
 import com.example.backend_kovarna.domain.entity.User;
@@ -21,6 +23,11 @@ public class AuthController {
     public ResponseEntity<UserResponseDto> register(@RequestBody @Valid UserRegistrationDto dto) {
         User user = authService.registerUser(dto);
         return ResponseEntity.ok(new UserResponseDto(user));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponseDto> login(@RequestBody LoginRequestDto dto) {
+        return ResponseEntity.ok(authService.authenticateUser(dto.getUsername(), dto.getPassword()));
     }
 
     @GetMapping("/me")
