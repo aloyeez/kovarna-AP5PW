@@ -2,12 +2,18 @@ package com.example.backend_kovarna.application.service.implementation;
 
 
 import com.example.backend_kovarna.application.service.AuthService;
+import com.example.backend_kovarna.application.service.JwtService;
+import com.example.backend_kovarna.domain.dto.AuthResponseDto;
 import com.example.backend_kovarna.domain.dto.UserRegistrationDto;
+import com.example.backend_kovarna.domain.dto.UserResponseDto;
 import com.example.backend_kovarna.domain.entity.Role;
 import com.example.backend_kovarna.domain.entity.User;
 import com.example.backend_kovarna.infrastructure.repository.RoleRepository;
 import com.example.backend_kovarna.infrastructure.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.*;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +27,29 @@ public class AuthServiceImplementation implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
+
+    @Override
+    public AuthResponseDto authenticateUser(String username, String password) {
+        Authentication auth = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(username, password)
+        );
+        String token = jwtService.generateToken(auth);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return new AuthResponseDto(token, new UserResponseDto(user));
+    }
+
+
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 
     @Override
     @Transactional

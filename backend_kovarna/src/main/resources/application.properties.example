@@ -11,3 +11,6 @@ spring.datasource.driver-class-name=org.postgresql.Driver
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+
+jwt.secret=super-secret-key-please-change-it-1234567890abcdefghijklmnop
+jwt.expiration=86400000
