@@ -101,23 +101,6 @@ function UserDropdown() {
           <div className="dropdown-items">
             <button
               className="dropdown-item"
-              onClick={() => handleMenuClick('/profile')}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-              </svg>
-              {t('auth.userDropdown.profile')}
-            </button>
-
-            <button
-              className="dropdown-item"
               onClick={() => handleMenuClick('/my-reservations')}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -154,6 +137,29 @@ function UserDropdown() {
                 <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
               </svg>
               {t('auth.userDropdown.settings')}
+            </button>
+
+            <button
+              className="dropdown-item"
+              onClick={() => handleMenuClick('/admin')}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 2L2 7l10 5 10-5-10-5z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M2 17l10 5 10-5M2 12l10 5 10-5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              {t('auth.userDropdown.administration')}
             </button>
           </div>
 
