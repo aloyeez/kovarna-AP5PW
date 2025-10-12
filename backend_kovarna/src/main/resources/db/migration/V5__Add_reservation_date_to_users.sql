@@ -1,0 +1,1 @@
+ALTER TABLE users ADD COLUMN reservation_date DATE;
