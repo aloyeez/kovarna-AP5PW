@@ -6,11 +6,11 @@ import com.example.backend_kovarna.domain.dto.LoginRequestDto;
 import com.example.backend_kovarna.domain.dto.UserRegistrationDto;
 import com.example.backend_kovarna.domain.dto.UserResponseDto;
 import com.example.backend_kovarna.domain.entity.User;
+import com.example.backend_kovarna.infrastructure.config.UserPrincipal;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,10 +31,10 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<String> getCurrentUser(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(401).body("Unauthorized");
+    public ResponseEntity<UserResponseDto> getCurrentUser(@AuthenticationPrincipal UserPrincipal principal) {
+        if (principal == null) {
+            return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok("Current user: " + userDetails.getUsername());
+        return ResponseEntity.ok(new UserResponseDto(principal.getUser()));
     }
 }
