@@ -1,15 +1,24 @@
 import { useState, useEffect } from "react";
 import { reservationService, type ReservationSlot } from '../services/reservationService';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Reservations.css'
+
+// Helper function to get today's date in YYYY-MM-DD format
+const getTodayDate = () => {
+  const today = new Date();
+  return today.toISOString().split('T')[0];
+};
+
 export default function ReservationPage() {
   const [step, setStep] = useState<"date" | "form">("date");
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDate, setSelectedDate] = useState(getTodayDate());
   const [selectedSlot, setSelectedSlot] = useState<ReservationSlot | null>(null);
   const [availableSlots, setAvailableSlots] = useState<ReservationSlot[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<'fetch' | 'submit' | null>(null);
   const { user } = useAuth();
+  const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
     name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "",
@@ -32,7 +41,7 @@ export default function ReservationPage() {
       const slots = await reservationService.getAvailableSlots(selectedDate);
       setAvailableSlots(slots.filter(slot => slot.isAvailable));
     } catch (err) {
-      setError('Failed to fetch available time slots');
+      setError('fetch');
       console.error('Error fetching slots:', err);
     } finally {
       setLoading(false);
@@ -59,7 +68,7 @@ export default function ReservationPage() {
         customerPhone: formData.phone,
         numberOfGuests: formData.guests,
       });
-      alert("Reservation submitted successfully! We'll confirm by email.");
+      alert(t('reservations.successMessage'));
       // Reset form
       setStep("date");
       setSelectedDate("");
@@ -71,7 +80,7 @@ export default function ReservationPage() {
         guests: 1,
       });
     } catch (err) {
-      setError('Failed to submit reservation');
+      setError('submit');
       console.error('Error submitting reservation:', err);
     } finally {
       setLoading(false);
@@ -81,20 +90,34 @@ export default function ReservationPage() {
   return (
     <div className="reservations-container">
       <div className="reservation-card">
-        <h2>Rezervace stolu</h2>
+        <h2>{t('reservations.title')}</h2>
 
         {step === "date" && (
           <div>
             <div>
               <label htmlFor="date">
-                Vyberte datum
+                {t('reservations.selectDate')}
               </label>
               <input
                 id="date"
                 name="date"
                 type="date"
                 value={selectedDate}
+                min={getTodayDate()}
                 onChange={(e) => setSelectedDate(e.target.value)}
+                onClick={(e) => {
+                  try {
+                    (e.target as HTMLInputElement).showPicker?.();
+                  } catch (error) {
+                    // showPicker not supported in this browser
+                  }
+                }}
+                onKeyDown={(e) => {
+                  // Allow tab and arrow keys, prevent typing numbers
+                  if (e.key !== 'Tab' && e.key !== 'ArrowLeft' && e.key !== 'ArrowRight' && e.key !== 'ArrowUp' && e.key !== 'ArrowDown') {
+                    e.preventDefault();
+                  }
+                }}
                 required
               />
             </div>
@@ -102,14 +125,25 @@ export default function ReservationPage() {
             {selectedDate && (
               <div>
                 <label>
-                  Vyberte čas
+                  {t('reservations.selectTime')}
                 </label>
                 {loading ? (
-                  <div>Loading available slots...</div>
+                  <div className="loading-message">
+                    <div className="loading-spinner"></div>
+                    <p>{t('reservations.loading')}</p>
+                  </div>
                 ) : error ? (
-                  <div style={{ color: 'red' }}>{error}</div>
+                  <div className="error-message">
+                    <div className="error-icon">⚠️</div>
+                    <p>{error === 'fetch' ? t('reservations.fetchError') : t('reservations.submitError')}</p>
+                    <span className="error-hint">{error === 'fetch' ? t('reservations.fetchErrorHint') : t('reservations.submitErrorHint')}</span>
+                  </div>
                 ) : availableSlots.length === 0 ? (
-                  <div>No available slots for this date</div>
+                  <div className="no-slots-message">
+                    <div className="no-slots-icon">📅</div>
+                    <p>{t('reservations.noSlots')}</p>
+                    <span className="no-slots-hint">{t('reservations.noSlotsHint')}</span>
+                  </div>
                 ) : (
                   <div className="time-slot-grid">
                     {availableSlots.map((slot) => (
@@ -138,7 +172,7 @@ export default function ReservationPage() {
                 onClick={() => setStep("form")}
                 disabled={loading}
               >
-                Pokračovat
+                {t('reservations.continue')}
               </button>
             )}
           </div>
@@ -148,7 +182,7 @@ export default function ReservationPage() {
           <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="name">
-                Celé jméno
+                {t('reservations.fullName')}
               </label>
               <input
                 id="name"
@@ -156,12 +190,12 @@ export default function ReservationPage() {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                placeholder="Vaše jméno"
+                placeholder={t('reservations.namePlaceholder')}
               />
             </div>
             <div>
               <label htmlFor="email">
-                Email
+                {t('reservations.email')}
               </label>
               <input
                 id="email"
@@ -170,12 +204,12 @@ export default function ReservationPage() {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="vas.email@example.com"
+                placeholder={t('reservations.emailPlaceholder')}
               />
             </div>
             <div>
               <label htmlFor="phone">
-                Telefon
+                {t('reservations.phone')}
               </label>
               <input
                 id="phone"
@@ -184,12 +218,12 @@ export default function ReservationPage() {
                 value={formData.phone}
                 onChange={handleChange}
                 required
-                placeholder="+420 xxx xxx xxx"
+                placeholder={t('reservations.phonePlaceholder')}
               />
             </div>
             <div>
               <label htmlFor="guests">
-                Počet hostů
+                {t('reservations.guestsLabel')}
               </label>
               <select
                 id="guests"
@@ -199,14 +233,20 @@ export default function ReservationPage() {
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                   <option key={num} value={num}>
-                    {num} {num === 1 ? 'osoba' : num < 5 ? 'osoby' : 'osob'}
+                    {num} {num === 1 ? t('reservations.person') : num < 5 ? t('reservations.people') : t('reservations.people2')}
                   </option>
                 ))}
               </select>
             </div>
-            {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
+            {error && (
+              <div className="error-message">
+                <div className="error-icon">⚠️</div>
+                <p>{error === 'submit' ? t('reservations.submitError') : t('reservations.fetchError')}</p>
+                <span className="error-hint">{error === 'submit' ? t('reservations.submitErrorHint') : t('reservations.fetchErrorHint')}</span>
+              </div>
+            )}
             <button type="submit" disabled={loading}>
-              {loading ? 'Processing...' : 'Potvrdit rezervaci'}
+              {loading ? t('reservations.processing') : t('reservations.confirmReservation')}
             </button>
           </form>
         )}
