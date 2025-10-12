@@ -23,6 +23,10 @@ public class UserPrincipal implements UserDetails {
                 .collect(Collectors.toList());
     }
 
+    public User getUser() {
+        return user;
+    }
+
     @Override
     public String getPassword() {
         return user.getPasswordHash();
