@@ -3,6 +3,7 @@ package com.example.backend_kovarna.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,6 +26,9 @@ public class User {
 
     @Column(nullable = false, length = 255)
     private String passwordHash;
+
+    @Column(name = "reservation_date", nullable = false)
+    private LocalDate reservationDate;
 
     @Column(nullable = false)
     private boolean enabled = true;
