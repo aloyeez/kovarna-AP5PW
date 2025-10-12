@@ -30,4 +30,11 @@ public class ReservationSlot {
 
     @OneToMany(mappedBy = "slot")
     private List<Reservation> reservations;
+
+    @Column(name = "max_reservations", nullable = false)
+    private int maxReservations;
+
+    @Column(name = "current_reservations", nullable = false)
+    private int currentReservations;
+
 }
