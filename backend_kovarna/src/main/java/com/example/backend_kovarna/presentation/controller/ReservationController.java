@@ -5,12 +5,11 @@ import com.example.backend_kovarna.application.service.ReservationSlotService;
 import com.example.backend_kovarna.domain.dto.ReservationRequestDto;
 import com.example.backend_kovarna.domain.dto.ReservationResponseDto;
 import com.example.backend_kovarna.domain.dto.ReservationSlotDto;
-import com.example.backend_kovarna.domain.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -26,17 +25,17 @@ public class ReservationController {
 
     @PostMapping
     public ResponseEntity<ReservationResponseDto> createReservation(
-            @AuthenticationPrincipal User user,
+            Authentication authentication,
             @RequestBody @Valid ReservationRequestDto dto
     ) {
-        return ResponseEntity.ok(reservationService.createReservation(user, dto));
+        String username = authentication.getName();
+        return ResponseEntity.ok(reservationService.createReservation(username, dto));
     }
 
     @GetMapping
-    public ResponseEntity<List<ReservationResponseDto>> getMyReservations(
-            @AuthenticationPrincipal User user
-    ) {
-        return ResponseEntity.ok(reservationService.getUserReservations(user));
+    public ResponseEntity<List<ReservationResponseDto>> getMyReservations(Authentication authentication) {
+        String username = authentication.getName();
+        return ResponseEntity.ok(reservationService.getUserReservations(username));
     }
 
     @GetMapping("/slots")
@@ -44,5 +43,15 @@ public class ReservationController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
     ) {
         return ResponseEntity.ok(slotService.getAvailableSlots(date));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteReservation(
+            @PathVariable Long id,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        reservationService.deleteReservationByUser(id, username);
+        return ResponseEntity.ok("Reservation deleted successfully");
     }
 }
