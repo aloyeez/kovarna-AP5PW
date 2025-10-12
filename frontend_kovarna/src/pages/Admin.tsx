@@ -1,34 +1,17 @@
 import { useState, useEffect } from 'react'
-// import { adminService, type ReservationSlotDto } from '../services/adminService'
+import { adminService, type ReservationSlotDto } from '../services/adminService'
 import { useLanguage } from '../contexts/LanguageContext'
 import './Admin.css'
-
-// Mock data type
-interface ReservationSlotDto {
-  id?: number;
-  slotFrom: string;
-  slotTo: string;
-  active: boolean;
-}
-
-// Initial mock data
-const initialMockSlots: ReservationSlotDto[] = [
-  { id: 1, slotFrom: '12:00', slotTo: '14:00', active: true },
-  { id: 2, slotFrom: '18:00', slotTo: '22:00', active: true },
-  { id: 3, slotFrom: '14:00', slotTo: '16:00', active: false },
-  { id: 4, slotFrom: '10:00', slotTo: '12:00', active: true },
-]
 
 type AdminSection = 'slots' | 'reservations' | 'users' | 'menu' | 'hours'
 
 function Admin() {
   const [activeSection, setActiveSection] = useState<AdminSection>('slots')
-  const [slots, setSlots] = useState<ReservationSlotDto[]>(initialMockSlots)
-  const [isLoading, setIsLoading] = useState(false)
+  const [slots, setSlots] = useState<ReservationSlotDto[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [editingSlot, setEditingSlot] = useState<ReservationSlotDto | null>(null)
-  const [nextId, setNextId] = useState(5)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   const [formData, setFormData] = useState({
@@ -36,16 +19,36 @@ function Admin() {
     slotTo: '',
     active: true
   })
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const { t } = useLanguage()
 
-  // Mock fetch (simulates loading)
+  // Helper function to convert time format
+  const formatTimeForBackend = (time: string): string => {
+    // If already has seconds, return as is
+    if (time.length === 8) return time
+    // Add :00 for seconds if missing
+    return time.length === 5 ? `${time}:00` : time
+  }
+
+  const formatTimeForDisplay = (time: string): string => {
+    // Remove seconds for display in time input (HH:mm:ss -> HH:mm)
+    return time.substring(0, 5)
+  }
+
+  // Fetch slots from backend
   const fetchSlots = async () => {
-    setIsLoading(true)
-    setError('')
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 300))
-    setIsLoading(false)
+    try {
+      setIsLoading(true)
+      setError('')
+      const data = await adminService.getAllSlots()
+      setSlots(data)
+    } catch (err: any) {
+      setError(err.message || 'Failed to fetch slots')
+      console.error('Error fetching slots:', err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   useEffect(() => {
@@ -63,42 +66,54 @@ function Admin() {
       return
     }
 
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    if (editingSlot) {
-      // Update existing slot
-      setSlots(slots.map(slot =>
-        slot.id === editingSlot.id
-          ? { ...slot, ...formData }
-          : slot
-      ))
-      setSuccess('Slot updated successfully!')
-    } else {
-      // Create new slot
-      const newSlot: ReservationSlotDto = {
-        id: nextId,
-        ...formData
+    try {
+      // Convert time format for backend
+      const dataForBackend = {
+        slotFrom: formatTimeForBackend(formData.slotFrom),
+        slotTo: formatTimeForBackend(formData.slotTo),
+        active: formData.active
       }
-      setSlots([...slots, newSlot])
-      setNextId(nextId + 1)
-      setSuccess('Slot created successfully!')
-    }
 
-    // Reset form
-    setFormData({ slotFrom: '', slotTo: '', active: true })
-    setEditingSlot(null)
+      if (editingSlot && editingSlot.id) {
+        // Update existing slot
+        const updated = await adminService.updateSlot(editingSlot.id, dataForBackend)
+        setSlots(slots.map(slot => slot.id === editingSlot.id ? updated : slot))
+        setSuccess('Slot updated successfully!')
+      } else {
+        // Create new slot
+        const created = await adminService.createSlot(dataForBackend)
+        setSlots([...slots, created])
+        setSuccess('Slot created successfully!')
+      }
+
+      // Reset form
+      setFormData({ slotFrom: '', slotTo: '', active: true })
+      setEditingSlot(null)
+      setIsDialogOpen(false)
+    } catch (err: any) {
+      setError(err.message || 'Failed to save slot')
+      console.error('Error saving slot:', err)
+    }
   }
 
   const handleEdit = (slot: ReservationSlotDto) => {
     setEditingSlot(slot)
     setFormData({
-      slotFrom: slot.slotFrom,
-      slotTo: slot.slotTo,
+      slotFrom: formatTimeForDisplay(slot.slotFrom),
+      slotTo: formatTimeForDisplay(slot.slotTo),
       active: slot.active
     })
     setError('')
     setSuccess('')
+    setIsDialogOpen(true)
+  }
+
+  const handleCreate = () => {
+    setEditingSlot(null)
+    setFormData({ slotFrom: '', slotTo: '', active: true })
+    setError('')
+    setSuccess('')
+    setIsDialogOpen(true)
   }
 
   const handleDelete = async (id: number) => {
@@ -109,12 +124,14 @@ function Admin() {
     setError('')
     setSuccess('')
 
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    // Delete slot from state
-    setSlots(slots.filter(slot => slot.id !== id))
-    setSuccess('Slot deleted successfully!')
+    try {
+      await adminService.deleteSlot(id)
+      setSlots(slots.filter(slot => slot.id !== id))
+      setSuccess('Slot deleted successfully!')
+    } catch (err: any) {
+      setError(err.message || 'Failed to delete slot')
+      console.error('Error deleting slot:', err)
+    }
   }
 
   const handleCancel = () => {
@@ -122,22 +139,28 @@ function Admin() {
     setFormData({ slotFrom: '', slotTo: '', active: true })
     setError('')
     setSuccess('')
+    setIsDialogOpen(false)
   }
 
   const handleToggleActive = async (slot: ReservationSlotDto) => {
+    if (!slot.id) return
+
     setError('')
     setSuccess('')
 
-    // Mock API delay
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    // Toggle active status
-    setSlots(slots.map(s =>
-      s.id === slot.id
-        ? { ...s, active: !s.active }
-        : s
-    ))
-    setSuccess(`Slot ${!slot.active ? 'activated' : 'deactivated'} successfully!`)
+    try {
+      const updatedData = {
+        slotFrom: formatTimeForBackend(slot.slotFrom),
+        slotTo: formatTimeForBackend(slot.slotTo),
+        active: !slot.active
+      }
+      const updated = await adminService.updateSlot(slot.id, updatedData)
+      setSlots(slots.map(s => s.id === slot.id ? updated : s))
+      setSuccess(`Slot ${updated.active ? 'activated' : 'deactivated'} successfully!`)
+    } catch (err: any) {
+      setError(err.message || 'Failed to toggle slot status')
+      console.error('Error toggling slot:', err)
+    }
   }
 
   if (isLoading) {
@@ -150,70 +173,24 @@ function Admin() {
 
   const renderSlotsSection = () => (
     <>
-      <h2 className="section-title">Reservation Time Slots</h2>
+      <div className="section-header">
+        <h2 className="section-title">Reservation Time Slots</h2>
+        <button className="btn btn-primary" onClick={handleCreate}>
+          + Create New Slot
+        </button>
+      </div>
 
       {error && <div className="error-message">{error}</div>}
       {success && <div className="success-message">{success}</div>}
 
       <div className="admin-content">
-        <div className="admin-form-section">
-          <h2>{editingSlot ? 'Edit Slot' : 'Create New Slot'}</h2>
-          <form onSubmit={handleSubmit} className="slot-form">
-            <div className="form-group">
-              <label htmlFor="slotFrom">From (HH:MM)</label>
-              <input
-                type="time"
-                id="slotFrom"
-                value={formData.slotFrom}
-                onChange={(e) => setFormData({ ...formData, slotFrom: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="slotTo">To (HH:MM)</label>
-              <input
-                type="time"
-                id="slotTo"
-                value={formData.slotTo}
-                onChange={(e) => setFormData({ ...formData, slotTo: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="form-group checkbox-group">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={formData.active}
-                  onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
-                />
-                Active
-              </label>
-            </div>
-
-            <div className="form-actions">
-              <button type="submit" className="btn btn-primary">
-                {editingSlot ? 'Update Slot' : 'Create Slot'}
-              </button>
-              {editingSlot && (
-                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                  Cancel
-                </button>
-              )}
-            </div>
-          </form>
-        </div>
-
-        <div className="admin-table-section">
-          <h2>Existing Slots</h2>
+        <div className="admin-table-section" style={{ width: '100%' }}>
           {slots.length === 0 ? (
             <p className="no-data">No slots found. Create one to get started.</p>
           ) : (
             <table className="slots-table">
               <thead>
                 <tr>
-                  <th>ID</th>
                   <th>From</th>
                   <th>To</th>
                   <th>Status</th>
@@ -221,11 +198,10 @@ function Admin() {
                 </tr>
               </thead>
               <tbody>
-                {slots.map((slot) => (
+                {[...slots].sort((a, b) => a.slotFrom.localeCompare(b.slotFrom)).map((slot) => (
                   <tr key={slot.id}>
-                    <td>{slot.id}</td>
-                    <td>{slot.slotFrom}</td>
-                    <td>{slot.slotTo}</td>
+                    <td>{formatTimeForDisplay(slot.slotFrom)}</td>
+                    <td>{formatTimeForDisplay(slot.slotTo)}</td>
                     <td>
                       <span className={`status-badge ${slot.active ? 'active' : 'inactive'}`}>
                         {slot.active ? 'Active' : 'Inactive'}
@@ -258,6 +234,61 @@ function Admin() {
           )}
         </div>
       </div>
+
+      {/* Dialog Modal */}
+      {isDialogOpen && (
+        <div className="modal-overlay" onClick={handleCancel}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>{editingSlot ? 'Edit Slot' : 'Create New Slot'}</h2>
+              <button className="modal-close" onClick={handleCancel}>×</button>
+            </div>
+            <form onSubmit={handleSubmit} className="slot-form">
+              <div className="form-group">
+                <label htmlFor="slotFrom">From (HH:MM)</label>
+                <input
+                  type="time"
+                  id="slotFrom"
+                  value={formData.slotFrom}
+                  onChange={(e) => setFormData({ ...formData, slotFrom: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="slotTo">To (HH:MM)</label>
+                <input
+                  type="time"
+                  id="slotTo"
+                  value={formData.slotTo}
+                  onChange={(e) => setFormData({ ...formData, slotTo: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group checkbox-group">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={formData.active}
+                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                  />
+                  Active
+                </label>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  {editingSlot ? 'Update Slot' : 'Create Slot'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   )
 
