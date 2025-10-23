@@ -40,7 +40,7 @@ function Menu() {
     }
   }>({
     cz: { daily: null, regular: null, drinks: null },
-    en: { daily: null, regular: null, drinks: null }
+    en: { daily: null, regular: null, drinks: null },
   })
   
   // Current language data (computed from menuData and current language)
