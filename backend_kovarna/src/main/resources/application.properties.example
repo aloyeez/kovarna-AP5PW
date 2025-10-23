@@ -1,10 +1,9 @@
 spring.application.name=backend_kovarna
 
 # Database Configuration
-# Copy this file to application.properties and set the DB_PASSWORD environment variable
-spring.datasource.url=jdbc:postgresql://localhost:5432/kovarna_db
-spring.datasource.username=kovarna_user
-spring.datasource.password=${DB_PASSWORD}
+spring.datasource.url=jdbc:postgresql://your-host:5432/your_database_name
+spring.datasource.username=your_db_username
+spring.datasource.password=your_db_password
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 # JPA/Hibernate Configuration
@@ -12,5 +11,8 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 
-jwt.secret=super-secret-key-please-change-it-1234567890abcdefghijklmnop
+# JWT Configuration
+# IMPORTANT: Generate a strong secret key (minimum 256 bits / 32 bytes)
+# Example: openssl rand -base64 32
+jwt.secret=your-jwt-secret-key-minimum-32-characters-long
 jwt.expiration=86400000
