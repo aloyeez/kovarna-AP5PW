@@ -1,7 +1,6 @@
 # Hospůdka U Kovárny - Restaurant Reservation System
 
 **School Project:** AP5PW - Web Applications
-**Submission:** Week 7
 
 Modern restaurant reservation system with React frontend and Spring Boot backend.
 
