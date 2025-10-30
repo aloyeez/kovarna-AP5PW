@@ -30,9 +30,11 @@ public class User {
     @Column(name = "reservation_date", nullable = false)
     private LocalDate reservationDate;
 
+    @Builder.Default
     @Column(nullable = false)
     private boolean enabled = true;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",

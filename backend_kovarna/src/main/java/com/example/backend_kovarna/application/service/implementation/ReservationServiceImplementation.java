@@ -65,14 +65,18 @@ public class ReservationServiceImplementation implements ReservationService {
 
         Reservation saved = reservationRepository.save(reservation);
 
-        return new ReservationResponseDto(
-                saved.getId(),
-                saved.getReservationDate(),
-                slot.getSlotFrom(),
-                slot.getSlotTo(),
-                saved.getGuestCount(),
-                saved.getStatus()
-        );
+        ReservationResponseDto response = new ReservationResponseDto();
+        response.setId(saved.getId());
+        response.setReservationId(saved.getId()); // Backward compatibility
+        response.setUsername(user.getUsername());
+        response.setDate(saved.getReservationDate());
+        response.setReservationDate(saved.getReservationDate()); // Backward compatibility
+        response.setSlotFrom(slot.getSlotFrom());
+        response.setSlotTo(slot.getSlotTo());
+        response.setSlotId(slot.getId());
+        response.setGuestCount(saved.getGuestCount());
+        response.setStatus(saved.getStatus());
+        return response;
     }
 
     @Override
@@ -81,14 +85,20 @@ public class ReservationServiceImplementation implements ReservationService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         return reservationRepository.findByUser(user).stream()
-                .map(r -> new ReservationResponseDto(
-                        r.getId(),
-                        r.getReservationDate(),
-                        r.getSlot().getSlotFrom(),
-                        r.getSlot().getSlotTo(),
-                        r.getGuestCount(),
-                        r.getStatus()
-                ))
+                .map(r -> {
+                    ReservationResponseDto dto = new ReservationResponseDto();
+                    dto.setId(r.getId());
+                    dto.setReservationId(r.getId());
+                    dto.setUsername(username);
+                    dto.setDate(r.getReservationDate());
+                    dto.setReservationDate(r.getReservationDate());
+                    dto.setSlotFrom(r.getSlot().getSlotFrom());
+                    dto.setSlotTo(r.getSlot().getSlotTo());
+                    dto.setSlotId(r.getSlot().getId());
+                    dto.setGuestCount(r.getGuestCount());
+                    dto.setStatus(r.getStatus());
+                    return dto;
+                })
                 .toList();
     }
 
