@@ -7,20 +7,6 @@ Modern restaurant reservation system with React frontend and Spring Boot backend
 
 ---
 
-## 📋 Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Detailed Setup](#detailed-setup)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [API Documentation](#api-documentation)
-- [Week 7 Requirements](#week-7-requirements)
-- [Troubleshooting](#troubleshooting)
-
----
-
 ## 🔧 Prerequisites
 
 Ensure you have the following installed:
@@ -204,36 +190,6 @@ kovarna-AP5PW/
 
 ---
 
-## ✨ Features
-
-### Customer Features
-- User registration & JWT authentication
-- Browse restaurant menu
-- Make table reservations (date, time, guests)
-- View & cancel own reservations
-- Multilingual (Czech/English)
-- Responsive design
-
-### Admin Features (ROLE_ADMIN)
-- View all reservations
-- Manage time slots (CRUD)
-- Manage users (view details, roles)
-- Manage opening hours (CRUD)
-- Full admin dashboard
-
-### Technical Features
-- **4-layer architecture** (Presentation, Application, Domain, Infrastructure)
-- **6 entities** with relationships (exceeds requirement of 5)
-- **Flyway migrations** (7 migration files)
-- **JPA/Hibernate** with PostgreSQL
-- **JWT authentication** with role-based access
-- **Custom validation** (`@FutureReservationDate`)
-- **Swagger API docs**
-- **CORS configured**
-- **BCrypt password hashing**
-
----
-
 ## 📚 API Documentation
 
 ### Access Points
@@ -265,41 +221,6 @@ kovarna-AP5PW/
 
 ---
 
-## 📖 Week 7 Requirements
-
-### ✅ All Requirements Met
-
-#### 1. Design Documentation
-**Included in this README and code comments**
-
-**Project includes:**
-- Functional requirements (documented in code)
-- Database schema with 6 entities
-- API endpoint documentation (Swagger/OpenAPI)
-- Multi-layered architecture implementation
-
-#### 2. Multi-Layered Architecture
-**4 layers implemented:**
-- **Presentation** - REST Controllers
-- **Application** - Business Logic Services
-- **Domain** - Entities, DTOs, Validators
-- **Infrastructure** - Repositories, Database Config
-
-**Compliance:**
-- ✅ No SQL in web layer (only JPA)
-- ✅ All functionality through services
-- ✅ Presentation doesn't access Infrastructure directly
-- ✅ Controllers contain no business logic
-
-#### 3. Entities & Relationships
-**6 entities** (requirement: 5):
-1. **User** - Users with auth
-2. **Role** - ADMIN, CUSTOMER
-3. **Reservation** - Table bookings
-4. **ReservationSlot** - Time slots
-5. **OpeningHours** - Restaurant hours
-6. **Event** - Promotions (bonus feature)
-
 **Relationships:**
 - User ↔ Role (M:M via join table)
 - Reservation → User (M:1)
@@ -330,16 +251,6 @@ kovarna-AP5PW/
 - ✅ Custom validator: `@FutureReservationDate`
 - ✅ Responsive frontend (Bootstrap)
 - ✅ React framework
-
----
-
-## 🎁 Bonus Features Status
-
-| Feature | Status | Points |
-|---------|--------|--------|
-| **File/Image Upload** | ⚠️ 50% (Entity & Service exist) | +1 |
-| **Unit Tests** | ❌ Not implemented | +1 |
-| **Logging** | ❌ Not implemented | +1 |
 
 ---
 
@@ -415,21 +326,6 @@ npm install
 - Backend configured for `http://localhost:5173`
 - Update `SecurityConfig.java` if using different port
 
-### 400 Bad Request on reservation
-- Check browser console for validation errors
-- Ensure date format: YYYY-MM-DD
-- Guest count must be 1-10
-- Select future date only
-
----
-
-## 📞 Support
-
-**Documentation:**
-- API Documentation: http://localhost:8080/swagger-ui.html
-- OpenAPI Specification: http://localhost:8080/v3/api-docs
-- This README contains all setup and usage instructions
-
 ---
 
 ## 📄 License
@@ -437,6 +333,3 @@ npm install
 Academic project for AP5PW course.
 
 ---
-
-**Last Updated:** 2025-10-30
-**Version:** 1.0 (Week 7 Submission)
