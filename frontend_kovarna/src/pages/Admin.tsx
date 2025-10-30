@@ -25,7 +25,8 @@ function Admin() {
   const [formData, setFormData] = useState({
     slotFrom: '',
     slotTo: '',
-    active: true
+    active: true,
+    maxReservations: 10
   })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
@@ -106,7 +107,8 @@ function Admin() {
       const dataForBackend = {
         slotFrom: formatTimeForBackend(formData.slotFrom),
         slotTo: formatTimeForBackend(formData.slotTo),
-        active: formData.active
+        active: formData.active,
+        maxReservations: formData.maxReservations
       }
 
       if (editingSlot && editingSlot.id) {
@@ -122,7 +124,7 @@ function Admin() {
       }
 
       // Reset form
-      setFormData({ slotFrom: '', slotTo: '', active: true })
+      setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
       setEditingSlot(null)
       setIsDialogOpen(false)
     } catch (err: any) {
@@ -136,7 +138,8 @@ function Admin() {
     setFormData({
       slotFrom: formatTimeForDisplay(slot.slotFrom),
       slotTo: formatTimeForDisplay(slot.slotTo),
-      active: slot.active
+      active: slot.active,
+      maxReservations: slot.maxReservations || 10
     })
     setError('')
     setSuccess('')
@@ -145,7 +148,7 @@ function Admin() {
 
   const handleCreate = () => {
     setEditingSlot(null)
-    setFormData({ slotFrom: '', slotTo: '', active: true })
+    setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
     setError('')
     setSuccess('')
     setIsDialogOpen(true)
@@ -171,7 +174,7 @@ function Admin() {
 
   const handleCancel = () => {
     setEditingSlot(null)
-    setFormData({ slotFrom: '', slotTo: '', active: true })
+    setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
     setError('')
     setSuccess('')
     setIsDialogOpen(false)
@@ -187,7 +190,8 @@ function Admin() {
       const updatedData = {
         slotFrom: formatTimeForBackend(slot.slotFrom),
         slotTo: formatTimeForBackend(slot.slotTo),
-        active: !slot.active
+        active: !slot.active,
+        maxReservations: slot.maxReservations || 10
       }
       const updated = await adminService.updateSlot(slot.id, updatedData)
       setSlots(slots.map(s => s.id === slot.id ? updated : s))
@@ -228,6 +232,8 @@ function Admin() {
                 <tr>
                   <th>From</th>
                   <th>To</th>
+                  <th>Max Capacity</th>
+                  <th>Current</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -237,6 +243,8 @@ function Admin() {
                   <tr key={slot.id}>
                     <td>{formatTimeForDisplay(slot.slotFrom)}</td>
                     <td>{formatTimeForDisplay(slot.slotTo)}</td>
+                    <td>{slot.maxReservations || 10}</td>
+                    <td>{slot.currentReservations || 0}</td>
                     <td>
                       <span className={`status-badge ${slot.active ? 'active' : 'inactive'}`}>
                         {slot.active ? 'Active' : 'Inactive'}
@@ -297,6 +305,19 @@ function Admin() {
                   id="slotTo"
                   value={formData.slotTo}
                   onChange={(e) => setFormData({ ...formData, slotTo: e.target.value })}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="maxReservations">Max Capacity (people)</label>
+                <input
+                  type="number"
+                  id="maxReservations"
+                  min="1"
+                  max="100"
+                  value={formData.maxReservations}
+                  onChange={(e) => setFormData({ ...formData, maxReservations: parseInt(e.target.value) || 10 })}
                   required
                 />
               </div>

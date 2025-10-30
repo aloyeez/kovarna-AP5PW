@@ -5,6 +5,8 @@ export interface ReservationSlotDto {
   slotFrom: string; // "HH:mm:ss" format
   slotTo: string;   // "HH:mm:ss" format
   active: boolean;
+  maxReservations?: number;
+  currentReservations?: number;
 }
 
 export const adminService = {

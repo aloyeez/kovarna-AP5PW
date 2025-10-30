@@ -84,8 +84,10 @@ public class AdminReservationService {
     private ReservationResponseDto convertToDto(Reservation reservation) {
         ReservationResponseDto dto = new ReservationResponseDto();
         dto.setId(reservation.getId());
+        dto.setReservationId(reservation.getId()); // For backward compatibility
         dto.setUsername(reservation.getUser().getUsername());
-        dto.setReservationDate(reservation.getReservationDate());
+        dto.setDate(reservation.getReservationDate()); // Date of the reservation
+        dto.setReservationDate(reservation.getReservationDate()); // For backward compatibility
         dto.setGuestCount(reservation.getGuestCount());
         dto.setStatus(reservation.getStatus());
         dto.setSlotFrom(reservation.getSlot().getSlotFrom());

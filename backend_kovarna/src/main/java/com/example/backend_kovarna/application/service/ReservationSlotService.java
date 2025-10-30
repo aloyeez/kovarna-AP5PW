@@ -30,11 +30,22 @@ public class ReservationSlotService {
         if (exists) {
             throw new IllegalArgumentException("Slot with this time range already exists");
         }
-        
+
         ReservationSlot slot = new ReservationSlot();
         slot.setSlotFrom(dto.getSlotFrom());
         slot.setSlotTo(dto.getSlotTo());
         slot.setActive(dto.isActive());
+
+        // Set maxReservations with default of 10 if not provided
+        if (dto.getMaxReservations() != null && dto.getMaxReservations() > 0) {
+            slot.setMaxReservations(dto.getMaxReservations());
+        } else {
+            slot.setMaxReservations(10); // Default value
+        }
+
+        // Initialize currentReservations to 0
+        slot.setCurrentReservations(0);
+
         return mapToDto(repository.save(slot));
     }
 
@@ -45,6 +56,14 @@ public class ReservationSlotService {
         slot.setSlotFrom(dto.getSlotFrom());
         slot.setSlotTo(dto.getSlotTo());
         slot.setActive(dto.isActive());
+
+        // Update maxReservations if provided
+        if (dto.getMaxReservations() != null && dto.getMaxReservations() > 0) {
+            slot.setMaxReservations(dto.getMaxReservations());
+        }
+
+        // Note: currentReservations is managed by reservation creation/deletion logic
+        // and should not be directly updated here
 
         return mapToDto(repository.save(slot));
     }
@@ -75,6 +94,8 @@ public class ReservationSlotService {
         dto.setSlotFrom(slot.getSlotFrom());
         dto.setSlotTo(slot.getSlotTo());
         dto.setActive(slot.isActive());
+        dto.setMaxReservations(slot.getMaxReservations());
+        dto.setCurrentReservations(slot.getCurrentReservations());
         return dto;
     }
 }

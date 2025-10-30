@@ -17,6 +17,7 @@ export default function ReservationPage() {
   const [availableSlots, setAvailableSlots] = useState<ReservationSlot[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<'fetch' | 'submit' | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>('');
   const { user } = useAuth();
   const { t } = useLanguage();
 
@@ -36,7 +37,15 @@ export default function ReservationPage() {
     setError(null);
     try {
       const slots = await reservationService.getAvailableSlots(selectedDate);
-      setAvailableSlots(slots.filter(slot => slot.active));
+      // Filter out inactive slots and fully booked slots
+      const availableSlots = slots.filter(slot => {
+        const isActive = slot.active;
+        const hasSpace = slot.currentReservations !== undefined && slot.maxReservations !== undefined
+          ? slot.currentReservations < slot.maxReservations
+          : true; // If no capacity info, assume available
+        return isActive && hasSpace;
+      });
+      setAvailableSlots(availableSlots);
     } catch (err) {
       setError('fetch');
       console.error('Error fetching slots:', err);
@@ -60,17 +69,13 @@ export default function ReservationPage() {
 
     setLoading(true);
     setError(null);
+    setErrorMessage('');
 
     const requestData = {
       slotId: selectedSlot.id,
       date: selectedDate,
       guestCount: formData.guests,
     };
-
-    console.log('📤 Submitting reservation request:', requestData);
-    console.log('📅 Selected date:', selectedDate, 'Type:', typeof selectedDate);
-    console.log('🎫 Slot ID:', selectedSlot.id, 'Type:', typeof selectedSlot.id);
-    console.log('👥 Guest count:', formData.guests, 'Type:', typeof formData.guests);
 
     try {
       await reservationService.createReservation(requestData);
@@ -84,18 +89,20 @@ export default function ReservationPage() {
       });
     } catch (err: any) {
       setError('submit');
-      console.error('❌ Error submitting reservation:', err);
-      console.error('📋 Error response:', err.response?.data);
-      console.error('🔢 Error status:', err.response?.status);
-      console.error('📝 Error message:', err.message);
 
-      // Show validation errors if available
-      if (err.response?.data?.errors) {
-        console.error('⚠️ Validation errors:', err.response.data.errors);
+      // Extract backend error message
+      let backendError = '';
+      if (err.response?.data?.error) {
+        backendError = err.response.data.error;
+      } else if (err.response?.data?.message) {
+        backendError = err.response.data.message;
+      } else if (err.message) {
+        backendError = err.message;
       }
-      if (err.response?.data?.message) {
-        console.error('💬 Backend message:', err.response.data.message);
-      }
+
+      setErrorMessage(backendError);
+      console.error('❌ Error submitting reservation:', err);
+      console.error('📋 Backend error:', backendError);
     } finally {
       setLoading(false);
     }
@@ -160,18 +167,31 @@ export default function ReservationPage() {
                   </div>
                 ) : (
                   <div className="time-slot-grid">
-                    {availableSlots.map((slot) => (
-                      <button
-                        key={slot.id}
-                        type="button"
-                        className={`time-slot-btn ${
-                          selectedSlot?.id === slot.id ? "selected" : ""
-                        }`}
-                        onClick={() => setSelectedSlot(slot)}
-                      >
-                        {slot.slotFrom.substring(0, 5)} - {slot.slotTo.substring(0, 5)}
-                      </button>
-                    ))}
+                    {availableSlots.map((slot) => {
+                      const spotsLeft = slot.maxReservations && slot.currentReservations !== undefined
+                        ? slot.maxReservations - slot.currentReservations
+                        : null;
+
+                      return (
+                        <button
+                          key={slot.id}
+                          type="button"
+                          className={`time-slot-btn ${
+                            selectedSlot?.id === slot.id ? "selected" : ""
+                          }`}
+                          onClick={() => setSelectedSlot(slot)}
+                        >
+                          <div className="slot-time">
+                            {slot.slotFrom.substring(0, 5)} - {slot.slotTo.substring(0, 5)}
+                          </div>
+                          {spotsLeft !== null && spotsLeft <= 3 && (
+                            <div className="slot-availability">
+                              {spotsLeft} {spotsLeft === 1 ? t('reservations.spotLeft') || 'spot left' : t('reservations.spotsLeft') || 'spots left'}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -218,8 +238,8 @@ export default function ReservationPage() {
             {error && (
               <div className="error-message">
                 <div className="error-icon">⚠️</div>
-                <p>{error === 'submit' ? t('reservations.submitError') : t('reservations.fetchError')}</p>
-                <span className="error-hint">{error === 'submit' ? t('reservations.submitErrorHint') : t('reservations.fetchErrorHint')}</span>
+                <p>{errorMessage || (error === 'submit' ? t('reservations.submitError') : t('reservations.fetchError'))}</p>
+                {!errorMessage && <span className="error-hint">{error === 'submit' ? t('reservations.submitErrorHint') : t('reservations.fetchErrorHint')}</span>}
               </div>
             )}
             <div style={{ display: 'flex', gap: '10px' }}>

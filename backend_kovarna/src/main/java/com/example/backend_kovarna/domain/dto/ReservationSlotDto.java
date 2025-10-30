@@ -12,5 +12,7 @@ public class ReservationSlotDto {
     private LocalTime slotFrom;
     private LocalTime slotTo;
     private boolean active;
+    private Integer maxReservations;
+    private Integer currentReservations;
 }
 
