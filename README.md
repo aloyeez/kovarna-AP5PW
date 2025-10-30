@@ -49,9 +49,11 @@ cp src/main/resources/application.properties.example src/main/resources/applicat
 
 ```bash
 # Using Maven wrapper (recommended)
+./mvnw clean install
 ./mvnw spring-boot:run
 
 # Or with Maven
+mvn clean install
 mvn spring-boot:run
 ```
 
@@ -130,6 +132,7 @@ spring.flyway.enabled=true
 ### Development Mode
 
 **Backend (Terminal 1):**
+
 ```bash
 cd backend_kovarna
 ./mvn clean install
@@ -137,6 +140,7 @@ cd backend_kovarna
 ```
 
 **Frontend (Terminal 2):**
+
 ```bash
 cd frontend_kovarna
 npm run dev
@@ -145,6 +149,7 @@ npm run dev
 ### Production Build
 
 **Backend:**
+
 ```bash
 cd backend_kovarna
 ./mvnw clean package
@@ -152,6 +157,7 @@ java -jar target/backend_kovarna-0.0.1-SNAPSHOT.jar
 ```
 
 **Frontend:**
+
 ```bash
 cd frontend_kovarna
 npm run build
@@ -192,17 +198,20 @@ kovarna-AP5PW/
 ## 📚 API Documentation
 
 ### Access Points
+
 - **Swagger UI:** http://localhost:8080/swagger-ui.html
 - **API Docs:** http://localhost:8080/v3/api-docs
 
 ### Key Endpoints
 
 **Public:**
+
 - `POST /api/auth/register` - Register user
 - `POST /api/auth/login` - Login
 - `GET /api/opening-hours` - Get hours
 
 **Authenticated:**
+
 - `GET /api/auth/me` - Current user
 - `GET /api/reservations/slots?date=YYYY-MM-DD` - Available slots
 - `POST /api/reservations` - Create reservation
@@ -210,6 +219,7 @@ kovarna-AP5PW/
 - `DELETE /api/reservations/{id}` - Cancel reservation
 
 **Admin (ROLE_ADMIN):**
+
 - `GET /admin/reservations` - All reservations
 - `DELETE /admin/reservations/{id}` - Delete any reservation
 - `GET /admin/users` - All users
@@ -221,12 +231,14 @@ kovarna-AP5PW/
 ---
 
 **Relationships:**
+
 - User ↔ Role (M:M via join table)
 - Reservation → User (M:1)
 - Reservation → ReservationSlot (M:1)
 - ReservationSlot ← Reservation (1:M)
 
 #### 4. ORM Integration
+
 - Spring Data JPA + Hibernate
 - PostgreSQL database
 - All entities with JPA annotations:
@@ -235,12 +247,15 @@ kovarna-AP5PW/
   - `@Column`, `@JoinColumn`, `@JoinTable`
 
 #### 5. Database Migrations
+
 **Flyway** with 7 migrations in `resources/db/migration/`:
+
 - V1: Initial schema (users, roles, slots, reservations)
 - V2-V7: Schema evolution
 - Auto-executes on startup
 
 #### 6. Additional Requirements
+
 - ✅ Admin area (`/admin/*` endpoints)
 - ✅ Full CRUD + Edit functionality
 - ✅ 2+ roles (ADMIN, CUSTOMER)
@@ -290,6 +305,7 @@ WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';
 ## 🐛 Troubleshooting
 
 ### Port 8080 in use
+
 ```bash
 # Linux/Mac
 lsof -ti:8080 | xargs kill -9
@@ -300,21 +316,25 @@ taskkill /PID <PID> /F
 ```
 
 ### Database connection failed
+
 - Check PostgreSQL is running: `sudo systemctl status postgresql`
 - Verify credentials in `application.properties`
 - Ensure `kovarna_db` database exists
 
 ### Flyway migration errors
+
 - Drop database and recreate
 - Verify migration file syntax
 - Check numbering (V1, V2, V3...)
 
 ### Frontend can't connect
+
 - Verify backend on port 8080
 - Check `src/services/api.ts` base URL
 - Look for CORS errors in browser console
 
 ### npm install fails
+
 ```bash
 npm cache clean --force
 rm -rf node_modules package-lock.json
@@ -322,6 +342,7 @@ npm install
 ```
 
 ### CORS errors
+
 - Backend configured for `http://localhost:5173`
 - Update `SecurityConfig.java` if using different port
 
