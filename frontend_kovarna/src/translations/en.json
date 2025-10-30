@@ -93,7 +93,8 @@
     "noData": "No data available.",
     "loading": "Loading...",
     "error": "Error loading data. Please try again later.",
-    "scrollToTop": "Scroll to top"
+    "scrollToTop": "Scroll to top",
+    "back": "Back"
   },
   "footer": {
     "title": "Hospůdka U Kovárny",
@@ -189,13 +190,18 @@
     "successMessage": "Reservation submitted successfully! We'll confirm by email.",
     "submitError": "Failed to submit reservation",
     "submitErrorHint": "Please try again",
+    "makeReservation": "Make a Reservation",
+    "confirmationTitle": "Reservation Confirmation",
+    "username": "Username",
     "myReservations": {
       "title": "My Reservations",
       "noReservations": "You have no reservations yet.",
       "upcoming": "Upcoming Reservations",
       "past": "Past Reservations",
       "cancel": "Cancel",
-      "modify": "Modify"
+      "modify": "Modify",
+      "cancelConfirm": "Are you sure you want to cancel this reservation?",
+      "reservationId": "Reservation ID"
     }
   }
 }

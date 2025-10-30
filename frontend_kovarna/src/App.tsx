@@ -13,6 +13,7 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
 import Reservations from './pages/Reservations'
+import MyReservations from './pages/MyReservations'
 import Admin from './pages/Admin'
 import { useScrollToTop } from './hooks/useScrollToTop'
 import { LanguageProvider } from './contexts/LanguageContext'
@@ -63,6 +64,13 @@ function AppContent() {
           <ProtectedRoute>
             <main className="main-content">
               <Reservations />
+            </main>
+          </ProtectedRoute>
+        } />
+        <Route path="/my-reservations" element={
+          <ProtectedRoute>
+            <main className="main-content">
+              <MyReservations />
             </main>
           </ProtectedRoute>
         } />

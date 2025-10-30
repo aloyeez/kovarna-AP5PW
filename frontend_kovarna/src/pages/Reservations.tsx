@@ -48,7 +48,10 @@ export default function ReservationPage() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const value = e.target.name === 'guests'
+      ? parseInt(e.target.value, 10)
+      : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,12 +60,20 @@ export default function ReservationPage() {
 
     setLoading(true);
     setError(null);
+
+    const requestData = {
+      slotId: selectedSlot.id,
+      date: selectedDate,
+      guestCount: formData.guests,
+    };
+
+    console.log('📤 Submitting reservation request:', requestData);
+    console.log('📅 Selected date:', selectedDate, 'Type:', typeof selectedDate);
+    console.log('🎫 Slot ID:', selectedSlot.id, 'Type:', typeof selectedSlot.id);
+    console.log('👥 Guest count:', formData.guests, 'Type:', typeof formData.guests);
+
     try {
-      await reservationService.createReservation({
-        slotId: selectedSlot.id,
-        date: selectedDate,
-        guestCount: formData.guests,
-      });
+      await reservationService.createReservation(requestData);
       alert(t('reservations.successMessage'));
       // Reset form
       setStep("date");
@@ -71,9 +82,20 @@ export default function ReservationPage() {
       setFormData({
         guests: 1,
       });
-    } catch (err) {
+    } catch (err: any) {
       setError('submit');
-      console.error('Error submitting reservation:', err);
+      console.error('❌ Error submitting reservation:', err);
+      console.error('📋 Error response:', err.response?.data);
+      console.error('🔢 Error status:', err.response?.status);
+      console.error('📝 Error message:', err.message);
+
+      // Show validation errors if available
+      if (err.response?.data?.errors) {
+        console.error('⚠️ Validation errors:', err.response.data.errors);
+      }
+      if (err.response?.data?.message) {
+        console.error('💬 Backend message:', err.response.data.message);
+      }
     } finally {
       setLoading(false);
     }

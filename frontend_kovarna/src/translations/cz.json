@@ -93,7 +93,8 @@
     "noData": "Žádná data nejsou k dispozici.",
     "loading": "Načítání...",
     "error": "Chyba při načítání dat. Zkuste to prosím později.",
-    "scrollToTop": "Scroll na vrch"
+    "scrollToTop": "Scroll na vrch",
+    "back": "Zpět"
   },
   "footer": {
     "title": "Hospůdka U Kovárny",
@@ -189,13 +190,18 @@
     "successMessage": "Rezervace byla úspěšně odeslána! Potvrdíme ji e-mailem.",
     "submitError": "Nepodařilo se odeslat rezervaci",
     "submitErrorHint": "Zkuste to prosím znovu",
+    "makeReservation": "Vytvořit rezervaci",
+    "confirmationTitle": "Potvrzení rezervace",
+    "username": "Uživatelské jméno",
     "myReservations": {
       "title": "Moje rezervace",
       "noReservations": "Zatím nemáte žádné rezervace.",
       "upcoming": "Nadcházející rezervace",
       "past": "Minulé rezervace",
       "cancel": "Zrušit",
-      "modify": "Upravit"
+      "modify": "Upravit",
+      "cancelConfirm": "Opravdu chcete zrušit tuto rezervaci?",
+      "reservationId": "Číslo rezervace"
     }
   }
 }

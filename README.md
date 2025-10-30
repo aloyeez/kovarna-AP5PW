@@ -1,646 +1,442 @@
-## Hospůdka U Kovárny – Full Stack Restaurant Application
+# Hospůdka U Kovárny - Restaurant Reservation System
 
-Modern restaurant reservation system with React frontend and Spring MVC backend. Features dynamic menu management through Google Sheets integration, user authentication, and comprehensive reservation management.
+**School Project:** AP5PW - Web Applications
+**Submission:** Week 7
 
-### Tech Stack
+Modern restaurant reservation system with React frontend and Spring Boot backend.
 
-#### Frontend
-- **Framework**: React 19 + TypeScript
-- **Build Tool**: Vite
-- **Package Manager**: pnpm
-- **Styling**: Tailwind CSS v4 + Custom CSS
-- **Routing**: React Router DOM
-- **State Management**: React Context API
-- **HTTP Client**: Axios
-- **Dynamic Content**: Google Sheets integration (no API keys required)
+---
 
-#### Backend
-- **Framework**: Spring Boot 3.x + Spring MVC
-- **Language**: Java 17+
-- **Build Tool**: Maven
-- **Database**: PostgreSQL/MySQL (JPA/Hibernate)
-- **Authentication**: JWT + Spring Security
-- **Architecture**: Multi-layered (Presentation, Application, Infrastructure, Domain)
-- **API**: RESTful Web Services
+## 📋 Table of Contents
 
-## Prerequisites
+- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start)
+- [Detailed Setup](#detailed-setup)
+- [Running the Application](#running-the-application)
+- [Project Structure](#project-structure)
+- [Features](#features)
+- [API Documentation](#api-documentation)
+- [Week 7 Requirements](#week-7-requirements)
+- [Troubleshooting](#troubleshooting)
 
-### Frontend
-- **Node.js**: 18.0+ (LTS recommended)
-- **pnpm**: 9+
+---
 
-### Backend
-- **Java**: 17+ (JDK)
-- **Maven**: 3.8+
-- **Database**: PostgreSQL 13+ or MySQL 8.0+
+## 🔧 Prerequisites
 
-## Database Setup
+Ensure you have the following installed:
 
-### PostgreSQL Installation and Configuration
+- **Java 21** ([Download](https://www.oracle.com/java/technologies/downloads/))
+- **Node.js 18+** with npm ([Download](https://nodejs.org/))
+- **PostgreSQL 16+** ([Download](https://www.postgresql.org/download/))
+- **Maven 3.6+** (or use included wrapper)
 
-1. **Install PostgreSQL on Ubuntu/Debian:**
-   ```bash
-   sudo apt update
-   sudo apt install postgresql postgresql-contrib -y
-   sudo systemctl start postgresql
-   sudo systemctl enable postgresql
-   ```
+---
 
-2. **Create Database and User:**
-   ```bash
-   # Connect to PostgreSQL as postgres user
-   sudo -u postgres psql
+## 🚀 Quick Start
 
-   # Create database and user
-   CREATE DATABASE kovarna_db;
-   CREATE USER kovarna_user WITH PASSWORD 'your_secure_password';
-   GRANT ALL PRIVILEGES ON DATABASE kovarna_db TO kovarna_user;
-   \q
-   ```
+### 1. Database Setup
 
-3. **Set Environment Variable:**
-   ```bash
-   # Set the database password as environment variable
-   export DB_PASSWORD=your_secure_password
-
-   # Add to ~/.bashrc for persistence
-   echo 'export DB_PASSWORD=your_secure_password' >> ~/.bashrc
-   source ~/.bashrc
-   ```
-
-4. **Configure Remote Access (Optional):**
-   If you need to connect from a different server:
-   ```bash
-   # Edit postgresql.conf
-   sudo nano /etc/postgresql/16/main/postgresql.conf
-   # Change: listen_addresses = 'localhost' to listen_addresses = '*'
-
-   # Edit pg_hba.conf
-   sudo nano /etc/postgresql/16/main/pg_hba.conf
-   # Add line: host kovarna_db kovarna_user 0.0.0.0/0 md5
-
-   # Restart PostgreSQL
-   sudo systemctl restart postgresql
-   ```
-
-### Database Configuration Files
-
-The project uses environment variables for secure database configuration:
-
-- **`application.properties`**: Contains database configuration with environment variable placeholders
-- **`application.properties.example`**: Template file showing required configuration structure
-- **Environment Variable Required**: `DB_PASSWORD` must be set before running the application
-
-### Security Notes
-
-- Database passwords are never stored in the repository
-- Use the `DB_PASSWORD` environment variable for the database password
-- The `application.properties.example` file shows the required configuration structure
-- For production, consider using additional environment variables for database URL and username
-
-### Install Prerequisites
-
-#### Install pnpm
 ```bash
-# Recommended (Node 16.13+):
-corepack enable
-corepack prepare pnpm@latest --activate
+# Connect to PostgreSQL
+psql -U postgres
 
-# Or via npm (alternative):
-npm i -g pnpm
+# Create database
+CREATE DATABASE kovarna_db;
+
+# Exit
+\q
 ```
 
-#### Install Java (if not already installed)
+### 2. Configure Backend
+
 ```bash
-# Ubuntu/Debian
-sudo apt update
-sudo apt install openjdk-17-jdk
-
-# macOS (using Homebrew)
-brew install openjdk@17
-
-# Windows (using Chocolatey)
-choco install openjdk17
-```
-
-## Quick Start
-
-### 1. Backend Setup
-```bash
-# Navigate to backend directory
 cd backend_kovarna
 
-# Compile and run Spring Boot application
+# Copy configuration template
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+
+# Edit application.properties with your settings:
+# - Database URL, username, password
+# - JWT secret key (minimum 256 bits)
+```
+
+### 3. Start Backend
+
+```bash
+# Using Maven wrapper (recommended)
 ./mvnw spring-boot:run
 
-# Backend will start on http://localhost:8080
+# Or with Maven
+mvn spring-boot:run
 ```
 
-### 2. Frontend Setup
+**Backend:** http://localhost:8080
+**API Docs:** http://localhost:8080/swagger-ui.html
+
+### 4. Start Frontend
+
 ```bash
-# Navigate to frontend directory
+# New terminal
 cd frontend_kovarna
 
-# Copy environment configuration
-cp .env.example .env
-
 # Install dependencies
-pnpm install
+npm install
 
-# Start the dev server
-pnpm dev
-
-# Frontend will start on http://localhost:5173
+# Start dev server
+npm run dev
 ```
 
-### Common Scripts
+**Frontend:** http://localhost:5173
 
-#### Frontend (`frontend_kovarna/`)
-- **dev**: start Vite dev server → `pnpm dev`
-- **build**: type-check and build for production → `pnpm build`
-- **preview**: preview the production build locally → `pnpm preview`
-- **lint**: run ESLint → `pnpm lint`
+---
 
-#### Backend (`backend_kovarna/`)
-- **run**: start Spring Boot application → `./mvnw spring-boot:run`
-- **compile**: compile Java sources → `./mvnw compile`
-- **test**: run unit tests → `./mvnw test`
-- **package**: create JAR file → `./mvnw package`
+## 📝 Detailed Setup
 
-## Project Structure
+### Database Configuration
+
+1. **Create PostgreSQL Database:**
+
+```sql
+CREATE DATABASE kovarna_db;
+CREATE USER kovarna_user WITH PASSWORD 'your_password';
+GRANT ALL PRIVILEGES ON DATABASE kovarna_db TO kovarna_user;
+```
+
+2. **Configure Backend** (`backend_kovarna/src/main/resources/application.properties`):
+
+```properties
+# Database
+spring.datasource.url=jdbc:postgresql://localhost:5432/kovarna_db
+spring.datasource.username=kovarna_user
+spring.datasource.password=your_password
+
+# JWT
+jwt.secret=your-256-bit-secret-key-here
+jwt.expiration=86400000
+
+# Flyway migrations (automatic)
+spring.flyway.enabled=true
+```
+
+**Note:** Tables are created automatically by Flyway on first startup.
+
+### Backend Configuration
+
+- **Framework:** Spring Boot 3.5.6
+- **Java Version:** 21
+- **Database:** PostgreSQL with Flyway migrations
+- **Security:** JWT authentication + Spring Security
+- **API Docs:** Swagger/OpenAPI
+
+### Frontend Configuration
+
+- **Framework:** React 19 + TypeScript
+- **Build Tool:** Vite
+- **Styling:** Custom CSS + Bootstrap
+- **State:** React Context API
+- **HTTP:** Axios
+
+**API URL:** Configured in `src/services/api.ts` (default: `http://localhost:8080`)
+
+---
+
+## 🏃 Running the Application
+
+### Development Mode
+
+**Backend (Terminal 1):**
+```bash
+cd backend_kovarna
+./mvn clean install
+./mvn spring-boot:run
+```
+
+**Frontend (Terminal 2):**
+```bash
+cd frontend_kovarna
+npm run dev
+```
+
+### Production Build
+
+**Backend:**
+```bash
+cd backend_kovarna
+./mvnw clean package
+java -jar target/backend_kovarna-0.0.1-SNAPSHOT.jar
+```
+
+**Frontend:**
+```bash
+cd frontend_kovarna
+npm run build
+# Output in dist/ folder
+```
+
+---
+
+## 📁 Project Structure
+
 ```
 kovarna-AP5PW/
-├─ frontend_kovarna/       # React Frontend Application
-│  ├─ public/              # Static assets served as-is
-│  │  └─ index.html        # Main HTML file with Facebook SDK
-│  ├─ src/
-│  │  ├─ assets/           # App assets (images, etc.)
-│  │  │  └─ logo.png       # Navbar logo
-│  │  ├─ components/       # Reusable UI components
-│  │  │  ├─ Navbar.tsx     # Navigation bar with auth buttons
-│  │  │  ├─ Footer.tsx     # Website footer
-│  │  │  └─ *.css          # Component styles
-│  │  ├─ pages/            # Page components
-│  │  │  ├─ Home.tsx       # Homepage
-│  │  │  ├─ About.tsx      # About page
-│  │  │  ├─ DailyMenu.tsx  # Daily menu (Google Sheets)
-│  │  │  ├─ RegularMenu.tsx# Permanent menu
-│  │  │  ├─ Contact.tsx    # Contact page
-│  │  │  ├─ Login.tsx      # User login with success messages
-│  │  │  ├─ SignUp.tsx     # User registration
-│  │  │  └─ Reservations.tsx # Reservation management
-│  │  ├─ contexts/         # React Context providers
-│  │  │  ├─ LanguageContext.tsx # i18n support
-│  │  │  └─ AuthContext.tsx     # Auth state management
-│  │  ├─ services/         # API communication
-│  │  │  ├─ api.ts         # Base API config with axios
-│  │  │  ├─ authService.ts # Authentication API
-│  │  │  └─ reservationService.ts # Reservation API
-│  │  ├─ utils/
-│  │  │  └─ googleSheets.ts# Google Sheets integration
-│  │  ├─ config/
-│  │  │  └─ sheets.ts      # Google Sheets URLs
-│  │  ├─ translations/     # i18n translation files
-│  │  │  ├─ en.json        # English translations
-│  │  │  └─ cz.json        # Czech translations
-│  │  ├─ App.tsx           # Root component with routing
-│  │  ├─ main.tsx          # Vite entry point
-│  │  └─ index.css         # Global styles and Tailwind CSS
-│  ├─ package.json         # Frontend dependencies
-│  ├─ vite.config.ts       # Vite configuration with proxy
-│  ├─ tsconfig.json        # TypeScript configuration
-│  ├─ .env                 # Environment variables (local)
-│  ├─ .env.example         # Environment variables template
-│  └─ .gitignore           # Git ignore rules
+├── backend_kovarna/                 # Spring Boot Backend
+│   ├── src/main/java/.../
+│   │   ├── presentation/            # Controllers (REST API)
+│   │   ├── application/             # Services (Business Logic)
+│   │   ├── domain/                  # Entities, DTOs, Validation
+│   │   └── infrastructure/          # Repositories, Config
+│   ├── src/main/resources/
+│   │   ├── db/migration/            # Flyway migrations (V1-V7)
+│   │   └── application.properties
+│   └── pom.xml
 │
-├─ backend_kovarna/        # Spring Boot Backend Application
-│  ├─ src/
-│  │  ├─ main/
-│  │  │  ├─ java/com/kovarna/
-│  │  │  │  ├─ presentation/      # Controllers (Presentation Layer)
-│  │  │  │  │  ├─ controllers/    # REST Controllers
-│  │  │  │  │  └─ dto/            # Data Transfer Objects
-│  │  │  │  ├─ application/       # Services (Application Layer)
-│  │  │  │  │  ├─ services/       # Business logic services
-│  │  │  │  │  └─ validators/     # Custom validation attributes
-│  │  │  │  ├─ infrastructure/    # Data Access (Infrastructure Layer)
-│  │  │  │  │  ├─ repositories/   # JPA Repositories
-│  │  │  │  │  └─ config/         # Database configuration
-│  │  │  │  ├─ domain/            # Entities (Domain Layer)
-│  │  │  │  │  ├─ entities/       # JPA Entities
-│  │  │  │  │  └─ enums/          # Domain enums
-│  │  │  │  └─ security/          # Spring Security configuration
-│  │  │  │     ├─ jwt/            # JWT token handling
-│  │  │  │     └─ config/         # Security configuration
-│  │  │  └─ resources/
-│  │  │     ├─ application.properties # Spring Boot configuration
-│  │  │     └─ db/migration/      # Database migrations
-│  │  └─ test/                    # Unit and integration tests
-│  ├─ pom.xml              # Maven dependencies
-│  ├─ mvnw                 # Maven wrapper (Unix)
-│  └─ mvnw.cmd             # Maven wrapper (Windows)
+├── frontend_kovarna/                # React Frontend
+│   ├── src/
+│   │   ├── components/              # Reusable UI components
+│   │   ├── pages/                   # Page components
+│   │   ├── services/                # API layer
+│   │   ├── contexts/                # Auth, Language contexts
+│   │   └── translations/            # Czech, English i18n
+│   └── package.json
 │
-├─ README.md               # Project documentation
-└─ .gitignore             # Git ignore rules
+└── README.md                        # This file
 ```
 
-## Environment Configuration
+---
 
-### Frontend
+## ✨ Features
 
-The frontend uses environment variables for API configuration:
+### Customer Features
+- User registration & JWT authentication
+- Browse restaurant menu
+- Make table reservations (date, time, guests)
+- View & cancel own reservations
+- Multilingual (Czech/English)
+- Responsive design
 
-1. **Create `.env` file from template:**
-   ```bash
-   cd frontend_kovarna
-   cp .env.example .env
-   ```
+### Admin Features (ROLE_ADMIN)
+- View all reservations
+- Manage time slots (CRUD)
+- Manage users (view details, roles)
+- Manage opening hours (CRUD)
+- Full admin dashboard
 
-2. **Environment variables:**
-   - `VITE_API_URL`: Backend API URL (default: `http://localhost:8080`)
+### Technical Features
+- **4-layer architecture** (Presentation, Application, Domain, Infrastructure)
+- **6 entities** with relationships (exceeds requirement of 5)
+- **Flyway migrations** (7 migration files)
+- **JPA/Hibernate** with PostgreSQL
+- **JWT authentication** with role-based access
+- **Custom validation** (`@FutureReservationDate`)
+- **Swagger API docs**
+- **CORS configured**
+- **BCrypt password hashing**
 
-### Development Setup
+---
 
-The frontend uses Vite's proxy configuration to bypass CORS issues during development. All requests to `/api` are automatically proxied to the backend server specified in `vite.config.ts`.
+## 📚 API Documentation
 
-## Features
+### Access Points
+- **Swagger UI:** http://localhost:8080/swagger-ui.html
+- **API Docs:** http://localhost:8080/v3/api-docs
 
-### 🍽️ Dynamic Menu Management
-- **Daily Menu**: Automatically fetches from Google Sheets
-- **Regular Menu**: Permanent menu items
-- **Real-time Updates**: Menu changes appear instantly on the website
-- **No API Keys Required**: Uses public CSV export from Google Sheets
+### Key Endpoints
 
-### 🔐 User Authentication & Authorization
-- **Multi-role System**: Admin, Manager, Customer roles
-- **JWT Authentication**: Secure token-based authentication
-- **Protected Routes**: Role-based access control
-- **User Registration**: Self-service user registration
+**Public:**
+- `POST /api/auth/register` - Register user
+- `POST /api/auth/login` - Login
+- `GET /api/opening-hours` - Get hours
 
-### 📅 Reservation Management
-- **Customer Reservations**: Users can create, view, and cancel their reservations
-- **Table Management**: Admin/Manager can manage restaurant tables
-- **Service Management**: Configurable restaurant services
-- **Admin Dashboard**: Complete CRUD operations for all entities
-- **Manager Interface**: Limited admin access for customer-facing operations
+**Authenticated:**
+- `GET /api/auth/me` - Current user
+- `GET /api/reservations/slots?date=YYYY-MM-DD` - Available slots
+- `POST /api/reservations` - Create reservation
+- `GET /api/reservations` - User's reservations
+- `DELETE /api/reservations/{id}` - Cancel reservation
 
-### 🎨 Modern Design
-- **Responsive Layout**: Works on all devices (mobile, tablet, desktop)
-- **Dark Theme**: Professional restaurant aesthetic
-- **Golden Accents**: Elegant color scheme
-- **Smooth Animations**: Enhanced user experience
-- **Multilingual Support**: Czech and English translations
+**Admin (ROLE_ADMIN):**
+- `GET /admin/reservations` - All reservations
+- `DELETE /admin/reservations/{id}` - Delete any reservation
+- `GET /admin/users` - All users
+- `CRUD /admin/slots` - Manage time slots
+- `CRUD /admin/opening-hours` - Manage hours
 
-### 📱 Social Integration
-- **Facebook Page Plugin**: Embedded Facebook timeline
-- **Google Maps**: Interactive location map
-- **Contact Information**: Complete restaurant details
+**Full Documentation:** Available in Swagger UI at http://localhost:8080/swagger-ui.html
 
-### 🏗️ Architecture & Development
-- **Multi-layered Architecture**: Clean separation of concerns
-- **RESTful API**: Standard REST endpoints for frontend-backend communication
-- **Code-First Database**: JPA/Hibernate with automatic migrations
-- **Custom Validation**: Server-side validation with custom attributes
-- **Unit Testing**: Comprehensive test coverage (planned)
-- **Logging**: Application logging for monitoring and debugging (planned)
+---
 
-## API Documentation
+## 📖 Week 7 Requirements
 
-### Base URL
-```
-http://localhost:8080/api
-```
+### ✅ All Requirements Met
 
-### Authentication Endpoints
+#### 1. Design Documentation
+**Included in this README and code comments**
 
-#### POST `/auth/register`
-Register a new user
-```json
-{
-  "username": "johndoe",
-  "email": "john.doe@example.com",
-  "password": "securePassword123"
-}
-```
-**Response:**
-```json
-{
-  "id": 1,
-  "username": "johndoe",
-  "email": "john.doe@example.com"
-}
-```
+**Project includes:**
+- Functional requirements (documented in code)
+- Database schema with 6 entities
+- API endpoint documentation (Swagger/OpenAPI)
+- Multi-layered architecture implementation
 
-#### POST `/auth/login` (To be implemented)
-Login with existing credentials - currently uses HTTP Basic Auth
-```json
-{
-  "username": "johndoe",
-  "password": "securePassword123"
-}
-```
+#### 2. Multi-Layered Architecture
+**4 layers implemented:**
+- **Presentation** - REST Controllers
+- **Application** - Business Logic Services
+- **Domain** - Entities, DTOs, Validators
+- **Infrastructure** - Repositories, Database Config
 
-#### GET `/auth/me`
-Get current authenticated user info
-**Headers:** `Authorization: Basic {credentials}`
-**Response:**
-```json
-"Current user: johndoe"
-```
+**Compliance:**
+- ✅ No SQL in web layer (only JPA)
+- ✅ All functionality through services
+- ✅ Presentation doesn't access Infrastructure directly
+- ✅ Controllers contain no business logic
 
-### Reservation Endpoints
+#### 3. Entities & Relationships
+**6 entities** (requirement: 5):
+1. **User** - Users with auth
+2. **Role** - ADMIN, CUSTOMER
+3. **Reservation** - Table bookings
+4. **ReservationSlot** - Time slots
+5. **OpeningHours** - Restaurant hours
+6. **Event** - Promotions (bonus feature)
 
-#### GET `/reservations` (Customer)
-Get user's own reservations
-**Headers:** `Authorization: Bearer {token}`
+**Relationships:**
+- User ↔ Role (M:M via join table)
+- Reservation → User (M:1)
+- Reservation → ReservationSlot (M:1)
+- ReservationSlot ← Reservation (1:M)
 
-#### POST `/reservations` (Customer)
-Create a new reservation
-```json
-{
-  "tableId": 1,
-  "dateTime": "2025-09-25T19:00:00",
-  "numberOfGuests": 4,
-  "notes": "Birthday celebration",
-  "services": [1, 2]
-}
-```
+#### 4. ORM Integration
+- Spring Data JPA + Hibernate
+- PostgreSQL database
+- All entities with JPA annotations:
+  - `@Entity`, `@Table`, `@Id`
+  - `@ManyToOne`, `@OneToMany`, `@ManyToMany`
+  - `@Column`, `@JoinColumn`, `@JoinTable`
 
-#### PUT `/reservations/{id}` (Customer)
-Update existing reservation (own reservations only)
+#### 5. Database Migrations
+**Flyway** with 7 migrations in `resources/db/migration/`:
+- V1: Initial schema (users, roles, slots, reservations)
+- V2-V7: Schema evolution
+- Auto-executes on startup
 
-#### DELETE `/reservations/{id}` (Customer)
-Cancel reservation (own reservations only)
+#### 6. Additional Requirements
+- ✅ Admin area (`/admin/*` endpoints)
+- ✅ Full CRUD + Edit functionality
+- ✅ 2+ roles (ADMIN, CUSTOMER)
+- ✅ User registration & login
+- ✅ JWT authentication
+- ✅ Server-side validation
+- ✅ Custom validator: `@FutureReservationDate`
+- ✅ Responsive frontend (Bootstrap)
+- ✅ React framework
 
-### Admin/Manager Endpoints
+---
 
-#### GET `/admin/reservations` (Admin, Manager)
-Get all reservations with filtering
-**Query Parameters:**
-- `date`: Filter by date (YYYY-MM-DD)
-- `status`: Filter by status (PENDING, CONFIRMED, CANCELLED)
-- `tableId`: Filter by table
+## 🎁 Bonus Features Status
 
-#### GET `/admin/tables` (Admin, Manager)
-Get all restaurant tables
+| Feature | Status | Points |
+|---------|--------|--------|
+| **File/Image Upload** | ⚠️ 50% (Entity & Service exist) | +1 |
+| **Unit Tests** | ❌ Not implemented | +1 |
+| **Logging** | ❌ Not implemented | +1 |
 
-#### POST `/admin/tables` (Admin, Manager)
-Create new table
-```json
-{
-  "number": "T1",
-  "capacity": 4,
-  "location": "Main dining area",
-  "isActive": true
-}
-```
+---
 
-#### GET `/admin/services` (Admin, Manager)
-Get all available services
+## 🔐 Default Users
 
-#### POST `/admin/services` (Admin, Manager)
-Create new service
-```json
-{
-  "name": "Wine tasting",
-  "description": "Premium wine selection",
-  "duration": 120,
-  "price": 50.00
-}
+After setup, create admin user:
+
+### Option 1: Register via UI + Manual Role Assignment
+
+1. Register at http://localhost:5173/signup
+2. Add admin role in database:
+
+```sql
+INSERT INTO users_roles (user_id, role_id)
+SELECT u.id, r.id
+FROM users u, roles r
+WHERE u.username = 'your_username'
+  AND r.name = 'ROLE_ADMIN';
 ```
 
-#### GET `/admin/users` (Admin only)
-Get all users with role management
+### Option 2: Direct SQL Insert
 
-### Entity Models
+```sql
+-- Insert admin user (password: admin123)
+INSERT INTO users (username, email, password_hash, enabled, reservation_date)
+VALUES ('admin', 'admin@kovarna.cz',
+  '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy',
+  true, CURRENT_DATE);
 
-#### User
-```typescript
-interface User {
-  id: number
-  firstName: string
-  lastName: string
-  email: string
-  phoneNumber?: string
-  role: 'ADMIN' | 'MANAGER' | 'CUSTOMER'
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-}
+-- Assign admin role
+INSERT INTO users_roles (user_id, role_id)
+SELECT u.id, r.id FROM users u, roles r
+WHERE u.username = 'admin' AND r.name = 'ROLE_ADMIN';
 ```
 
-#### Reservation
-```typescript
-interface Reservation {
-  id: number
-  userId: number
-  tableId: number
-  dateTime: string
-  numberOfGuests: number
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED' | 'COMPLETED'
-  notes?: string
-  services: Service[]
-  createdAt: string
-  updatedAt: string
-}
+---
+
+## 🐛 Troubleshooting
+
+### Port 8080 in use
+```bash
+# Linux/Mac
+lsof -ti:8080 | xargs kill -9
+
+# Windows
+netstat -ano | findstr :8080
+taskkill /PID <PID> /F
 ```
 
-#### Table
-```typescript
-interface Table {
-  id: number
-  number: string
-  capacity: number
-  location: string
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-}
+### Database connection failed
+- Check PostgreSQL is running: `sudo systemctl status postgresql`
+- Verify credentials in `application.properties`
+- Ensure `kovarna_db` database exists
+
+### Flyway migration errors
+- Drop database and recreate
+- Verify migration file syntax
+- Check numbering (V1, V2, V3...)
+
+### Frontend can't connect
+- Verify backend on port 8080
+- Check `src/services/api.ts` base URL
+- Look for CORS errors in browser console
+
+### npm install fails
+```bash
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install
 ```
 
-#### Service
-```typescript
-interface Service {
-  id: number
-  name: string
-  description: string
-  duration: number // minutes
-  price: number
-  isActive: boolean
-  createdAt: string
-  updatedAt: string
-}
-```
+### CORS errors
+- Backend configured for `http://localhost:5173`
+- Update `SecurityConfig.java` if using different port
 
-### Error Responses
-```json
-{
-  "error": "VALIDATION_ERROR",
-  "message": "Invalid input data",
-  "details": [
-    {
-      "field": "email",
-      "message": "Email is required"
-    }
-  ],
-  "timestamp": "2025-09-20T10:30:00Z"
-}
-```
+### 400 Bad Request on reservation
+- Check browser console for validation errors
+- Ensure date format: YYYY-MM-DD
+- Guest count must be 1-10
+- Select future date only
 
-### Status Codes
-- `200`: Success
-- `201`: Created
-- `400`: Bad Request (validation errors)
-- `401`: Unauthorized (invalid/missing token)
-- `403`: Forbidden (insufficient permissions)
-- `404`: Not Found
-- `409`: Conflict (duplicate data)
-- `500`: Internal Server Error
+---
 
-## Google Sheets Integration
+## 📞 Support
 
-### Setup Instructions
+**Documentation:**
+- API Documentation: http://localhost:8080/swagger-ui.html
+- OpenAPI Specification: http://localhost:8080/v3/api-docs
+- This README contains all setup and usage instructions
 
-1. **Create a Google Sheet** with the following structure:
-   ```
-   Date | Day | Type | Name | Price | Allergens
-   ```
+---
 
-2. **Example Data**:
-   ```
-   Date        | Day      | Type | Name                                    | Price  | Allergens
-   11.8.2025  | Pondělí  | INFO | Pro tento den nebylo zadáno menu.       |        |           |
-   12.8.2025  | Úterý    | SOUP | Kuřecí vývar s masem a nudlemi         | 20 Kč  | 1 3 9     |
-   12.8.2025  | Úterý    | MAIN | Vepřové výpečky s dušeným špenátem     | 159 Kč | 1 3 7     |
-   13.8.2025  | Středa   | OFFER| K menu č. 1 a 2 domácí moučník zdarma  |        |           |
-   ```
+## 📄 License
 
-3. **Make it Public**: Share → Anyone with the link → Viewer
+Academic project for AP5PW course.
 
-4. **Update Configuration**: Edit `src/config/sheets.ts` with your sheet URL
+---
 
-### Data Types
-- **SOUP**: Soup items
-- **MAIN**: Main course dishes
-- **OFFER**: Special offers or promotions
-- **INFO**: General information for a day
-
-### Detailed Sheet Structure
-
-#### **Column Definitions**
-
-| Column | Required | Description | Example |
-|--------|----------|-------------|---------|
-| **Date** | ✅ Yes | Date in DD.MM.YYYY format | `11.8.2025` |
-| **Day** | ✅ Yes | Day name in Czech | `Pondělí`, `Úterý`, `Středa` |
-| **Type** | ✅ Yes | Item category | `SOUP`, `MAIN`, `OFFER`, `INFO` |
-| **Name** | ✅ Yes | Item description | `Kuřecí vývar s masem, zeleninou a nudlemi` |
-| **Price** | ⚠️ Conditional | Price in Czech Koruna (not needed for INFO/OFFER) | `20 Kč`, `159 Kč` |
-| **Allergens** | ❌ No | Space-separated allergen codes | `1 3 9`, `1 3 7 10` |
-
-#### **Data Type Rules**
-
-##### **INFO Type**
-- Used for general information about a day
-- **Required fields**: Date, Day, Type, Name
-- **Optional fields**: All others can be empty
-- **Example**:
-  ```
-  Date: 11.8.2025 | Day: Pondělí | Type: INFO | Name: Pro tento den nebylo zadáno menu.
-  ```
-
-##### **SOUP Type**
-- Used for soup items
-- **Required fields**: Date, Day, Type, Name, Price
-- **Optional fields**: Allergens, Special
-- **Example**:
-  ```
-  Date: 11.8.2025 | Day: Pondělí | Type: SOUP | Name: Kuřecí vývar s masem, zeleninou a nudlemi | Price: 20 Kč | Allergens: 1 3 9
-  ```
-
-##### **MAIN Type**
-- Used for main course dishes
-- **Required fields**: Date, Day, Type, Name, Price
-- **Optional fields**: Allergens, Special
-- **Example**:
-  ```
-  Date: 11.8.2025 | Day: Pondělí | Type: MAIN | Name: Vepřové výpečky, dušený špenát, bramborový knedlík / brambory / | Price: 159 Kč | Allergens: 1 3 7
-  ```
-
-##### **OFFER Type**
-- Used for special offers or promotions
-- **Required fields**: Date, Day, Type, Name
-- **Optional fields**: All others can be empty
-- **Example**:
-  ```
-  Date: 11.8.2025 | Day: Pondělí | Type: OFFER | Name: K menu č. 1 a 2 domácí moučník zdarma
-  ```
-
-#### **Complete Example Sheet**
-
-Here's a complete example of how your Google Sheet should look:
-
-| Date | Day | Type | Name | Price | Allergens |
-|------|-----|------|------|-------|-----------|
-| 11.8.2025 | Pondělí | INFO | | Pro tento den nebylo zadáno menu. | | |
-| 11.8.2025 | Pondělí | SOUP | | Kuřecí vývar s masem, zeleninou a nudlemi | 20 Kč | 1 3 9 |
-| 11.8.2025 | Pondělí | MAIN | | Vepřové výpečky, dušený špenát, bramborový knedlík / brambory / | 159 Kč | 1 3 7 |
-| 11.8.2025 | Pondělí | MAIN | | Brynzové halušky s opečenou slaninou | 149 Kč | 1 3 7 |
-| 11.8.2025 | Pondělí | MAIN | | Vídeňská hovězí roštěná s opečenou cibulkou (150g), dušená rýže / hranolky / | 189 Kč | 1 3 7 10 |
-| 11.8.2025 | Pondělí | OFFER | | K menu č. 1 a 2 domácí moučník zdarma | | |
-
-#### **Best Practices**
-
-1. **Consistent Date Format**: Always use DD.MM.YYYY format
-2. **Day Names**: Use full Czech day names (Pondělí, Úterý, Středa, Čtvrtek, Pátek, Sobota, Neděle)
-3. **Type Values**: Use exact values: `SOUP`, `MAIN`, `OFFER`, `INFO` (case sensitive)
-4. **Price Format**: Use "XX Kč" format consistently
-5. **Allergen Codes**: Use space-separated numbers (1 3 9)
-
-#### **Common Mistakes to Avoid**
-
-❌ **Don't do this:**
-- Mix date formats (11.8.2025 vs 11/8/2025)
-- Use abbreviated day names (Po, Út, St)
-- Leave required fields empty
-- Use incorrect Type values (soup, main, offer)
-
-✅ **Do this instead:**
-- Use consistent DD.MM.YYYY format
-- Use full day names (Pondělí, Úterý, Středa)
-- Fill all required fields
-- Use exact Type values (SOUP, MAIN, OFFER, INFO)
-
-#### **Troubleshooting Sheet Issues**
-
-| Problem | Solution |
-|---------|----------|
-| Menu not loading | Check if sheet is public and URL is correct |
-| Missing menu items | Verify all required fields are filled |
-| Wrong data display | Check Type values are exactly: SOUP, MAIN, OFFER, INFO |
-| Price not showing | Ensure Price field is filled for SOUP and MAIN types |
-| Allergens missing | Check Allergens column format (space-separated numbers) |
-| Special offers not working | Verify OFFER type items have Name field filled |
-
-### Advanced Features
-
-#### **Adding New Data Types**
-To add new menu categories (e.g., DESSERT, DRINK), update the `googleSheets.ts` file:
-
-1. Add new type to the switch statement
-2. Update the OrganizedDayData interface
-3. Add corresponding display logic in DailyMenu.tsx
-
-#### **Custom Fields**
-You can add custom columns like:
-- **Image**: For food photos
-- **Description**: Additional item details
-- **Category**: Sub-categories within main types
-- **Availability**: Stock status
-
-Remember to update the TypeScript interfaces and parsing logic accordingly.
-
-## Customization
-
-### Logo and Branding
-- **Logo**: Replace `
+**Last Updated:** 2025-10-30
+**Version:** 1.0 (Week 7 Submission)
