@@ -5,10 +5,11 @@ import { useLanguage } from '../contexts/LanguageContext'
 
 interface ProtectedRouteProps {
   children: ReactNode
+  requiredRole?: string // Optional role requirement (e.g., "ROLE_ADMIN")
 }
 
-function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth()
+function ProtectedRoute({ children, requiredRole }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading, hasRole } = useAuth()
   const { t } = useLanguage()
   const location = useLocation()
 
@@ -26,6 +27,12 @@ function ProtectedRoute({ children }: ProtectedRouteProps) {
   if (!isAuthenticated) {
     // Redirect to login page with return URL
     return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  // Check role requirement if specified
+  if (requiredRole && !hasRole(requiredRole)) {
+    // User doesn't have required role, redirect to home
+    return <Navigate to="/" replace />
   }
 
   return <>{children}</>

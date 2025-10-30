@@ -67,7 +67,7 @@ function AppContent() {
           </ProtectedRoute>
         } />
         <Route path="/admin" element={
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="ROLE_ADMIN">
             <main className="main-content">
               <Admin />
             </main>

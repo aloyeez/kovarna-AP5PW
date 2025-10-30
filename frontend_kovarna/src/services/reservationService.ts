@@ -1,35 +1,31 @@
 import api from './api';
 
 export interface ReservationSlot {
-  id: string;
-  startTime: string;
-  endTime: string;
-  date: string;
-  isAvailable: boolean;
-  capacity: number;
+  id: number; // Backend uses Long
+  slotFrom: string; // LocalTime format "HH:mm:ss"
+  slotTo: string; // LocalTime format "HH:mm:ss"
+  active: boolean;
+  currentReservations?: number; // Optional for availability display
+  maxReservations?: number; // Optional for availability display
 }
 
 export interface ReservationRequest {
-  slotId: string;
-  numberOfGuests: number;
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  specialRequests?: string;
+  slotId: number; // Backend expects Long
+  date: string; // LocalDate format "YYYY-MM-DD"
+  guestCount: number; // Must be 1-10
 }
 
 export interface ReservationResponse {
-  id: string;
-  slotId: string;
-  userId?: string;
-  customerName: string;
-  customerEmail: string;
-  customerPhone: string;
-  numberOfGuests: number;
-  specialRequests?: string;
-  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
-  createdAt: string;
-  updatedAt: string;
+  id: number;
+  reservationId: number;
+  username: string;
+  date: string; // LocalDate
+  reservationDate: string; // LocalDate (when reservation was made)
+  slotFrom: string; // LocalTime
+  slotTo: string; // LocalTime
+  slotId: number;
+  guestCount: number;
+  status: string; // "ACTIVE", "CANCELLED", etc.
 }
 
 export const reservationService = {
@@ -50,11 +46,11 @@ export const reservationService = {
     return response.data;
   },
 
-  async cancelReservation(id: string): Promise<void> {
+  async cancelReservation(id: number): Promise<void> {
     await api.delete(`/api/reservations/${id}`);
   },
 
-  async getReservationById(id: string): Promise<ReservationResponse> {
+  async getReservationById(id: number): Promise<ReservationResponse> {
     const response = await api.get<ReservationResponse>(`/api/reservations/${id}`);
     return response.data;
   }

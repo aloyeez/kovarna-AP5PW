@@ -2,9 +2,7 @@ package com.example.backend_kovarna.infrastructure.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
@@ -33,15 +31,7 @@ public class OpenApiConfig {
                         .title("Kovarna Restaurant API")
                         .description("REST API for restaurant reservation system with JWT authentication")
                         .version("1.0.0")
-                        .contact(new Contact()
-                                .name("Kovarna Development Team")
-                                .email("support@kovarna.example.com")
                         )
-                        .license(new License()
-                                .name("MIT License")
-                                .url("https://opensource.org/licenses/MIT")
-                        )
-                )
                 .servers(List.of(
                         new Server()
                                 .url("http://localhost:8080")

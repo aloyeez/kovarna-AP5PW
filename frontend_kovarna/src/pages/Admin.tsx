@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react'
 import { adminService, type ReservationSlotDto } from '../services/adminService'
+import { adminReservationService } from '../services/adminReservationService'
+import { adminUserService } from '../services/adminUserService'
+import { openingHoursService, type OpeningHoursDto } from '../services/openingHoursService'
+import type { ReservationResponse } from '../services/reservationService'
+import type { UserResponse } from '../services/authService'
 import { useLanguage } from '../contexts/LanguageContext'
 import './Admin.css'
 
@@ -8,6 +13,9 @@ type AdminSection = 'slots' | 'reservations' | 'users' | 'menu' | 'hours'
 function Admin() {
   const [activeSection, setActiveSection] = useState<AdminSection>('slots')
   const [slots, setSlots] = useState<ReservationSlotDto[]>([])
+  const [reservations, setReservations] = useState<ReservationResponse[]>([])
+  const [users, setUsers] = useState<UserResponse[]>([])
+  const [openingHours, setOpeningHours] = useState<OpeningHoursDto[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -52,8 +60,35 @@ function Admin() {
   }
 
   useEffect(() => {
-    fetchSlots()
-  }, [])
+    // Fetch data based on active section
+    const fetchData = async () => {
+      try {
+        setIsLoading(true)
+        setError('')
+
+        if (activeSection === 'slots') {
+          const data = await adminService.getAllSlots()
+          setSlots(data)
+        } else if (activeSection === 'reservations') {
+          const data = await adminReservationService.getAllReservations()
+          setReservations(data)
+        } else if (activeSection === 'users') {
+          const data = await adminUserService.getAllUsers()
+          setUsers(data)
+        } else if (activeSection === 'hours') {
+          const data = await openingHoursService.getAllOpeningHours()
+          setOpeningHours(data)
+        }
+      } catch (err: any) {
+        setError(err.message || `Failed to fetch ${activeSection}`)
+        console.error(`Error fetching ${activeSection}:`, err)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [activeSection])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -292,21 +327,122 @@ function Admin() {
     </>
   )
 
-  const renderReservationsSection = () => (
-    <div className="coming-soon">
-      <h2>Customer Reservations</h2>
-      <p>View and manage all customer reservations</p>
-      <p className="coming-soon-text">Coming soon...</p>
-    </div>
-  )
+  const renderReservationsSection = () => {
+    const handleDeleteReservation = async (id: number) => {
+      if (!window.confirm('Are you sure you want to delete this reservation?')) return
 
-  const renderUsersSection = () => (
-    <div className="coming-soon">
-      <h2>User Management</h2>
-      <p>Manage user accounts and permissions</p>
-      <p className="coming-soon-text">Coming soon...</p>
-    </div>
-  )
+      try {
+        await adminReservationService.deleteReservation(id)
+        setReservations(reservations.filter(r => r.id !== id))
+        setSuccess('Reservation deleted successfully!')
+      } catch (err: any) {
+        setError(err.message || 'Failed to delete reservation')
+      }
+    }
+
+    return (
+      <>
+        <div className="section-header">
+          <h2 className="section-title">Customer Reservations</h2>
+        </div>
+
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <div className="admin-content">
+          {reservations.length === 0 ? (
+            <p className="no-data">No reservations found.</p>
+          ) : (
+            <table className="slots-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Guests</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {reservations.map((reservation) => (
+                  <tr key={reservation.id}>
+                    <td>{reservation.id}</td>
+                    <td>{reservation.username}</td>
+                    <td>{reservation.date}</td>
+                    <td>{reservation.slotFrom.substring(0, 5)} - {reservation.slotTo.substring(0, 5)}</td>
+                    <td>{reservation.guestCount}</td>
+                    <td>
+                      <span className={`status-badge ${reservation.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
+                        {reservation.status}
+                      </span>
+                    </td>
+                    <td className="actions-cell">
+                      <button
+                        className="btn btn-small btn-delete"
+                        onClick={() => handleDeleteReservation(reservation.id)}
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </>
+    )
+  }
+
+  const renderUsersSection = () => {
+    return (
+      <>
+        <div className="section-header">
+          <h2 className="section-title">User Management</h2>
+        </div>
+
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <div className="admin-content">
+          {users.length === 0 ? (
+            <p className="no-data">No users found.</p>
+          ) : (
+            <table className="slots-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Username</th>
+                  <th>Email</th>
+                  <th>Roles</th>
+                  <th>Enabled</th>
+                  <th>Reservation Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => (
+                  <tr key={user.id}>
+                    <td>{user.id}</td>
+                    <td>{user.username}</td>
+                    <td>{user.email}</td>
+                    <td>{user.roles.join(', ')}</td>
+                    <td>
+                      <span className={`status-badge ${user.enabled ? 'active' : 'inactive'}`}>
+                        {user.enabled ? 'Yes' : 'No'}
+                      </span>
+                    </td>
+                    <td>{user.reservationDate}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </>
+    )
+  }
 
   const renderMenuSection = () => (
     <div className="coming-soon">

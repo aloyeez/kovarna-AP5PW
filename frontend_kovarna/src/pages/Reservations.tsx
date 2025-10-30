@@ -21,9 +21,6 @@ export default function ReservationPage() {
   const { t } = useLanguage();
 
   const [formData, setFormData] = useState({
-    name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "",
-    email: user?.email || "",
-    phone: "",
     guests: 1,
   });
 
@@ -39,7 +36,7 @@ export default function ReservationPage() {
     setError(null);
     try {
       const slots = await reservationService.getAvailableSlots(selectedDate);
-      setAvailableSlots(slots.filter(slot => slot.isAvailable));
+      setAvailableSlots(slots.filter(slot => slot.active));
     } catch (err) {
       setError('fetch');
       console.error('Error fetching slots:', err);
@@ -63,20 +60,15 @@ export default function ReservationPage() {
     try {
       await reservationService.createReservation({
         slotId: selectedSlot.id,
-        customerName: formData.name,
-        customerEmail: formData.email,
-        customerPhone: formData.phone,
-        numberOfGuests: formData.guests,
+        date: selectedDate,
+        guestCount: formData.guests,
       });
       alert(t('reservations.successMessage'));
       // Reset form
       setStep("date");
-      setSelectedDate("");
+      setSelectedDate(getTodayDate());
       setSelectedSlot(null);
       setFormData({
-        name: user?.firstName && user?.lastName ? `${user.firstName} ${user.lastName}` : "",
-        email: user?.email || "",
-        phone: "",
         guests: 1,
       });
     } catch (err) {
@@ -155,10 +147,7 @@ export default function ReservationPage() {
                         }`}
                         onClick={() => setSelectedSlot(slot)}
                       >
-                        {new Date(slot.startTime).toLocaleTimeString('cs-CZ', {
-                          hour: '2-digit',
-                          minute: '2-digit'
-                        })}
+                        {slot.slotFrom.substring(0, 5)} - {slot.slotTo.substring(0, 5)}
                       </button>
                     ))}
                   </div>
@@ -180,46 +169,11 @@ export default function ReservationPage() {
 
         {step === "form" && (
           <form onSubmit={handleSubmit}>
-            <div>
-              <label htmlFor="name">
-                {t('reservations.fullName')}
-              </label>
-              <input
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                placeholder={t('reservations.namePlaceholder')}
-              />
-            </div>
-            <div>
-              <label htmlFor="email">
-                {t('reservations.email')}
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder={t('reservations.emailPlaceholder')}
-              />
-            </div>
-            <div>
-              <label htmlFor="phone">
-                {t('reservations.phone')}
-              </label>
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-                placeholder={t('reservations.phonePlaceholder')}
-              />
+            <div className="reservation-summary">
+              <h3>{t('reservations.confirmationTitle') || 'Reservation Confirmation'}</h3>
+              <p><strong>{t('reservations.date') || 'Date'}:</strong> {selectedDate}</p>
+              <p><strong>{t('reservations.time') || 'Time'}:</strong> {selectedSlot?.slotFrom.substring(0, 5)} - {selectedSlot?.slotTo.substring(0, 5)}</p>
+              <p><strong>{t('reservations.username') || 'Username'}:</strong> {user?.username}</p>
             </div>
             <div>
               <label htmlFor="guests">
@@ -230,6 +184,7 @@ export default function ReservationPage() {
                 name="guests"
                 value={formData.guests}
                 onChange={handleChange}
+                required
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
                   <option key={num} value={num}>
@@ -245,9 +200,14 @@ export default function ReservationPage() {
                 <span className="error-hint">{error === 'submit' ? t('reservations.submitErrorHint') : t('reservations.fetchErrorHint')}</span>
               </div>
             )}
-            <button type="submit" disabled={loading}>
-              {loading ? t('reservations.processing') : t('reservations.confirmReservation')}
-            </button>
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button type="button" onClick={() => setStep("date")} disabled={loading}>
+                {t('common.back') || 'Back'}
+              </button>
+              <button type="submit" disabled={loading} style={{ flex: 1 }}>
+                {loading ? t('reservations.processing') : t('reservations.confirmReservation')}
+              </button>
+            </div>
           </form>
         )}
       </div>

@@ -9,7 +9,7 @@ function UserDropdown() {
   const dropdownRef = useRef<HTMLDivElement>(null)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-  const { user, logout } = useAuth()
+  const { user, logout, isAdmin } = useAuth()
   const { t } = useLanguage()
   const navigate = useNavigate()
 
@@ -46,13 +46,8 @@ function UserDropdown() {
 
   if (!user) return null
 
-  const displayName = user.firstName && user.lastName
-    ? `${user.firstName} ${user.lastName}`
-    : user.username
-
-  const initials = user.firstName && user.lastName
-    ? `${user.firstName[0]}${user.lastName[0]}`
-    : user.username.slice(0, 2)
+  const displayName = user.username
+  const initials = user.username.slice(0, 2)
 
   return (
     <div className="user-dropdown-container">
@@ -139,28 +134,31 @@ function UserDropdown() {
               {t('auth.userDropdown.settings')}
             </button>
 
-            <button
-              className="dropdown-item"
-              onClick={() => handleMenuClick('/admin')}
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M12 2L2 7l10 5 10-5-10-5z"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M2 17l10 5 10-5M2 12l10 5 10-5"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-              {t('auth.userDropdown.administration')}
-            </button>
+            {/* Only show admin link for users with ROLE_ADMIN */}
+            {isAdmin && (
+              <button
+                className="dropdown-item"
+                onClick={() => handleMenuClick('/admin')}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 2L2 7l10 5 10-5-10-5z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M2 17l10 5 10-5M2 12l10 5 10-5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+                {t('auth.userDropdown.administration')}
+              </button>
+            )}
           </div>
 
           <div className="dropdown-divider"></div>

@@ -5,8 +5,9 @@ interface User {
   id: number
   username: string
   email: string
-  firstName?: string
-  lastName?: string
+  enabled: boolean
+  reservationDate: string // ISO date string (LocalDate)
+  roles: string[] // e.g., ["ROLE_ADMIN", "ROLE_CUSTOMER"]
 }
 
 interface AuthContextType {
@@ -14,9 +15,11 @@ interface AuthContextType {
   token: string | null
   isLoading: boolean
   login: (username: string, password: string) => Promise<void>
-  register: (userData: RegisterData) => Promise<boolean>
+  register: (userData: RegisterData) => Promise<void>
   logout: () => Promise<void>
   isAuthenticated: boolean
+  hasRole: (role: string) => boolean
+  isAdmin: boolean
 }
 
 interface RegisterData {
@@ -79,25 +82,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
-  const register = async (userData: RegisterData): Promise<boolean> => {
+  const register = async (userData: RegisterData): Promise<void> => {
     try {
-      const response = await authService.register(userData)
-
-      // Check if response includes token (auto-login after registration)
-      if ('token' in response) {
-        // Full auth response with token
-        const { token: authToken, user: userData } = response
-        setToken(authToken)
-        setUser(userData)
-        localStorage.setItem('auth_token', authToken)
-        localStorage.setItem('auth_user', JSON.stringify(userData))
-        return true // Auto-login successful
-      } else {
-        // User-only response (need to login separately)
-        setUser(response)
-        localStorage.setItem('auth_user', JSON.stringify(response))
-        return false // Need to login manually
-      }
+      await authService.register(userData)
+      // Backend returns UserResponseDto only (no auto-login)
+      // User must login separately after registration
+      console.log('✅ Registration successful! Please login.')
     } catch (error) {
       console.error('Registration error:', error)
       throw error
@@ -112,6 +102,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     console.log('❌ User is NOT logged in (logged out)')
   }
 
+  const hasRole = (role: string): boolean => {
+    if (!user || !user.roles) return false
+    return user.roles.includes(role)
+  }
+
+  const isAdmin = user ? hasRole('ROLE_ADMIN') : false
+
   const value: AuthContextType = {
     user,
     token,
@@ -120,6 +117,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     register,
     logout,
     isAuthenticated: !!user && !!token,
+    hasRole,
+    isAdmin,
   }
 
   return (

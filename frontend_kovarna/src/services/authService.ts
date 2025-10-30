@@ -15,8 +15,9 @@ export interface UserResponse {
   id: number;
   username: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  enabled: boolean;
+  reservationDate: string; // ISO date string (LocalDate)
+  roles: string[]; // e.g., ["ROLE_ADMIN", "ROLE_CUSTOMER"]
 }
 
 export interface AuthResponse {
@@ -30,8 +31,8 @@ export const authService = {
     return response.data;
   },
 
-  async register(data: RegisterRequest): Promise<AuthResponse | UserResponse> {
-    const response = await api.post<AuthResponse | UserResponse>('/api/auth/register', data);
+  async register(data: RegisterRequest): Promise<UserResponse> {
+    const response = await api.post<UserResponse>('/api/auth/register', data);
     return response.data;
   },
 
