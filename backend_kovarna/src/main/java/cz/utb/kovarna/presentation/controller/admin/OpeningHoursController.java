@@ -1,0 +1,64 @@
+package cz.utb.kovarna.presentation.controller.admin;
+
+import cz.utb.kovarna.application.service.OpeningHoursService;
+import cz.utb.kovarna.application.dto.OpeningHoursDto;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.DayOfWeek;
+import java.util.List;
+
+@RestController
+@RequestMapping("/admin/opening-hours")
+@PreAuthorize("hasRole('ADMIN')")
+@Tag(name = "Admin - Opening Hours", description = "Admin endpoints for managing restaurant opening hours")
+@SecurityRequirement(name = "Bearer Authentication")
+public class OpeningHoursController {
+
+    @Autowired
+    private OpeningHoursService openingHoursService;
+
+    @GetMapping
+    public ResponseEntity<List<OpeningHoursDto>> getAllOpeningHours() {
+        List<OpeningHoursDto> openingHours = openingHoursService.getAllOpeningHours();
+        return ResponseEntity.ok(openingHours);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OpeningHoursDto> getOpeningHoursById(@PathVariable Long id) {
+        OpeningHoursDto openingHours = openingHoursService.getOpeningHoursById(id);
+        return ResponseEntity.ok(openingHours);
+    }
+
+    @GetMapping("/day/{dayOfWeek}")
+    public ResponseEntity<OpeningHoursDto> getOpeningHoursByDay(@PathVariable DayOfWeek dayOfWeek) {
+        OpeningHoursDto openingHours = openingHoursService.getOpeningHoursByDay(dayOfWeek);
+        return ResponseEntity.ok(openingHours);
+    }
+
+    @PostMapping
+    public ResponseEntity<OpeningHoursDto> createOpeningHours(@Valid @RequestBody OpeningHoursDto dto) {
+        OpeningHoursDto created = openingHoursService.createOpeningHours(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<OpeningHoursDto> updateOpeningHours(
+            @PathVariable Long id,
+            @Valid @RequestBody OpeningHoursDto dto) {
+        OpeningHoursDto updated = openingHoursService.updateOpeningHours(id, dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOpeningHours(@PathVariable Long id) {
+        openingHoursService.deleteOpeningHours(id);
+        return ResponseEntity.noContent().build();
+    }
+}
