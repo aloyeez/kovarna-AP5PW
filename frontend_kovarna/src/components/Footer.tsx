@@ -1,9 +1,11 @@
 import './Footer.css'
 import { useLanguage } from '../contexts/LanguageContext'
+import { useOpeningHours } from '../hooks/useOpeningHours'
 
 function Footer() {
   const { t } = useLanguage()
-  
+  const { groupedHours, loading } = useOpeningHours()
+
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -14,10 +16,10 @@ function Footer() {
             {/* <div className="social-links">
               <a href="#" aria-label="Facebook">📘</a>
               <a href="#" aria-label="Instagram">📷</a>
-              <a href="#" aria-label="TripAdvisor">⭐</a> 
+              <a href="#" aria-label="TripAdvisor">⭐</a>
             </div> */}
           </div>
-          
+
           <div className="footer-section">
             <h4>{t('footer.contact')}</h4>
             <p>
@@ -34,13 +36,19 @@ function Footer() {
             <p>{t('footer.phone')}</p>
             <p>{t('footer.email')}</p>
           </div>
-          
+
           <div className="footer-section">
             <h4>{t('footer.openingHours')}</h4>
-            <p>{t('footer.mondayThursday')}</p>
-            <p>{t('footer.friday')}</p>
-            <p>{t('footer.saturday')}</p>
-            <p>{t('footer.sunday')}</p>
+            {loading ? (
+              <p>Načítání...</p>
+            ) : (
+              groupedHours.map((group, index) => (
+                <p key={index}>
+                  {group.daysLabel}: {group.timeRange}
+                  {group.note && <span className="hours-note"> ({group.note})</span>}
+                </p>
+              ))
+            )}
           </div>
           
           <div className="footer-section">

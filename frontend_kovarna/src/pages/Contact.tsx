@@ -1,9 +1,11 @@
 
 import { useLanguage } from '../contexts/LanguageContext'
+import { useOpeningHours } from '../hooks/useOpeningHours'
 
 function Contact() {
   const { t } = useLanguage()
-  
+  const { groupedHours, loading } = useOpeningHours()
+
   return (
     <div className="contact-page">
       <div className="contact-container">
@@ -15,22 +17,21 @@ function Contact() {
               <div className="contact-item">
                 <h3>{t('contact.openingHoursTitle')}</h3>
                 <div className="opening-hours">
-                  <div className="day-group">
-                    <span className="day-label">Po-Čt:</span>
-                    <span className="time-value">11:00 - 14:00 | 17:00 - 22:00</span>
-                  </div>
-                  <div className="day-group">
-                    <span className="day-label">Pá:</span>
-                    <span className="time-value">11:00 - 14:00 | 17:00 - 23:00</span>
-                  </div>
-                  <div className="day-group">
-                    <span className="day-label">So:</span>
-                    <span className="time-value">18:00 - 23:00</span>
-                  </div>
-                  <div className="day-group">
-                    <span className="day-label">Ne:</span>
-                    <span className="time-value">18:00 - 22:00</span>
-                  </div>
+                  {loading ? (
+                    <div className="day-group">
+                      <span className="time-value">Načítání...</span>
+                    </div>
+                  ) : (
+                    groupedHours.map((group, index) => (
+                      <div className="day-group" key={index}>
+                        <span className="day-label">{group.daysLabel}:</span>
+                        <span className="time-value">
+                          {group.timeRange}
+                          {group.note && <span className="hours-note"> ({group.note})</span>}
+                        </span>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
 

@@ -30,6 +30,17 @@ function Admin() {
   })
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  // Opening hours states
+  const [editingHour, setEditingHour] = useState<OpeningHoursDto | null>(null)
+  const [isHourDialogOpen, setIsHourDialogOpen] = useState(false)
+  const [hourFormData, setHourFormData] = useState({
+    dayOfWeek: 'MONDAY' as const,
+    openTime: '',
+    closeTime: '',
+    isOpen: true,
+    note: ''
+  })
+
   const { t } = useLanguage()
 
   // Helper function to convert time format
@@ -473,13 +484,226 @@ function Admin() {
     </div>
   )
 
-  const renderHoursSection = () => (
-    <div className="coming-soon">
-      <h2>Opening Hours</h2>
-      <p>Configure restaurant opening hours and special closures</p>
-      <p className="coming-soon-text">Coming soon...</p>
-    </div>
-  )
+  const renderHoursSection = () => {
+    const dayOptions = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+    const dayOrder = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+
+    const formatTimeForDisplay = (time: string): string => {
+      return time.substring(0, 5);
+    };
+
+    const formatTimeForBackend = (time: string): string => {
+      return time.length === 5 ? `${time}:00` : time;
+    };
+
+    const getDayLabel = (day: string): string => {
+      const labels: Record<string, string> = {
+        'MONDAY': 'Monday',
+        'TUESDAY': 'Tuesday',
+        'WEDNESDAY': 'Wednesday',
+        'THURSDAY': 'Thursday',
+        'FRIDAY': 'Friday',
+        'SATURDAY': 'Saturday',
+        'SUNDAY': 'Sunday'
+      };
+      return labels[day] || day;
+    };
+
+    // Sort opening hours by day of week (Monday to Sunday)
+    const sortedOpeningHours = [...openingHours].sort((a, b) => {
+      return dayOrder.indexOf(a.dayOfWeek) - dayOrder.indexOf(b.dayOfWeek);
+    });
+
+    const handleHourEdit = (hour: OpeningHoursDto) => {
+      setEditingHour(hour);
+      setHourFormData({
+        dayOfWeek: hour.dayOfWeek,
+        openTime: formatTimeForDisplay(hour.openTime),
+        closeTime: formatTimeForDisplay(hour.closeTime),
+        isOpen: hour.isOpen,
+        note: hour.note || ''
+      });
+      setIsHourDialogOpen(true);
+      setError('');
+      setSuccess('');
+    };
+
+    const handleHourSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setError('');
+      setSuccess('');
+
+      if (!hourFormData.openTime || !hourFormData.closeTime) {
+        setError('Please fill in all required fields');
+        return;
+      }
+
+      try {
+        const dataForBackend = {
+          dayOfWeek: hourFormData.dayOfWeek,
+          openTime: formatTimeForBackend(hourFormData.openTime),
+          closeTime: formatTimeForBackend(hourFormData.closeTime),
+          isOpen: hourFormData.isOpen,
+          note: hourFormData.note || undefined
+        };
+
+        if (editingHour && editingHour.id) {
+          const updated = await openingHoursService.updateOpeningHours(editingHour.id, dataForBackend);
+          setOpeningHours(openingHours.map(h => h.id === editingHour.id ? updated : h));
+          setSuccess('Opening hours updated successfully!');
+        }
+
+        setIsHourDialogOpen(false);
+        setEditingHour(null);
+        setHourFormData({ dayOfWeek: 'MONDAY', openTime: '', closeTime: '', isOpen: true, note: '' });
+      } catch (err: any) {
+        setError(err.message || 'Failed to save opening hours');
+        console.error('Error saving opening hours:', err);
+      }
+    };
+
+    const handleHourCancel = () => {
+      setIsHourDialogOpen(false);
+      setEditingHour(null);
+      setHourFormData({ dayOfWeek: 'MONDAY', openTime: '', closeTime: '', isOpen: true, note: '' });
+      setError('');
+      setSuccess('');
+    };
+
+    return (
+      <>
+        <div className="section-header">
+          <h2 className="section-title">Opening Hours Management</h2>
+        </div>
+
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <div className="admin-content">
+          {openingHours.length === 0 ? (
+            <p className="no-data">No opening hours configured.</p>
+          ) : (
+            <table className="slots-table">
+              <thead>
+                <tr>
+                  <th>Day</th>
+                  <th>Open Time</th>
+                  <th>Close Time</th>
+                  <th>Status</th>
+                  <th>Note</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sortedOpeningHours.map((hour) => (
+                  <tr key={hour.id}>
+                    <td><strong>{getDayLabel(hour.dayOfWeek)}</strong></td>
+                    <td>{formatTimeForDisplay(hour.openTime)}</td>
+                    <td>{formatTimeForDisplay(hour.closeTime)}</td>
+                    <td>
+                      <span className={`status-badge ${hour.isOpen ? 'active' : 'inactive'}`}>
+                        {hour.isOpen ? 'Open' : 'Closed'}
+                      </span>
+                    </td>
+                    <td>{hour.note || '-'}</td>
+                    <td className="actions-cell">
+                      <button
+                        className="btn btn-small btn-edit"
+                        onClick={() => handleHourEdit(hour)}
+                      >
+                        Edit
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+
+        {isHourDialogOpen && (
+          <div className="modal-overlay" onClick={handleHourCancel}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>Edit Opening Hours</h2>
+                <button className="modal-close" onClick={handleHourCancel}>×</button>
+              </div>
+              <form onSubmit={handleHourSubmit} className="slot-form">
+                <div className="form-group">
+                  <label>Day of Week</label>
+                  <p style={{
+                    padding: '0.8rem 1rem',
+                    background: 'rgba(230, 210, 156, 0.1)',
+                    border: '2px solid rgba(230, 210, 156, 0.3)',
+                    borderRadius: '0.5rem',
+                    color: '#e6d29c',
+                    fontWeight: 600,
+                    margin: 0
+                  }}>
+                    {getDayLabel(hourFormData.dayOfWeek)}
+                  </p>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="openTime">Open Time (HH:MM)</label>
+                  <input
+                    type="time"
+                    id="openTime"
+                    value={hourFormData.openTime}
+                    onChange={(e) => setHourFormData({ ...hourFormData, openTime: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="closeTime">Close Time (HH:MM)</label>
+                  <input
+                    type="time"
+                    id="closeTime"
+                    value={hourFormData.closeTime}
+                    onChange={(e) => setHourFormData({ ...hourFormData, closeTime: e.target.value })}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="note">Note (optional)</label>
+                  <input
+                    type="text"
+                    id="note"
+                    value={hourFormData.note}
+                    onChange={(e) => setHourFormData({ ...hourFormData, note: e.target.value })}
+                    placeholder="e.g., Special hours, Closed for holidays"
+                    maxLength={500}
+                  />
+                </div>
+
+                <div className="form-group checkbox-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={hourFormData.isOpen}
+                      onChange={(e) => setHourFormData({ ...hourFormData, isOpen: e.target.checked })}
+                    />
+                    Open on this day
+                  </label>
+                </div>
+
+                <div className="form-actions">
+                  <button type="button" className="btn btn-secondary" onClick={handleHourCancel}>
+                    Cancel
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Update Hours
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
 
   return (
     <div className="admin-container">

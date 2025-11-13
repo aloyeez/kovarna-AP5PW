@@ -1,8 +1,10 @@
 import api from './api';
 
+export type DayOfWeek = 'MONDAY' | 'TUESDAY' | 'WEDNESDAY' | 'THURSDAY' | 'FRIDAY' | 'SATURDAY' | 'SUNDAY';
+
 export interface OpeningHoursDto {
   id?: number;
-  dayOfWeek: number; // 1 = Monday, 7 = Sunday
+  dayOfWeek: DayOfWeek;
   openTime: string; // LocalTime format "HH:mm:ss"
   closeTime: string; // LocalTime format "HH:mm:ss"
   isOpen: boolean;
@@ -22,9 +24,9 @@ export const openingHoursService = {
 
   /**
    * Get opening hours for a specific day (public access)
-   * @param dayOfWeek 1 = Monday, 7 = Sunday
+   * @param dayOfWeek MONDAY, TUESDAY, etc.
    */
-  async getByDay(dayOfWeek: number): Promise<OpeningHoursDto> {
+  async getByDay(dayOfWeek: DayOfWeek): Promise<OpeningHoursDto> {
     const response = await api.get<OpeningHoursDto>(`/api/opening-hours/day/${dayOfWeek}`);
     return response.data;
   },

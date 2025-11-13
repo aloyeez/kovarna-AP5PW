@@ -96,6 +96,15 @@
     "scrollToTop": "Scroll to top",
     "back": "Back"
   },
+  "days": {
+    "monday": "Mon",
+    "tuesday": "Tue",
+    "wednesday": "Wed",
+    "thursday": "Thu",
+    "friday": "Fri",
+    "saturday": "Sat",
+    "sunday": "Sun"
+  },
   "footer": {
     "title": "Hospůdka U Kovárny",
     "subtitle": "Traditional Czech cuisine in a historic atmosphere",
