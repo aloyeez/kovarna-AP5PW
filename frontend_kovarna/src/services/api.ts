@@ -40,6 +40,14 @@ api.interceptors.response.use(
       }
     }
 
+    // Handle 403 Forbidden - user doesn't have required permissions
+    if (error.response?.status === 403) {
+      // Clear auth data and redirect to login
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user');
+      window.location.href = '/login';
+    }
+
     // Provide better error messages
     const errorMessage = error.response?.data?.message ||
                         error.response?.data?.error ||

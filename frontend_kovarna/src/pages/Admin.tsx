@@ -71,6 +71,20 @@ function Admin() {
     return time.substring(0, 5);
   };
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.classList.add('mobile-menu-open');
+    } else {
+      document.body.classList.remove('mobile-menu-open');
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.classList.remove('mobile-menu-open');
+    };
+  }, [isMobileMenuOpen]);
+
   useEffect(() => {
     // Fetch data based on active section
     const fetchData = async () => {
@@ -279,11 +293,11 @@ function Admin() {
                   .sort((a, b) => a.slotFrom.localeCompare(b.slotFrom))
                   .map((slot) => (
                     <tr key={slot.id}>
-                      <td>{formatTimeForDisplay(slot.slotFrom)}</td>
-                      <td>{formatTimeForDisplay(slot.slotTo)}</td>
-                      <td>{slot.maxReservations || 10}</td>
-                      <td>{slot.currentReservations || 0}</td>
-                      <td>
+                      <td data-label={t('admin.slots.from')}>{formatTimeForDisplay(slot.slotFrom)}</td>
+                      <td data-label={t('admin.slots.to')}>{formatTimeForDisplay(slot.slotTo)}</td>
+                      <td data-label={t('admin.slots.maxCapacity')}>{slot.maxReservations || 10}</td>
+                      <td data-label={t('admin.slots.current')}>{slot.currentReservations || 0}</td>
+                      <td data-label={t('admin.slots.status')}>
                         <span
                           className={`status-badge ${
                             slot.active ? "active" : "inactive"
@@ -449,15 +463,15 @@ function Admin() {
               <tbody>
                 {reservations.map((reservation) => (
                   <tr key={reservation.id}>
-                    <td>{reservation.id}</td>
-                    <td>{reservation.username}</td>
-                    <td>{reservation.date}</td>
-                    <td>
+                    <td data-label={t('admin.reservations.id')}>{reservation.id}</td>
+                    <td data-label={t('admin.reservations.username')}>{reservation.username}</td>
+                    <td data-label={t('admin.reservations.date')}>{reservation.date}</td>
+                    <td data-label={t('admin.reservations.time')}>
                       {reservation.slotFrom.substring(0, 5)} -{" "}
                       {reservation.slotTo.substring(0, 5)}
                     </td>
-                    <td>{reservation.guestCount}</td>
-                    <td>
+                    <td data-label={t('admin.reservations.guests')}>{reservation.guestCount}</td>
+                    <td data-label={t('admin.reservations.status')}>
                       <span
                         className={`status-badge ${
                           reservation.status === "ACTIVE"
@@ -514,11 +528,11 @@ function Admin() {
               <tbody>
                 {users.map((user) => (
                   <tr key={user.id}>
-                    <td>{user.id}</td>
-                    <td>{user.username}</td>
-                    <td>{user.email}</td>
-                    <td>{user.roles.join(", ")}</td>
-                    <td>
+                    <td data-label={t('admin.users.id')}>{user.id}</td>
+                    <td data-label={t('admin.users.username')}>{user.username}</td>
+                    <td data-label={t('admin.users.email')}>{user.email}</td>
+                    <td data-label={t('admin.users.roles')}>{user.roles.join(", ")}</td>
+                    <td data-label={t('admin.users.enabled')}>
                       <span
                         className={`status-badge ${
                           user.enabled ? "active" : "inactive"
@@ -527,7 +541,7 @@ function Admin() {
                         {user.enabled ? t('admin.users.yes') : t('admin.users.no')}
                       </span>
                     </td>
-                    <td>{user.reservationDate}</td>
+                    <td data-label={t('admin.users.created')}>{user.reservationDate}</td>
                   </tr>
                 ))}
               </tbody>
@@ -759,12 +773,12 @@ function Admin() {
               <tbody>
                 {sortedOpeningHours.map((hour) => (
                   <tr key={hour.id}>
-                    <td>
+                    <td data-label={t('admin.hours.day')}>
                       <strong>{getDayLabel(hour.dayOfWeek)}</strong>
                     </td>
-                    <td>{formatTimeForDisplay(hour.openTime)}</td>
-                    <td>{formatTimeForDisplay(hour.closeTime)}</td>
-                    <td>
+                    <td data-label={t('admin.hours.openTime')}>{formatTimeForDisplay(hour.openTime)}</td>
+                    <td data-label={t('admin.hours.closeTime')}>{formatTimeForDisplay(hour.closeTime)}</td>
+                    <td data-label={t('admin.hours.status')}>
                       <span
                         className={`status-badge ${
                           hour.isOpen ? "active" : "inactive"
@@ -773,7 +787,7 @@ function Admin() {
                         {hour.isOpen ? t('admin.hours.open') : t('admin.hours.closed')}
                       </span>
                     </td>
-                    <td>{hour.note || "-"}</td>
+                    <td data-label={t('admin.hours.note')}>{hour.note || "-"}</td>
                     <td className="actions-cell">
                       <button
                         className="btn btn-small btn-edit"
@@ -909,6 +923,12 @@ function Admin() {
           ☰
         </button>
       </div>
+
+      {/* Mobile menu overlay */}
+      <div
+        className={`mobile-menu-overlay ${isMobileMenuOpen ? "open" : ""}`}
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
 
       <div className="admin-layout">
         {/* Sidebar Navigation */}
