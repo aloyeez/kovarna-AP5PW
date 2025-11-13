@@ -289,7 +289,19 @@
       "created": "Created",
       "yes": "Yes",
       "no": "No",
-      "noData": "No users found."
+      "noData": "No users found.",
+      "actions": "Actions",
+      "edit": "Edit",
+      "editUser": "Edit User",
+      "usernameLabel": "Username",
+      "emailLabel": "Email",
+      "enabledCheckbox": "Account Enabled",
+      "rolesLabel": "User Roles",
+      "roleAdmin": "Administrator",
+      "roleCustomer": "Customer",
+      "cancel": "Cancel",
+      "update": "Update User",
+      "updated": "User updated successfully!"
     },
     "menu": {
       "title": "Menu Management",

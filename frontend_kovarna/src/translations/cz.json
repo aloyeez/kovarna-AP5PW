@@ -289,7 +289,19 @@
       "created": "Vytvořeno",
       "yes": "Ano",
       "no": "Ne",
-      "noData": "Nebyli nalezeni žádní uživatelé."
+      "noData": "Nebyli nalezeni žádní uživatelé.",
+      "actions": "Akce",
+      "edit": "Upravit",
+      "editUser": "Upravit uživatele",
+      "usernameLabel": "Uživatelské jméno",
+      "emailLabel": "E-mail",
+      "enabledCheckbox": "Účet povolen",
+      "rolesLabel": "Uživatelské role",
+      "roleAdmin": "Administrátor",
+      "roleCustomer": "Zákazník",
+      "cancel": "Zrušit",
+      "update": "Aktualizovat uživatele",
+      "updated": "Uživatel úspěšně aktualizován!"
     },
     "menu": {
       "title": "Správa menu",

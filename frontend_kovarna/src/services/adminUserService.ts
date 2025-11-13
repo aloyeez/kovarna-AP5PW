@@ -2,9 +2,10 @@ import api from './api';
 import type { UserResponse } from './authService';
 
 export interface UserUpdateDto {
-  username?: string;
-  email?: string;
-  enabled?: boolean;
+  username: string;
+  email: string;
+  enabled: boolean;
+  roles: string[]; // e.g., ["ROLE_ADMIN", "ROLE_CUSTOMER"]
   reservationDate?: string; // LocalDate format "YYYY-MM-DD"
   // Note: Cannot change password hash per assignment requirements
 }

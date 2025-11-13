@@ -56,6 +56,16 @@ function Admin() {
     note: "",
   });
 
+  // User editing states
+  const [editingUser, setEditingUser] = useState<UserResponse | null>(null);
+  const [isUserDialogOpen, setIsUserDialogOpen] = useState(false);
+  const [userFormData, setUserFormData] = useState({
+    username: "",
+    email: "",
+    enabled: true,
+    roles: [] as string[],
+  });
+
   const { t } = useLanguage();
 
   // Helper function to convert time format
@@ -500,6 +510,77 @@ function Admin() {
     );
   };
 
+  // User editing handlers
+  const handleUserEdit = (user: UserResponse) => {
+    setEditingUser(user);
+    setUserFormData({
+      username: user.username,
+      email: user.email,
+      enabled: user.enabled,
+      roles: [...user.roles],
+    });
+    setError("");
+    setSuccess("");
+    setIsUserDialogOpen(true);
+  };
+
+  const handleUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!editingUser || !editingUser.id) {
+      setError("No user selected for editing");
+      return;
+    }
+
+    // Validate form
+    if (!userFormData.username || !userFormData.email) {
+      setError("Please fill in all required fields");
+      return;
+    }
+
+    if (userFormData.roles.length === 0) {
+      setError("User must have at least one role");
+      return;
+    }
+
+    try {
+      const updated = await adminUserService.updateUser(editingUser.id, {
+        username: userFormData.username,
+        email: userFormData.email,
+        enabled: userFormData.enabled,
+        roles: userFormData.roles,
+      });
+
+      // Update users list
+      setUsers(users.map((u) => (u.id === editingUser.id ? updated : u)));
+      setSuccess(t('admin.users.updated'));
+
+      // Reset and close
+      setUserFormData({
+        username: "",
+        email: "",
+        enabled: true,
+        roles: [],
+      });
+      setEditingUser(null);
+      setIsUserDialogOpen(false);
+    } catch (err: any) {
+      setError(err.message || "Failed to update user");
+      console.error("Error updating user:", err);
+    }
+  };
+
+  const handleRoleToggle = (role: string) => {
+    setUserFormData((prev) => ({
+      ...prev,
+      roles: prev.roles.includes(role)
+        ? prev.roles.filter((r) => r !== role)
+        : [...prev.roles, role],
+    }));
+  };
+
   const renderUsersSection = () => {
     return (
       <>
@@ -522,7 +603,7 @@ function Admin() {
                   <th>{t('admin.users.email')}</th>
                   <th>{t('admin.users.roles')}</th>
                   <th>{t('admin.users.enabled')}</th>
-                  <th>{t('admin.users.created')}</th>
+                  <th>{t('admin.users.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -541,13 +622,111 @@ function Admin() {
                         {user.enabled ? t('admin.users.yes') : t('admin.users.no')}
                       </span>
                     </td>
-                    <td data-label={t('admin.users.created')}>{user.reservationDate}</td>
+                    <td className="actions-cell">
+                      <button
+                        className="btn btn-small btn-edit"
+                        onClick={() => handleUserEdit(user)}
+                      >
+                        {t('admin.users.edit')}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           )}
         </div>
+
+        {/* User Edit Modal */}
+        {isUserDialogOpen && (
+          <div className="modal-overlay" onClick={() => setIsUserDialogOpen(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <h2>{t('admin.users.editUser')}</h2>
+                <button className="modal-close" onClick={() => setIsUserDialogOpen(false)}>
+                  ×
+                </button>
+              </div>
+              <form onSubmit={handleUserSubmit} className="slot-form">
+                <div className="form-group">
+                  <label htmlFor="username">{t('admin.users.usernameLabel')}</label>
+                  <input
+                    type="text"
+                    id="username"
+                    value={userFormData.username}
+                    onChange={(e) =>
+                      setUserFormData({ ...userFormData, username: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="email">{t('admin.users.emailLabel')}</label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={userFormData.email}
+                    onChange={(e) =>
+                      setUserFormData({ ...userFormData, email: e.target.value })
+                    }
+                    required
+                  />
+                </div>
+
+                <div className="checkbox-group">
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={userFormData.enabled}
+                      onChange={(e) =>
+                        setUserFormData({ ...userFormData, enabled: e.target.checked })
+                      }
+                    />
+                    <span>{t('admin.users.enabledCheckbox')}</span>
+                  </label>
+                </div>
+
+                <div className="form-group">
+                  <label>{t('admin.users.rolesLabel')}</label>
+                  <div className="checkbox-group">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={userFormData.roles.includes("ROLE_ADMIN")}
+                        onChange={() => handleRoleToggle("ROLE_ADMIN")}
+                      />
+                      <span>{t('admin.users.roleAdmin')}</span>
+                    </label>
+                  </div>
+                  <div className="checkbox-group">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={userFormData.roles.includes("ROLE_CUSTOMER")}
+                        onChange={() => handleRoleToggle("ROLE_CUSTOMER")}
+                      />
+                      <span>{t('admin.users.roleCustomer')}</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div className="form-actions">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => setIsUserDialogOpen(false)}
+                  >
+                    {t('admin.users.cancel')}
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    {t('admin.users.update')}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </>
     );
   };
