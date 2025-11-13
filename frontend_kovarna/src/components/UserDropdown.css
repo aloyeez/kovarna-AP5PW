@@ -166,13 +166,25 @@
 }
 
 .logout-item {
-  color: #ff6b7d;
+  color: #ff6b7d !important;
+  border: 1px solid #ff6b7d !important;
   margin-top: 0.5rem;
 }
 
 .logout-item:hover {
-  background: rgba(255, 107, 125, 0.1);
-  color: #ff8a9b;
+  background: rgba(255, 107, 125, 0.1) !important;
+  color: #ff8a9b !important;
+  border-color: #ff8a9b !important;
+}
+
+.logout-item svg {
+  color: #ff6b7d !important;
+  stroke: #ff6b7d !important;
+}
+
+.logout-item:hover svg {
+  color: #ff8a9b !important;
+  stroke: #ff8a9b !important;
 }
 
 /* Mobile responsive design */
