@@ -137,7 +137,8 @@
       "signupButton": "Sign Up",
       "hasAccount": "Already have an account?",
       "loginLink": "Login here",
-      "error": "Registration failed. Please try again."
+      "error": "Registration failed. Please try again.",
+      "successMessage": "Registration successful! Please log in with your credentials."
     },
     "userDropdown": {
       "profile": "My Profile",

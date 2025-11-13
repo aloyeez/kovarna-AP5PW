@@ -137,7 +137,8 @@
       "signupButton": "Registrovat",
       "hasAccount": "Už máte účet?",
       "loginLink": "Přihlaste se zde",
-      "error": "Registrace se nezdařila. Zkuste to prosím znovu."
+      "error": "Registrace se nezdařila. Zkuste to prosím znovu.",
+      "successMessage": "Registrace proběhla úspěšně! Přihlaste se prosím pomocí svých přihlašovacích údajů."
     },
     "userDropdown": {
       "profile": "Můj profil",
