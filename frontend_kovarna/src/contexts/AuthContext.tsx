@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import { authService } from '../services/authService'
+import { SESSION_EXPIRED_EVENT } from '../utils/sessionManager'
 
 interface User {
   id: number
@@ -60,6 +61,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       console.log('❌ User is NOT logged in (no saved session)')
     }
     setIsLoading(false)
+  }, [])
+
+  // Listen for session expiration events
+  useEffect(() => {
+    const handleSessionExpiration = () => {
+      console.log('🔒 Session expired - clearing auth state')
+      setUser(null)
+      setToken(null)
+    }
+
+    window.addEventListener(SESSION_EXPIRED_EVENT, handleSessionExpiration)
+
+    return () => {
+      window.removeEventListener(SESSION_EXPIRED_EVENT, handleSessionExpiration)
+    }
   }, [])
 
   const login = async (username: string, password: string): Promise<void> => {

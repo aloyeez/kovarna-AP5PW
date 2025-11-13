@@ -133,7 +133,9 @@
       "loginButton": "Přihlásit",
       "noAccount": "Nemáte účet?",
       "signUpLink": "Zaregistrujte se zde",
-      "error": "Neplatné uživatelské jméno nebo heslo"
+      "error": "Neplatné uživatelské jméno nebo heslo",
+      "invalidCredentials": "Neplatné přihlašovací údaje. Zkontrolujte prosím své uživatelské jméno a heslo.",
+      "successMessage": "Vítejte zpět! Úspěšně jste se přihlásili."
     },
     "signup": {
       "title": "Vytvořit nový účet",
@@ -154,7 +156,8 @@
       "reservations": "Moje rezervace",
       "settings": "Nastavení účtu",
       "administration": "Administrace",
-      "logout": "Odhlásit"
+      "logout": "Odhlásit",
+      "logoutSuccess": "Byli jste úspěšně odhlášeni."
     },
     "dropdown": {
       "title": "Vítejte zpět!",

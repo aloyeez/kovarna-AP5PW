@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import './Login.css'
@@ -9,7 +10,6 @@ function Login() {
     username: '',
     password: ''
   })
-  const [successMessage, setSuccessMessage] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -23,7 +23,7 @@ function Login() {
   // Check for success message from registration
   useEffect(() => {
     if (location.state?.successMessage) {
-      setSuccessMessage(location.state.successMessage)
+      toast.success(location.state.successMessage)
       // Pre-fill username if provided from registration
       if (location.state.username) {
         setFormData(prev => ({
@@ -49,9 +49,14 @@ function Login() {
 
     try {
       await login(formData.username, formData.password)
+      toast.success(t('auth.login.successMessage'))
       navigate(from, { replace: true })
     } catch (err: any) {
-      setError(err.message || t('auth.login.error'))
+      // Map backend error messages to translated messages
+      const errorMessage = err.message === 'Bad credentials'
+        ? t('auth.login.invalidCredentials')
+        : err.message || t('auth.login.error')
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }
@@ -65,12 +70,6 @@ function Login() {
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
-          {successMessage && (
-            <div className="success-message" style={{ color: 'green', marginBottom: '1rem', padding: '0.75rem', backgroundColor: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '0.375rem' }}>
-              {successMessage}
-            </div>
-          )}
-
           {error && (
             <div className="error-message">
               {error}

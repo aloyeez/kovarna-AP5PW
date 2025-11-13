@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import './UserDropdown.css'
@@ -33,8 +34,15 @@ function UserDropdown() {
     }
   }, [isOpen])
 
-  const handleLogout = () => {
-    logout()
+  const handleLogout = async () => {
+    await logout()
+    toast.error(t('auth.userDropdown.logoutSuccess'), {
+      style: {
+        background: '#7f1d1d',
+        color: '#fff',
+        border: '1px solid #7f1d1d'
+      }
+    })
     setIsOpen(false)
     navigate('/')
   }

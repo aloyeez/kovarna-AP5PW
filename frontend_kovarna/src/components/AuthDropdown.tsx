@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import './AuthDropdown.css'
@@ -57,18 +58,25 @@ function AuthDropdown() {
 
     try {
       await login(formData.username, formData.password)
+      toast.success(t('auth.login.successMessage'))
       setIsOpen(false)
       setFormData({ username: '', password: '' })
 
-      // Redirect to reservations if they were trying to access it
-      const from = location.pathname
-      if (from === '/reservations') {
-        // Stay on current page (will now show reservations since authenticated)
-      } else {
-        // Could redirect to a welcome page or stay where they are
+      // Redirect logic after successful login
+      const currentPath = location.pathname
+
+      // If on login or signup page, redirect to home
+      if (currentPath === '/login' || currentPath === '/signup') {
+        navigate('/')
       }
+      // If trying to access protected route, stay on that page (will now show content)
+      // Otherwise stay where they are
     } catch (err: any) {
-      setError(err.message || t('auth.login.error'))
+      // Map backend error messages to translated messages
+      const errorMessage = err.message === 'Bad credentials'
+        ? t('auth.login.invalidCredentials')
+        : err.message || t('auth.login.error')
+      setError(errorMessage)
     } finally {
       setIsLoading(false)
     }

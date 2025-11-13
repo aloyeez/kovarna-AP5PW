@@ -1,4 +1,5 @@
 import axios, { type AxiosInstance } from 'axios';
+import { handleSessionExpired } from '../utils/sessionManager';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
@@ -27,9 +28,16 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('auth_user');
-      window.location.href = '/login';
+      // Check if user was authenticated (token expired) vs just unauthorized
+      const wasAuthenticated = !!localStorage.getItem('auth_token');
+
+      if (wasAuthenticated) {
+        // Session expired - handle with toast notification and proper cleanup
+        handleSessionExpired();
+      } else {
+        // User was never authenticated, just redirect
+        window.location.href = '/login';
+      }
     }
 
     // Provide better error messages

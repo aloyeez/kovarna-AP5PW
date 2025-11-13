@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { toast } from 'sonner';
 import { reservationService, type ReservationSlot } from '../services/reservationService';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -79,7 +80,7 @@ export default function ReservationPage() {
 
     try {
       await reservationService.createReservation(requestData);
-      alert(t('reservations.successMessage'));
+      toast.success(t('reservations.successMessage'));
       // Reset form
       setStep("date");
       setSelectedDate(getTodayDate());

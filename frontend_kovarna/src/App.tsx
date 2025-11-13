@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Toaster } from 'sonner'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTopButton from './components/ScrollToTopButton'
@@ -25,6 +26,7 @@ function AppContent() {
 
   return (
     <div className="App">
+      <Toaster position="bottom-right" theme="dark" richColors />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

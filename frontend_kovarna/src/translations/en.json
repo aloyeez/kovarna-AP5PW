@@ -133,7 +133,9 @@
       "loginButton": "Login",
       "noAccount": "Don't have an account?",
       "signUpLink": "Sign up here",
-      "error": "Invalid username or password"
+      "error": "Invalid username or password",
+      "invalidCredentials": "Invalid credentials. Please check your username and password.",
+      "successMessage": "Welcome back! You have successfully logged in."
     },
     "signup": {
       "title": "Create Your Account",
@@ -154,7 +156,8 @@
       "reservations": "My Reservations",
       "settings": "Account Settings",
       "administration": "Administration",
-      "logout": "Logout"
+      "logout": "Logout",
+      "logoutSuccess": "You have been successfully logged out."
     },
     "dropdown": {
       "title": "Welcome Back!",

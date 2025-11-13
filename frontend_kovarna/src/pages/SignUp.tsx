@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { toast } from 'sonner'
 import { useAuth } from '../contexts/AuthContext'
 import { useLanguage } from '../contexts/LanguageContext'
 import './SignUp.css'
@@ -69,15 +70,21 @@ function SignUp() {
         password: formData.password
       })
 
+      // Show success toast
+      const successMessage = t('auth.signup.successMessage') || 'Registration successful! Please log in with your credentials.'
+      toast.success(successMessage)
+
       // Backend returns UserResponseDto only (no auto-login)
-      // Redirect to login page with success message
-      navigate('/login', {
-        replace: true,
-        state: {
-          successMessage: t('auth.signup.successMessage') || `Registration successful! Please log in with your credentials.`,
-          username: formData.username
-        }
-      })
+      // Redirect to login page with success message and username
+      setTimeout(() => {
+        navigate('/login', {
+          replace: true,
+          state: {
+            successMessage,
+            username: formData.username
+          }
+        })
+      }, 1000) // Delay to show toast before redirect
     } catch (err: any) {
       setErrors([err.message || t('auth.signup.error')])
     } finally {
