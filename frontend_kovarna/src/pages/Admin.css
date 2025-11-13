@@ -232,6 +232,16 @@
   box-shadow: 0 0 8px rgba(230, 210, 156, 0.3);
 }
 
+/* Style the clock icon in time inputs */
+.form-group input[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(78%) sepia(19%) saturate(649%) hue-rotate(359deg) brightness(96%) contrast(92%);
+  cursor: pointer;
+}
+
+.form-group input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  filter: invert(88%) sepia(29%) saturate(749%) hue-rotate(359deg) brightness(106%) contrast(102%);
+}
+
 .checkbox-group label {
   display: flex;
   align-items: center;
@@ -559,4 +569,124 @@
 
 .modal-content .slot-form {
   padding: 2rem;
+}
+
+/* Menu Management Section */
+.menu-management-section {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.menu-management-section h2 {
+  color: #e6d29c;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.menu-management-section > p {
+  color: #ccc;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.google-drive-card {
+  display: flex;
+  gap: 2rem;
+  background: rgba(42, 42, 42, 0.8);
+  border: 2px solid rgba(230, 210, 156, 0.3);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.google-drive-card:hover {
+  border-color: rgba(230, 210, 156, 0.5);
+  box-shadow: 0 4px 12px rgba(230, 210, 156, 0.2);
+}
+
+.drive-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drive-content {
+  flex: 1;
+}
+
+.drive-content h3 {
+  color: #e6d29c;
+  font-size: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.drive-content p {
+  color: #ccc;
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.google-drive-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e6d29c;
+  color: #1a1a1a;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.google-drive-link:hover {
+  background: #f1c126;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 210, 156, 0.4);
+}
+
+.google-drive-link svg {
+  stroke: #1a1a1a;
+}
+
+.menu-instructions {
+  background: rgba(230, 210, 156, 0.1);
+  border-left: 4px solid #e6d29c;
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.menu-instructions h4 {
+  color: #e6d29c;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.menu-instructions ol {
+  color: #e0e0e0;
+  line-height: 1.8;
+  padding-left: 1.5rem;
+}
+
+.menu-instructions li {
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .google-drive-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.5rem;
+  }
+
+  .drive-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

@@ -66,12 +66,22 @@ export default function MyReservations() {
 
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString)
-    return date.toLocaleDateString('cs-CZ', {
+    const locale = t('nav.home') === 'Home' ? 'en-US' : 'cs-CZ'
+    return date.toLocaleDateString(locale, {
       weekday: 'short',
       year: 'numeric',
       month: 'long',
       day: 'numeric'
     })
+  }
+
+  const translateStatus = (status: string): string => {
+    const statusMap: Record<string, string> = {
+      'ACTIVE': t('reservations.status.active'),
+      'CANCELLED': t('reservations.status.cancelled'),
+      'PENDING': t('reservations.status.pending')
+    }
+    return statusMap[status] || status
   }
 
   const formatTime = (timeString: string): string => {
@@ -138,7 +148,7 @@ export default function MyReservations() {
                           <span>{formatDate(reservation.date)}</span>
                         </div>
                         <span className={`status-badge ${reservation.status.toLowerCase()}`}>
-                          {reservation.status}
+                          {translateStatus(reservation.status)}
                         </span>
                       </div>
 
@@ -217,7 +227,7 @@ export default function MyReservations() {
                           <span>{formatDate(reservation.date)}</span>
                         </div>
                         <span className={`status-badge ${reservation.status.toLowerCase()}`}>
-                          {reservation.status}
+                          {translateStatus(reservation.status)}
                         </span>
                       </div>
 

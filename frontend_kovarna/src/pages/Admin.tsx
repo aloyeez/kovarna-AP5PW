@@ -1,116 +1,117 @@
-import { useState, useEffect } from 'react'
-import { adminService, type ReservationSlotDto } from '../services/adminService'
-import { adminReservationService } from '../services/adminReservationService'
-import { adminUserService } from '../services/adminUserService'
-import { openingHoursService, type OpeningHoursDto } from '../services/openingHoursService'
-import type { ReservationResponse } from '../services/reservationService'
-import type { UserResponse } from '../services/authService'
-import { useLanguage } from '../contexts/LanguageContext'
-import './Admin.css'
+import { useState, useEffect } from "react";
+import {
+  adminService,
+  type ReservationSlotDto,
+} from "../services/adminService";
+import { adminReservationService } from "../services/adminReservationService";
+import { adminUserService } from "../services/adminUserService";
+import {
+  openingHoursService,
+  type OpeningHoursDto,
+  type DayOfWeek,
+} from "../services/openingHoursService";
+import type { ReservationResponse } from "../services/reservationService";
+import type { UserResponse } from "../services/authService";
+import { useLanguage } from "../contexts/LanguageContext";
+import "./Admin.css";
 
-type AdminSection = 'slots' | 'reservations' | 'users' | 'menu' | 'hours'
+type AdminSection = "slots" | "reservations" | "users" | "menu" | "hours";
 
 function Admin() {
-  const [activeSection, setActiveSection] = useState<AdminSection>('slots')
-  const [slots, setSlots] = useState<ReservationSlotDto[]>([])
-  const [reservations, setReservations] = useState<ReservationResponse[]>([])
-  const [users, setUsers] = useState<UserResponse[]>([])
-  const [openingHours, setOpeningHours] = useState<OpeningHoursDto[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
-  const [editingSlot, setEditingSlot] = useState<ReservationSlotDto | null>(null)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [activeSection, setActiveSection] = useState<AdminSection>("slots");
+  const [slots, setSlots] = useState<ReservationSlotDto[]>([]);
+  const [reservations, setReservations] = useState<ReservationResponse[]>([]);
+  const [users, setUsers] = useState<UserResponse[]>([]);
+  const [openingHours, setOpeningHours] = useState<OpeningHoursDto[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [editingSlot, setEditingSlot] = useState<ReservationSlotDto | null>(
+    null
+  );
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const [formData, setFormData] = useState({
-    slotFrom: '',
-    slotTo: '',
+    slotFrom: "",
+    slotTo: "",
     active: true,
-    maxReservations: 10
-  })
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
+    maxReservations: 10,
+  });
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   // Opening hours states
-  const [editingHour, setEditingHour] = useState<OpeningHoursDto | null>(null)
-  const [isHourDialogOpen, setIsHourDialogOpen] = useState(false)
-  const [hourFormData, setHourFormData] = useState({
-    dayOfWeek: 'MONDAY' as const,
-    openTime: '',
-    closeTime: '',
+  const [editingHour, setEditingHour] = useState<OpeningHoursDto | null>(null);
+  const [isHourDialogOpen, setIsHourDialogOpen] = useState(false);
+  const [hourFormData, setHourFormData] = useState<{
+    dayOfWeek: DayOfWeek;
+    openTime: string;
+    closeTime: string;
+    isOpen: boolean;
+    note: string;
+  }>({
+    dayOfWeek: "MONDAY",
+    openTime: "",
+    closeTime: "",
     isOpen: true,
-    note: ''
-  })
+    note: "",
+  });
 
-  const { t } = useLanguage()
+  const { t } = useLanguage();
 
   // Helper function to convert time format
   const formatTimeForBackend = (time: string): string => {
     // If already has seconds, return as is
-    if (time.length === 8) return time
+    if (time.length === 8) return time;
     // Add :00 for seconds if missing
-    return time.length === 5 ? `${time}:00` : time
-  }
+    return time.length === 5 ? `${time}:00` : time;
+  };
 
   const formatTimeForDisplay = (time: string): string => {
     // Remove seconds for display in time input (HH:mm:ss -> HH:mm)
-    return time.substring(0, 5)
-  }
-
-  // Fetch slots from backend
-  const fetchSlots = async () => {
-    try {
-      setIsLoading(true)
-      setError('')
-      const data = await adminService.getAllSlots()
-      setSlots(data)
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch slots')
-      console.error('Error fetching slots:', err)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    return time.substring(0, 5);
+  };
 
   useEffect(() => {
     // Fetch data based on active section
     const fetchData = async () => {
       try {
-        setIsLoading(true)
-        setError('')
+        setIsLoading(true);
+        setError("");
+        setSuccess("");
 
-        if (activeSection === 'slots') {
-          const data = await adminService.getAllSlots()
-          setSlots(data)
-        } else if (activeSection === 'reservations') {
-          const data = await adminReservationService.getAllReservations()
-          setReservations(data)
-        } else if (activeSection === 'users') {
-          const data = await adminUserService.getAllUsers()
-          setUsers(data)
-        } else if (activeSection === 'hours') {
-          const data = await openingHoursService.getAllOpeningHours()
-          setOpeningHours(data)
+        if (activeSection === "slots") {
+          const data = await adminService.getAllSlots();
+          setSlots(data);
+        } else if (activeSection === "reservations") {
+          const data = await adminReservationService.getAllReservations();
+          setReservations(data);
+        } else if (activeSection === "users") {
+          const data = await adminUserService.getAllUsers();
+          setUsers(data);
+        } else if (activeSection === "hours") {
+          const data = await openingHoursService.getAllOpeningHours();
+          setOpeningHours(data);
         }
       } catch (err: any) {
-        setError(err.message || `Failed to fetch ${activeSection}`)
-        console.error(`Error fetching ${activeSection}:`, err)
+        setError(err.message || `Failed to fetch ${activeSection}`);
+        console.error(`Error fetching ${activeSection}:`, err);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [activeSection])
+    fetchData();
+  }, [activeSection]);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setSuccess('')
+    e.preventDefault();
+    setError("");
+    setSuccess("");
 
     // Validate times
     if (!formData.slotFrom || !formData.slotTo) {
-      setError('Please fill in all fields')
-      return
+      setError("Please fill in all fields");
+      return;
     }
 
     try {
@@ -119,114 +120,136 @@ function Admin() {
         slotFrom: formatTimeForBackend(formData.slotFrom),
         slotTo: formatTimeForBackend(formData.slotTo),
         active: formData.active,
-        maxReservations: formData.maxReservations
-      }
+        maxReservations: formData.maxReservations,
+      };
 
       if (editingSlot && editingSlot.id) {
         // Update existing slot
-        const updated = await adminService.updateSlot(editingSlot.id, dataForBackend)
-        setSlots(slots.map(slot => slot.id === editingSlot.id ? updated : slot))
-        setSuccess('Slot updated successfully!')
+        const updated = await adminService.updateSlot(
+          editingSlot.id,
+          dataForBackend
+        );
+        setSlots(
+          slots.map((slot) => (slot.id === editingSlot.id ? updated : slot))
+        );
+        setSuccess(t('admin.slots.updated'));
       } else {
         // Create new slot
-        const created = await adminService.createSlot(dataForBackend)
-        setSlots([...slots, created])
-        setSuccess('Slot created successfully!')
+        const created = await adminService.createSlot(dataForBackend);
+        setSlots([...slots, created]);
+        setSuccess(t('admin.slots.created'));
       }
 
       // Reset form
-      setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
-      setEditingSlot(null)
-      setIsDialogOpen(false)
+      setFormData({
+        slotFrom: "",
+        slotTo: "",
+        active: true,
+        maxReservations: 10,
+      });
+      setEditingSlot(null);
+      setIsDialogOpen(false);
     } catch (err: any) {
-      setError(err.message || 'Failed to save slot')
-      console.error('Error saving slot:', err)
+      setError(err.message || "Failed to save slot");
+      console.error("Error saving slot:", err);
     }
-  }
+  };
 
   const handleEdit = (slot: ReservationSlotDto) => {
-    setEditingSlot(slot)
+    setEditingSlot(slot);
     setFormData({
       slotFrom: formatTimeForDisplay(slot.slotFrom),
       slotTo: formatTimeForDisplay(slot.slotTo),
       active: slot.active,
-      maxReservations: slot.maxReservations || 10
-    })
-    setError('')
-    setSuccess('')
-    setIsDialogOpen(true)
-  }
+      maxReservations: slot.maxReservations || 10,
+    });
+    setError("");
+    setSuccess("");
+    setIsDialogOpen(true);
+  };
 
   const handleCreate = () => {
-    setEditingSlot(null)
-    setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
-    setError('')
-    setSuccess('')
-    setIsDialogOpen(true)
-  }
+    setEditingSlot(null);
+    setFormData({
+      slotFrom: "",
+      slotTo: "",
+      active: true,
+      maxReservations: 10,
+    });
+    setError("");
+    setSuccess("");
+    setIsDialogOpen(true);
+  };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this slot?')) {
-      return
+    if (!window.confirm(t('admin.slots.deleteConfirm'))) {
+      return;
     }
 
-    setError('')
-    setSuccess('')
+    setError("");
+    setSuccess("");
 
     try {
-      await adminService.deleteSlot(id)
-      setSlots(slots.filter(slot => slot.id !== id))
-      setSuccess('Slot deleted successfully!')
+      await adminService.deleteSlot(id);
+      setSlots(slots.filter((slot) => slot.id !== id));
+      setSuccess(t('admin.slots.deleted'));
     } catch (err: any) {
-      setError(err.message || 'Failed to delete slot')
-      console.error('Error deleting slot:', err)
+      setError(err.message || "Failed to delete slot");
+      console.error("Error deleting slot:", err);
     }
-  }
+  };
 
   const handleCancel = () => {
-    setEditingSlot(null)
-    setFormData({ slotFrom: '', slotTo: '', active: true, maxReservations: 10 })
-    setError('')
-    setSuccess('')
-    setIsDialogOpen(false)
-  }
+    setEditingSlot(null);
+    setFormData({
+      slotFrom: "",
+      slotTo: "",
+      active: true,
+      maxReservations: 10,
+    });
+    setError("");
+    setSuccess("");
+    setIsDialogOpen(false);
+  };
 
   const handleToggleActive = async (slot: ReservationSlotDto) => {
-    if (!slot.id) return
+    if (!slot.id) return;
 
-    setError('')
-    setSuccess('')
+    setError("");
+    setSuccess("");
 
     try {
       const updatedData = {
         slotFrom: formatTimeForBackend(slot.slotFrom),
         slotTo: formatTimeForBackend(slot.slotTo),
         active: !slot.active,
-        maxReservations: slot.maxReservations || 10
-      }
-      const updated = await adminService.updateSlot(slot.id, updatedData)
-      setSlots(slots.map(s => s.id === slot.id ? updated : s))
-      setSuccess(`Slot ${updated.active ? 'activated' : 'deactivated'} successfully!`)
+        maxReservations: slot.maxReservations || 10,
+      };
+      const updated = await adminService.updateSlot(slot.id, updatedData);
+      setSlots(slots.map((s) => (s.id === slot.id ? updated : s)));
+      setSuccess(
+        updated.active ? t('admin.slots.activated') : t('admin.slots.deactivated')
+      );
     } catch (err: any) {
-      setError(err.message || 'Failed to toggle slot status')
-      console.error('Error toggling slot:', err)
+      setError(err.message || "Failed to toggle slot status");
+      console.error("Error toggling slot:", err);
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <div className="admin-container">
-        <div className="loading">Loading...</div>
+        <div className="loading">{t('admin.common.loading')}</div>
       </div>
-    )
+    );
   }
 
   const renderSlotsSection = () => (
     <>
       <div className="section-header">
-        <h2 className="section-title">Reservation Time Slots</h2>
+        <h2 className="section-title">{t('admin.slots.title')}</h2>
         <button className="btn btn-primary" onClick={handleCreate}>
-          + Create New Slot
+          + {t('admin.slots.createNew')}
         </button>
       </div>
 
@@ -234,55 +257,63 @@ function Admin() {
       {success && <div className="success-message">{success}</div>}
 
       <div className="admin-content">
-        <div className="admin-table-section" style={{ width: '100%' }}>
+        <div className="admin-table-section" style={{ width: "100%" }}>
           {slots.length === 0 ? (
-            <p className="no-data">No slots found. Create one to get started.</p>
+            <p className="no-data">
+              {t('admin.slots.noData')}
+            </p>
           ) : (
             <table className="slots-table">
               <thead>
                 <tr>
-                  <th>From</th>
-                  <th>To</th>
-                  <th>Max Capacity</th>
-                  <th>Current</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>{t('admin.slots.from')}</th>
+                  <th>{t('admin.slots.to')}</th>
+                  <th>{t('admin.slots.maxCapacity')}</th>
+                  <th>{t('admin.slots.current')}</th>
+                  <th>{t('admin.slots.status')}</th>
+                  <th>{t('admin.slots.actions')}</th>
                 </tr>
               </thead>
               <tbody>
-                {[...slots].sort((a, b) => a.slotFrom.localeCompare(b.slotFrom)).map((slot) => (
-                  <tr key={slot.id}>
-                    <td>{formatTimeForDisplay(slot.slotFrom)}</td>
-                    <td>{formatTimeForDisplay(slot.slotTo)}</td>
-                    <td>{slot.maxReservations || 10}</td>
-                    <td>{slot.currentReservations || 0}</td>
-                    <td>
-                      <span className={`status-badge ${slot.active ? 'active' : 'inactive'}`}>
-                        {slot.active ? 'Active' : 'Inactive'}
-                      </span>
-                    </td>
-                    <td className="actions-cell">
-                      <button
-                        className="btn btn-small btn-edit"
-                        onClick={() => handleEdit(slot)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-small btn-toggle"
-                        onClick={() => handleToggleActive(slot)}
-                      >
-                        {slot.active ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button
-                        className="btn btn-small btn-delete"
-                        onClick={() => handleDelete(slot.id!)}
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+                {[...slots]
+                  .sort((a, b) => a.slotFrom.localeCompare(b.slotFrom))
+                  .map((slot) => (
+                    <tr key={slot.id}>
+                      <td>{formatTimeForDisplay(slot.slotFrom)}</td>
+                      <td>{formatTimeForDisplay(slot.slotTo)}</td>
+                      <td>{slot.maxReservations || 10}</td>
+                      <td>{slot.currentReservations || 0}</td>
+                      <td>
+                        <span
+                          className={`status-badge ${
+                            slot.active ? "active" : "inactive"
+                          }`}
+                        >
+                          {slot.active ? t('admin.slots.active') : t('admin.slots.inactive')}
+                        </span>
+                      </td>
+                      <td className="actions-cell">
+                        <button
+                          className="btn btn-small btn-edit"
+                          onClick={() => handleEdit(slot)}
+                        >
+                          {t('admin.slots.edit')}
+                        </button>
+                        <button
+                          className="btn btn-small btn-toggle"
+                          onClick={() => handleToggleActive(slot)}
+                        >
+                          {slot.active ? t('admin.slots.deactivate') : t('admin.slots.activate')}
+                        </button>
+                        <button
+                          className="btn btn-small btn-delete"
+                          onClick={() => handleDelete(slot.id!)}
+                        >
+                          {t('admin.slots.delete')}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </table>
           )}
@@ -294,41 +325,52 @@ function Admin() {
         <div className="modal-overlay" onClick={handleCancel}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>{editingSlot ? 'Edit Slot' : 'Create New Slot'}</h2>
-              <button className="modal-close" onClick={handleCancel}>×</button>
+              <h2>{editingSlot ? t('admin.slots.editSlot') : t('admin.slots.createSlot')}</h2>
+              <button className="modal-close" onClick={handleCancel}>
+                ×
+              </button>
             </div>
             <form onSubmit={handleSubmit} className="slot-form">
               <div className="form-group">
-                <label htmlFor="slotFrom">From (HH:MM)</label>
+                <label htmlFor="slotFrom">{t('admin.slots.slotFrom')}</label>
                 <input
                   type="time"
                   id="slotFrom"
                   value={formData.slotFrom}
-                  onChange={(e) => setFormData({ ...formData, slotFrom: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, slotFrom: e.target.value })
+                  }
                   required
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="slotTo">To (HH:MM)</label>
+                <label htmlFor="slotTo">{t('admin.slots.slotTo')}</label>
                 <input
                   type="time"
                   id="slotTo"
                   value={formData.slotTo}
-                  onChange={(e) => setFormData({ ...formData, slotTo: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, slotTo: e.target.value })
+                  }
                   required
                 />
               </div>
 
               <div className="form-group">
-                <label htmlFor="maxReservations">Max Capacity (people)</label>
+                <label htmlFor="maxReservations">{t('admin.slots.maxReservations')}</label>
                 <input
                   type="number"
                   id="maxReservations"
                   min="1"
                   max="100"
                   value={formData.maxReservations}
-                  onChange={(e) => setFormData({ ...formData, maxReservations: parseInt(e.target.value) || 10 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      maxReservations: parseInt(e.target.value) || 10,
+                    })
+                  }
                   required
                 />
               </div>
@@ -338,18 +380,24 @@ function Admin() {
                   <input
                     type="checkbox"
                     checked={formData.active}
-                    onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, active: e.target.checked })
+                    }
                   />
-                  Active
+                  {t('admin.slots.activeCheckbox')}
                 </label>
               </div>
 
               <div className="form-actions">
-                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
-                  Cancel
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCancel}
+                >
+                  {t('admin.slots.cancel')}
                 </button>
                 <button type="submit" className="btn btn-primary">
-                  {editingSlot ? 'Update Slot' : 'Create Slot'}
+                  {editingSlot ? t('admin.slots.update') : t('admin.slots.create')}
                 </button>
               </div>
             </form>
@@ -357,25 +405,26 @@ function Admin() {
         </div>
       )}
     </>
-  )
+  );
 
   const renderReservationsSection = () => {
     const handleDeleteReservation = async (id: number) => {
-      if (!window.confirm('Are you sure you want to delete this reservation?')) return
+      if (!window.confirm(t('admin.reservations.deleteConfirm')))
+        return;
 
       try {
-        await adminReservationService.deleteReservation(id)
-        setReservations(reservations.filter(r => r.id !== id))
-        setSuccess('Reservation deleted successfully!')
+        await adminReservationService.deleteReservation(id);
+        setReservations(reservations.filter((r) => r.id !== id));
+        setSuccess(t('admin.reservations.deleted'));
       } catch (err: any) {
-        setError(err.message || 'Failed to delete reservation')
+        setError(err.message || "Failed to delete reservation");
       }
-    }
+    };
 
     return (
       <>
         <div className="section-header">
-          <h2 className="section-title">Customer Reservations</h2>
+          <h2 className="section-title">{t('admin.reservations.title')}</h2>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -383,18 +432,18 @@ function Admin() {
 
         <div className="admin-content">
           {reservations.length === 0 ? (
-            <p className="no-data">No reservations found.</p>
+            <p className="no-data">{t('admin.reservations.noData')}</p>
           ) : (
             <table className="slots-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Username</th>
-                  <th>Date</th>
-                  <th>Time</th>
-                  <th>Guests</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+                  <th>{t('admin.reservations.id')}</th>
+                  <th>{t('admin.reservations.username')}</th>
+                  <th>{t('admin.reservations.date')}</th>
+                  <th>{t('admin.reservations.time')}</th>
+                  <th>{t('admin.reservations.guests')}</th>
+                  <th>{t('admin.reservations.status')}</th>
+                  <th>{t('admin.reservations.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -403,10 +452,19 @@ function Admin() {
                     <td>{reservation.id}</td>
                     <td>{reservation.username}</td>
                     <td>{reservation.date}</td>
-                    <td>{reservation.slotFrom.substring(0, 5)} - {reservation.slotTo.substring(0, 5)}</td>
+                    <td>
+                      {reservation.slotFrom.substring(0, 5)} -{" "}
+                      {reservation.slotTo.substring(0, 5)}
+                    </td>
                     <td>{reservation.guestCount}</td>
                     <td>
-                      <span className={`status-badge ${reservation.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
+                      <span
+                        className={`status-badge ${
+                          reservation.status === "ACTIVE"
+                            ? "active"
+                            : "inactive"
+                        }`}
+                      >
                         {reservation.status}
                       </span>
                     </td>
@@ -415,7 +473,7 @@ function Admin() {
                         className="btn btn-small btn-delete"
                         onClick={() => handleDeleteReservation(reservation.id)}
                       >
-                        Delete
+                        {t('admin.reservations.delete')}
                       </button>
                     </td>
                   </tr>
@@ -425,14 +483,14 @@ function Admin() {
           )}
         </div>
       </>
-    )
-  }
+    );
+  };
 
   const renderUsersSection = () => {
     return (
       <>
         <div className="section-header">
-          <h2 className="section-title">User Management</h2>
+          <h2 className="section-title">{t('admin.users.title')}</h2>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -440,17 +498,17 @@ function Admin() {
 
         <div className="admin-content">
           {users.length === 0 ? (
-            <p className="no-data">No users found.</p>
+            <p className="no-data">{t('admin.users.noData')}</p>
           ) : (
             <table className="slots-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>Username</th>
-                  <th>Email</th>
-                  <th>Roles</th>
-                  <th>Enabled</th>
-                  <th>Reservation Date</th>
+                  <th>{t('admin.users.id')}</th>
+                  <th>{t('admin.users.username')}</th>
+                  <th>{t('admin.users.email')}</th>
+                  <th>{t('admin.users.roles')}</th>
+                  <th>{t('admin.users.enabled')}</th>
+                  <th>{t('admin.users.created')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -459,10 +517,14 @@ function Admin() {
                     <td>{user.id}</td>
                     <td>{user.username}</td>
                     <td>{user.email}</td>
-                    <td>{user.roles.join(', ')}</td>
+                    <td>{user.roles.join(", ")}</td>
                     <td>
-                      <span className={`status-badge ${user.enabled ? 'active' : 'inactive'}`}>
-                        {user.enabled ? 'Yes' : 'No'}
+                      <span
+                        className={`status-badge ${
+                          user.enabled ? "active" : "inactive"
+                        }`}
+                      >
+                        {user.enabled ? t('admin.users.yes') : t('admin.users.no')}
                       </span>
                     </td>
                     <td>{user.reservationDate}</td>
@@ -473,20 +535,112 @@ function Admin() {
           )}
         </div>
       </>
-    )
-  }
+    );
+  };
 
   const renderMenuSection = () => (
-    <div className="coming-soon">
-      <h2>Menu Management</h2>
-      <p>Manage restaurant menu items, categories, and pricing</p>
-      <p className="coming-soon-text">Coming soon...</p>
+    <div className="menu-management-section">
+      <h2>{t('admin.menu.title')}</h2>
+      <p>{t('admin.menu.description')}</p>
+
+      <div className="google-drive-card">
+        <div className="drive-icon">
+          <svg
+            width="48"
+            height="48"
+            viewBox="0 0 87.3 78"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="m6.6 66.85 3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8h-27.5c0 1.55.4 3.1 1.2 4.5z"
+              fill="#0066da"
+            />
+            <path
+              d="m43.65 25-13.75-23.8c-1.35.8-2.5 1.9-3.3 3.3l-25.4 44a9.06 9.06 0 0 0 -1.2 4.5h27.5z"
+              fill="#00ac47"
+            />
+            <path
+              d="m73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 7.65-13.25c.8-1.4 1.2-2.95 1.2-4.5h-27.502l5.852 11.5z"
+              fill="#ea4335"
+            />
+            <path
+              d="m43.65 25 13.75-23.8c-1.35-.8-2.9-1.2-4.5-1.2h-18.5c-1.6 0-3.15.45-4.5 1.2z"
+              fill="#00832d"
+            />
+            <path
+              d="m59.8 53h-32.3l-13.75 23.8c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.45 4.5-1.2z"
+              fill="#2684fc"
+            />
+            <path
+              d="m73.4 26.5-12.7-22c-.8-1.4-1.95-2.5-3.3-3.3l-13.75 23.8 16.15 28h27.45c0-1.55-.4-3.1-1.2-4.5z"
+              fill="#ffba00"
+            />
+          </svg>
+        </div>
+
+        <div className="drive-content">
+          <h3>{t('admin.menu.driveTitle')}</h3>
+          <p>{t('admin.menu.driveDescription')}</p>
+
+          <a
+            href="https://docs.google.com/spreadsheets/d/1UykTaLDzCM9zFWNNnpQ0zAAyC78fp8yg1ysAvVpWKgo/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="google-drive-link"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <polyline
+                points="15 3 21 3 21 9"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <line
+                x1="10"
+                y1="14"
+                x2="21"
+                y2="3"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {t('admin.menu.openDrive')}
+          </a>
+        </div>
+      </div>
+
+      <div className="menu-instructions">
+        <h4>{t('admin.menu.instructionsTitle')}</h4>
+        <ol>
+          <li>{t('admin.menu.step1')}</li>
+          <li>{t('admin.menu.step2')}</li>
+          <li>{t('admin.menu.step3')}</li>
+          <li>{t('admin.menu.step4')}</li>
+        </ol>
+      </div>
     </div>
-  )
+  );
 
   const renderHoursSection = () => {
-    const dayOptions = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
-    const dayOrder = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+    const dayOrder = [
+      "MONDAY",
+      "TUESDAY",
+      "WEDNESDAY",
+      "THURSDAY",
+      "FRIDAY",
+      "SATURDAY",
+      "SUNDAY",
+    ];
 
     const formatTimeForDisplay = (time: string): string => {
       return time.substring(0, 5);
@@ -497,16 +651,7 @@ function Admin() {
     };
 
     const getDayLabel = (day: string): string => {
-      const labels: Record<string, string> = {
-        'MONDAY': 'Monday',
-        'TUESDAY': 'Tuesday',
-        'WEDNESDAY': 'Wednesday',
-        'THURSDAY': 'Thursday',
-        'FRIDAY': 'Friday',
-        'SATURDAY': 'Saturday',
-        'SUNDAY': 'Sunday'
-      };
-      return labels[day] || day;
+      return t(`admin.hours.days.${day}`) || day;
     };
 
     // Sort opening hours by day of week (Monday to Sunday)
@@ -521,20 +666,20 @@ function Admin() {
         openTime: formatTimeForDisplay(hour.openTime),
         closeTime: formatTimeForDisplay(hour.closeTime),
         isOpen: hour.isOpen,
-        note: hour.note || ''
+        note: hour.note || "",
       });
       setIsHourDialogOpen(true);
-      setError('');
-      setSuccess('');
+      setError("");
+      setSuccess("");
     };
 
     const handleHourSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-      setError('');
-      setSuccess('');
+      setError("");
+      setSuccess("");
 
       if (!hourFormData.openTime || !hourFormData.closeTime) {
-        setError('Please fill in all required fields');
+        setError("Please fill in all required fields");
         return;
       }
 
@@ -544,36 +689,53 @@ function Admin() {
           openTime: formatTimeForBackend(hourFormData.openTime),
           closeTime: formatTimeForBackend(hourFormData.closeTime),
           isOpen: hourFormData.isOpen,
-          note: hourFormData.note || undefined
+          note: hourFormData.note || undefined,
         };
 
         if (editingHour && editingHour.id) {
-          const updated = await openingHoursService.updateOpeningHours(editingHour.id, dataForBackend);
-          setOpeningHours(openingHours.map(h => h.id === editingHour.id ? updated : h));
-          setSuccess('Opening hours updated successfully!');
+          const updated = await openingHoursService.updateOpeningHours(
+            editingHour.id,
+            dataForBackend
+          );
+          setOpeningHours(
+            openingHours.map((h) => (h.id === editingHour.id ? updated : h))
+          );
+          setSuccess(t('admin.hours.updated'));
         }
 
         setIsHourDialogOpen(false);
         setEditingHour(null);
-        setHourFormData({ dayOfWeek: 'MONDAY', openTime: '', closeTime: '', isOpen: true, note: '' });
+        setHourFormData({
+          dayOfWeek: "MONDAY",
+          openTime: "",
+          closeTime: "",
+          isOpen: true,
+          note: "",
+        });
       } catch (err: any) {
-        setError(err.message || 'Failed to save opening hours');
-        console.error('Error saving opening hours:', err);
+        setError(err.message || "Failed to save opening hours");
+        console.error("Error saving opening hours:", err);
       }
     };
 
     const handleHourCancel = () => {
       setIsHourDialogOpen(false);
       setEditingHour(null);
-      setHourFormData({ dayOfWeek: 'MONDAY', openTime: '', closeTime: '', isOpen: true, note: '' });
-      setError('');
-      setSuccess('');
+      setHourFormData({
+        dayOfWeek: "MONDAY",
+        openTime: "",
+        closeTime: "",
+        isOpen: true,
+        note: "",
+      });
+      setError("");
+      setSuccess("");
     };
 
     return (
       <>
         <div className="section-header">
-          <h2 className="section-title">Opening Hours Management</h2>
+          <h2 className="section-title">{t('admin.hours.title')}</h2>
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -581,37 +743,43 @@ function Admin() {
 
         <div className="admin-content">
           {openingHours.length === 0 ? (
-            <p className="no-data">No opening hours configured.</p>
+            <p className="no-data">{t('admin.hours.noData')}</p>
           ) : (
             <table className="slots-table">
               <thead>
                 <tr>
-                  <th>Day</th>
-                  <th>Open Time</th>
-                  <th>Close Time</th>
-                  <th>Status</th>
-                  <th>Note</th>
-                  <th>Actions</th>
+                  <th>{t('admin.hours.day')}</th>
+                  <th>{t('admin.hours.openTime')}</th>
+                  <th>{t('admin.hours.closeTime')}</th>
+                  <th>{t('admin.hours.status')}</th>
+                  <th>{t('admin.hours.note')}</th>
+                  <th>{t('admin.hours.actions')}</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedOpeningHours.map((hour) => (
                   <tr key={hour.id}>
-                    <td><strong>{getDayLabel(hour.dayOfWeek)}</strong></td>
+                    <td>
+                      <strong>{getDayLabel(hour.dayOfWeek)}</strong>
+                    </td>
                     <td>{formatTimeForDisplay(hour.openTime)}</td>
                     <td>{formatTimeForDisplay(hour.closeTime)}</td>
                     <td>
-                      <span className={`status-badge ${hour.isOpen ? 'active' : 'inactive'}`}>
-                        {hour.isOpen ? 'Open' : 'Closed'}
+                      <span
+                        className={`status-badge ${
+                          hour.isOpen ? "active" : "inactive"
+                        }`}
+                      >
+                        {hour.isOpen ? t('admin.hours.open') : t('admin.hours.closed')}
                       </span>
                     </td>
-                    <td>{hour.note || '-'}</td>
+                    <td>{hour.note || "-"}</td>
                     <td className="actions-cell">
                       <button
                         className="btn btn-small btn-edit"
                         onClick={() => handleHourEdit(hour)}
                       >
-                        Edit
+                        {t('admin.hours.edit')}
                       </button>
                     </td>
                   </tr>
@@ -625,55 +793,71 @@ function Admin() {
           <div className="modal-overlay" onClick={handleHourCancel}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
-                <h2>Edit Opening Hours</h2>
-                <button className="modal-close" onClick={handleHourCancel}>×</button>
+                <h2>{t('admin.hours.editHours')}</h2>
+                <button className="modal-close" onClick={handleHourCancel}>
+                  ×
+                </button>
               </div>
               <form onSubmit={handleHourSubmit} className="slot-form">
                 <div className="form-group">
-                  <label>Day of Week</label>
-                  <p style={{
-                    padding: '0.8rem 1rem',
-                    background: 'rgba(230, 210, 156, 0.1)',
-                    border: '2px solid rgba(230, 210, 156, 0.3)',
-                    borderRadius: '0.5rem',
-                    color: '#e6d29c',
-                    fontWeight: 600,
-                    margin: 0
-                  }}>
+                  <label>{t('admin.hours.dayOfWeek')}</label>
+                  <p
+                    style={{
+                      padding: "0.8rem 1rem",
+                      background: "rgba(230, 210, 156, 0.1)",
+                      border: "2px solid rgba(230, 210, 156, 0.3)",
+                      borderRadius: "0.5rem",
+                      color: "#e6d29c",
+                      fontWeight: 600,
+                      margin: 0,
+                    }}
+                  >
                     {getDayLabel(hourFormData.dayOfWeek)}
                   </p>
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="openTime">Open Time (HH:MM)</label>
+                  <label htmlFor="openTime">{t('admin.hours.openTimeLabel')}</label>
                   <input
                     type="time"
                     id="openTime"
                     value={hourFormData.openTime}
-                    onChange={(e) => setHourFormData({ ...hourFormData, openTime: e.target.value })}
+                    onChange={(e) =>
+                      setHourFormData({
+                        ...hourFormData,
+                        openTime: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="closeTime">Close Time (HH:MM)</label>
+                  <label htmlFor="closeTime">{t('admin.hours.closeTimeLabel')}</label>
                   <input
                     type="time"
                     id="closeTime"
                     value={hourFormData.closeTime}
-                    onChange={(e) => setHourFormData({ ...hourFormData, closeTime: e.target.value })}
+                    onChange={(e) =>
+                      setHourFormData({
+                        ...hourFormData,
+                        closeTime: e.target.value,
+                      })
+                    }
                     required
                   />
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="note">Note (optional)</label>
+                  <label htmlFor="note">{t('admin.hours.noteLabel')}</label>
                   <input
                     type="text"
                     id="note"
                     value={hourFormData.note}
-                    onChange={(e) => setHourFormData({ ...hourFormData, note: e.target.value })}
-                    placeholder="e.g., Special hours, Closed for holidays"
+                    onChange={(e) =>
+                      setHourFormData({ ...hourFormData, note: e.target.value })
+                    }
+                    placeholder={t('admin.hours.notePlaceholder')}
                     maxLength={500}
                   />
                 </div>
@@ -683,18 +867,27 @@ function Admin() {
                     <input
                       type="checkbox"
                       checked={hourFormData.isOpen}
-                      onChange={(e) => setHourFormData({ ...hourFormData, isOpen: e.target.checked })}
+                      onChange={(e) =>
+                        setHourFormData({
+                          ...hourFormData,
+                          isOpen: e.target.checked,
+                        })
+                      }
                     />
-                    Open on this day
+                    {t('admin.hours.openCheckbox')}
                   </label>
                 </div>
 
                 <div className="form-actions">
-                  <button type="button" className="btn btn-secondary" onClick={handleHourCancel}>
-                    Cancel
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleHourCancel}
+                  >
+                    {t('admin.hours.cancel')}
                   </button>
                   <button type="submit" className="btn btn-primary">
-                    Update Hours
+                    {t('admin.hours.update')}
                   </button>
                 </div>
               </form>
@@ -703,12 +896,12 @@ function Admin() {
         )}
       </>
     );
-  }
+  };
 
   return (
     <div className="admin-container">
       <div className="admin-header">
-        <h1>Administration Panel</h1>
+        <h1>{t('admin.title')}</h1>
         <button
           className="mobile-menu-toggle"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -719,92 +912,161 @@ function Admin() {
 
       <div className="admin-layout">
         {/* Sidebar Navigation */}
-        <aside className={`admin-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
+        <aside className={`admin-sidebar ${isMobileMenuOpen ? "open" : ""}`}>
           <nav className="admin-nav">
             <button
-              className={`nav-item ${activeSection === 'slots' ? 'active' : ''}`}
+              className={`nav-item ${
+                activeSection === "slots" ? "active" : ""
+              }`}
               onClick={() => {
-                setActiveSection('slots')
-                setIsMobileMenuOpen(false)
+                setActiveSection("slots");
+                setIsMobileMenuOpen(false);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="4" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="2"/>
-                <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/>
-                <line x1="9" y1="4" x2="9" y2="10" stroke="currentColor" strokeWidth="2"/>
+                <rect
+                  x="3"
+                  y="4"
+                  width="18"
+                  height="18"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <line
+                  x1="3"
+                  y1="10"
+                  x2="21"
+                  y2="10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <line
+                  x1="9"
+                  y1="4"
+                  x2="9"
+                  y2="10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
               </svg>
-              Time Slots
+              {t('admin.navigation.timeSlots')}
             </button>
 
             <button
-              className={`nav-item ${activeSection === 'reservations' ? 'active' : ''}`}
+              className={`nav-item ${
+                activeSection === "reservations" ? "active" : ""
+              }`}
               onClick={() => {
-                setActiveSection('reservations')
-                setIsMobileMenuOpen(false)
+                setActiveSection("reservations");
+                setIsMobileMenuOpen(false);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z" stroke="currentColor" strokeWidth="2"/>
-                <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="2"/>
+                <path
+                  d="M19 4H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2Z"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M16 2v4M8 2v4M3 10h18"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
               </svg>
-              Reservations
+              {t('admin.navigation.reservations')}
             </button>
 
             <button
-              className={`nav-item ${activeSection === 'users' ? 'active' : ''}`}
+              className={`nav-item ${
+                activeSection === "users" ? "active" : ""
+              }`}
               onClick={() => {
-                setActiveSection('users')
-                setIsMobileMenuOpen(false)
+                setActiveSection("users");
+                setIsMobileMenuOpen(false);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" strokeWidth="2"/>
-                <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" strokeWidth="2"/>
+                <path
+                  d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <circle
+                  cx="9"
+                  cy="7"
+                  r="4"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
               </svg>
-              Users
+              {t('admin.navigation.users')}
             </button>
 
             <button
-              className={`nav-item ${activeSection === 'menu' ? 'active' : ''}`}
+              className={`nav-item ${activeSection === "menu" ? "active" : ""}`}
               onClick={() => {
-                setActiveSection('menu')
-                setIsMobileMenuOpen(false)
+                setActiveSection("menu");
+                setIsMobileMenuOpen(false);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path
+                  d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2M7 2v20M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
               </svg>
-              Menu
+              {t('admin.navigation.menu')}
             </button>
 
             <button
-              className={`nav-item ${activeSection === 'hours' ? 'active' : ''}`}
+              className={`nav-item ${
+                activeSection === "hours" ? "active" : ""
+              }`}
               onClick={() => {
-                setActiveSection('hours')
-                setIsMobileMenuOpen(false)
+                setActiveSection("hours");
+                setIsMobileMenuOpen(false);
               }}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-                <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                <circle
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <path
+                  d="M12 6v6l4 2"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                />
               </svg>
-              Opening Hours
+              {t('admin.navigation.openingHours')}
             </button>
           </nav>
         </aside>
 
         {/* Main Content Area */}
         <main className="admin-main">
-          {activeSection === 'slots' && renderSlotsSection()}
-          {activeSection === 'reservations' && renderReservationsSection()}
-          {activeSection === 'users' && renderUsersSection()}
-          {activeSection === 'menu' && renderMenuSection()}
-          {activeSection === 'hours' && renderHoursSection()}
+          {activeSection === "slots" && renderSlotsSection()}
+          {activeSection === "reservations" && renderReservationsSection()}
+          {activeSection === "users" && renderUsersSection()}
+          {activeSection === "menu" && renderMenuSection()}
+          {activeSection === "hours" && renderHoursSection()}
         </main>
       </div>
     </div>
-  )
+  );
 }
 
-export default Admin
+export default Admin;

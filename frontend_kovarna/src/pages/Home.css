@@ -7,6 +7,8 @@
     padding: 0;
     margin-top: -70px;
     padding-top: 80px;
+    padding-bottom: 4rem;
+    background-color: #1a1a1a;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -80,14 +82,13 @@
     flex-direction: column;
     gap: 4rem;
     padding: 3rem 2rem;
-    margin-top: 1rem;
+    margin: -2rem auto 0 auto;
     max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
   }
-  
+
   .feature-card {
-    background: #e6d29c;
+    background: rgba(230, 210, 156, 0.1);
+    border: 2px solid rgba(230, 210, 156, 0.3);
     border-radius: 16px;
     padding: 3rem 2rem;
   }
@@ -134,11 +135,11 @@
     font-weight: 700;
     margin-bottom: 1.5rem;
     line-height: 1.3;
-    color: #222;
+    color: #e6d29c;
     position: relative;
   }
-  
-  
+
+
   .feature-text h2::after {
     content: "";
     position: absolute;
@@ -146,14 +147,14 @@
     bottom: -10px;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, #864618, #f1c126);
+    background: linear-gradient(90deg, #e6d29c, #f1c126);
     border-radius: 2px;
   }
-  
+
   .feature-text p {
     font-size: 1.125rem;
     line-height: 1.7;
-    color: #444;
+    color: #e0e0e0;
   }
 
   /* Mobile responsive styles */
@@ -161,6 +162,7 @@
     .features {
       gap: 3rem;
       padding: 2rem 1rem;
+      margin-top: 2rem;
     }
     
     .feature-card {
@@ -195,6 +197,7 @@
     .features {
       gap: 2rem;
       padding: 1rem 0.5rem;
+      margin-top: 1.5rem;
     }
     
     .feature-card {
